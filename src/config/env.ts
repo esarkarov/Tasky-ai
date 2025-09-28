@@ -6,6 +6,7 @@ const envSchema = z.object({
   VITE_APPWRITE_PROJECT_ID: z.string().nonempty().readonly(),
   VITE_APPWRITE_ENDPOINT: z.string().nonempty().readonly(),
   VITE_APPWRITE_DATABASE_ID: z.string().nonempty().readonly(),
+  VITE_GEMINI_API_KEY: z.string().nonempty().readonly(),
 });
 
 export const parsedEnv = envSchema.safeParse(import.meta.env);
@@ -20,4 +21,5 @@ export const env = {
   appwriteProjectId: parsedEnv.data.VITE_APPWRITE_PROJECT_ID,
   appwriteEndpoint: parsedEnv.data.VITE_APPWRITE_ENDPOINT,
   appwriteDatabaseId: parsedEnv.data.VITE_APPWRITE_DATABASE_ID,
+  geminiApiKey: parsedEnv.data.VITE_GEMINI_API_KEY,
 };

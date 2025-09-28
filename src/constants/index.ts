@@ -11,6 +11,7 @@ import { Calendar1, CalendarDays, CircleCheck, Inbox } from 'lucide-react';
 
 export const TOOLTIP_DELAY = 500;
 export const SCROLL_THRESHOLD = 70;
+export const GEMINI_DEFAULT_MODEL = "gemini-2.5-flash";
 const DEFAULT_PROJECT_NAME = 'Untitled';
 const DEFAULT_PROJECT_COLOR_NAME = 'Slate';
 const DEFAULT_PROJECT_COLOR_HEX = '#64748b';

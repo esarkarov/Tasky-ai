@@ -42,7 +42,7 @@ export interface IImg {
   width: number;
   height: number;
 }
-export interface IAiGenTask {
+export interface IAIGenTask {
   content: string;
   due_date: Date | null;
 };
