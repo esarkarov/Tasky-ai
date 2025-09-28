@@ -1,39 +1,30 @@
 import { ROUTES } from '@/constants';
-import { createElement, lazy } from 'react';
+import { AuthSyncPage, HomePage, LoginPage, RegisterPage } from '@/routes/lazy';
 import { RouteObject } from 'react-router';
-
-export const HomePage = lazy(() =>
-  import('@/pages/HomePage').then((module) => ({ default: module.default }))
-);
-export const LoginPage = lazy(() =>
-  import('@/pages/LoginPage').then((module) => ({ default: module.default }))
-);
-export const RegisterPage = lazy(() =>
-  import('@/pages/RegisterPage').then((module) => ({
-    default: module.default,
-  }))
-);
-export const AuthSyncPage = lazy(() =>
-  import('@/pages/AuthSyncPage').then((module) => ({
-    default: module.default,
-  }))
-);
 
 export const publicRoutes: RouteObject[] = [
   {
     index: true,
-    element: createElement(HomePage),
+    lazy: {
+      element: HomePage,
+    },
   },
   {
     path: ROUTES.REGISTER,
-    element: createElement(RegisterPage),
+    lazy: {
+      element: RegisterPage,
+    },
   },
   {
     path: ROUTES.LOGIN,
-    element: createElement(LoginPage),
+    lazy: {
+      element: LoginPage,
+    },
   },
   {
     path: ROUTES.AUTH_SYNC,
-    element: createElement(AuthSyncPage),
+    lazy: {
+      element: AuthSyncPage,
+    },
   },
 ];

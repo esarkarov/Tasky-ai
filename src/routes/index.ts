@@ -1,35 +1,33 @@
-import AppLayout from '@/components/layout/AppLayout';
-import RootLayout from '@/components/layout/RootLayout';
 import { ROUTES } from '@/constants';
-import taskAction from '@/routes/actions/taskAction';
-import appLoader from '@/routes/loaders/appLoader';
+import ErrorPage from '@/pages/ErrorPage';
+import { AppLayout, appLoader, RootLayout, taskAction } from '@/routes/lazy';
 import { appRoutes } from '@/routes/modules/appRoutes';
 import { publicRoutes } from '@/routes/modules/publicRoutes';
-import { createElement, lazy } from 'react';
+import { createElement } from 'react';
 import { createBrowserRouter } from 'react-router';
-
-export const ErrorPage = lazy(() =>
-  import('@/pages/ErrorPage').then((module) => ({ default: module.default }))
-);
 
 const router = createBrowserRouter([
   {
     path: ROUTES.HOME,
-    element: createElement(RootLayout),
-    errorElement: createElement(ErrorPage),
     children: publicRoutes,
+    errorElement: createElement(ErrorPage),
+    lazy: {
+      element: RootLayout,
+    },
   },
   {
     path: ROUTES.APP,
-    element: createElement(AppLayout),
-    errorElement: createElement(ErrorPage),
     children: appRoutes,
-    action: taskAction,
-    loader: appLoader,
+    errorElement: createElement(ErrorPage),
+    lazy: {
+      element: AppLayout,
+      action: taskAction,
+      loader: appLoader,
+    },
   },
   {
-    path: '*',
-    element: createElement(ErrorPage),
+    path: ROUTES.NOT_FOUND,
+    errorElement: createElement(ErrorPage),
   },
 ]);
 

@@ -28,6 +28,7 @@ export const ROUTES = {
   UPCOMING: '/app/upcoming',
   COMPLETED: '/app/completed',
   PROJECT: (id: string | undefined) => `/app/projects/${id}`,
+  NOT_FOUND: '*',
 
   APP_PATHS: {
     INBOX: 'inbox',
