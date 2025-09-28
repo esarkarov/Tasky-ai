@@ -5,12 +5,15 @@ import {
   todayTaskEmptyState,
   upcomingTaskEmptyState,
 } from '@/assets';
-import { IEmptyStateContent, ITaskForm } from '@/interfaces';
+import { IEmptyStateContent, IProject, ITaskForm } from '@/interfaces';
 import { TEmptyStateType } from '@/types';
 import { Calendar1, CalendarDays, CircleCheck, Inbox } from 'lucide-react';
 
 export const TOOLTIP_DELAY = 500;
 export const SCROLL_THRESHOLD = 70;
+const DEFAULT_PROJECT_NAME = 'Untitled';
+const DEFAULT_PROJECT_COLOR_NAME = 'Slate';
+const DEFAULT_PROJECT_COLOR_HEX = '#64748b';
 
 export const ROUTES = {
   HOME: '/',
@@ -30,6 +33,7 @@ export const ROUTES = {
     TODAY: 'today',
     UPCOMING: 'upcoming',
     COMPLETED: 'completed',
+    PROJECTS: 'projects',
   },
 } as const;
 
@@ -135,8 +139,90 @@ export const EMPTY_STATES: Record<TEmptyStateType, IEmptyStateContent> = {
   },
 };
 
-export const DEFAULT_FORM_DATA: ITaskForm = {
+export const PROJECT_COLORS = [
+  {
+    name: 'Slate',
+    hex: '#64748b',
+  },
+  {
+    name: 'Red',
+    hex: '#ef4444',
+  },
+  {
+    name: 'Orange',
+    hex: '#f97316',
+  },
+  {
+    name: 'Amber',
+    hex: '#f59e0b',
+  },
+  {
+    name: 'Yellow',
+    hex: '#eab308',
+  },
+  {
+    name: 'Lime',
+    hex: '#84cc16',
+  },
+  {
+    name: 'Green',
+    hex: '#22c55e',
+  },
+  {
+    name: 'Emerald',
+    hex: '#10b981',
+  },
+  {
+    name: 'Teal',
+    hex: '#06b6d4',
+  },
+  {
+    name: 'Cyan',
+    hex: '#06b6d4',
+  },
+  {
+    name: 'Sky',
+    hex: '#0ea5e9',
+  },
+  {
+    name: 'Blue',
+    hex: '#06b6d4',
+  },
+  {
+    name: 'Indigo',
+    hex: '#6366f1',
+  },
+  {
+    name: 'Violet',
+    hex: '#8b5cf6',
+  },
+  {
+    name: 'Purple',
+    hex: '#a855f7',
+  },
+  {
+    name: 'Fuchsia',
+    hex: '#d946ef',
+  },
+  {
+    name: 'Pink',
+    hex: '#ec4899',
+  },
+  {
+    name: 'Rose',
+    hex: '#f43f5e',
+  },
+] as const;
+
+export const DEFAULT_TASK_FORM_DATA: ITaskForm = {
   content: '',
   due_date: null,
   projectId: null,
+};
+
+export const DEFAULT_PROJECT_FORM_DATA: IProject = {
+  id: null,
+  name: DEFAULT_PROJECT_NAME,
+  color_name: DEFAULT_PROJECT_COLOR_NAME,
+  color_hex: DEFAULT_PROJECT_COLOR_HEX,
 };

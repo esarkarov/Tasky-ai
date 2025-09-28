@@ -13,7 +13,7 @@ const CompletedPage = () => {
 
   return (
     <>
-      <Head title="Completed – Tasky AI" />
+      <Head title="Tasky AI | Completed" />
 
       <TopAppBar title="Completed" />
 

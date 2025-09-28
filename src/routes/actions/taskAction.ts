@@ -43,19 +43,22 @@ const deleteTask = async (data: ITask) => {
 };
 
 const taskAction: ActionFunction = async ({ request }) => {
+  const method = request.method;
   const data = (await request.json()) as ITask;
 
-  if (request.method === HTTP_METHODS.POST) {
+  if (method === HTTP_METHODS.POST) {
     return await createTask(data);
   }
 
-  if (request.method === HTTP_METHODS.PUT) {
+  if (method === HTTP_METHODS.PUT) {
     return await updateTask(data);
   }
 
-  if (request.method === HTTP_METHODS.DELETE) {
+  if (method === HTTP_METHODS.DELETE) {
     return await deleteTask(data);
   }
+
+  throw new Error('Invalid method');
 };
 
 export default taskAction;

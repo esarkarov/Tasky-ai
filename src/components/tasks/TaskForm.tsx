@@ -4,10 +4,10 @@ import { TaskContentInput } from '@/components/tasks/TaskContentInput';
 import { TaskFormActions } from '@/components/tasks/TaskFormActions';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { DEFAULT_FORM_DATA } from '@/constants';
+import { DEFAULT_TASK_FORM_DATA } from '@/constants';
 import { IProjectInfo, ITaskForm } from '@/interfaces';
 import { cn } from '@/lib/utils';
-import { TTaskMode } from '@/types';
+import { TActionMode } from '@/types';
 import * as chrono from 'chrono-node';
 import type { ClassValue } from 'clsx';
 import { useCallback, useEffect, useState } from 'react';
@@ -15,13 +15,13 @@ import { useCallback, useEffect, useState } from 'react';
 interface TaskFormProps {
   defaultFormData?: ITaskForm;
   className?: ClassValue;
-  mode: TTaskMode;
+  mode: TActionMode;
   onCancel?: () => void;
   onSubmit?: (formData: ITaskForm) => void;
 }
 
 export const TaskForm = ({
-  defaultFormData = DEFAULT_FORM_DATA,
+  defaultFormData = DEFAULT_TASK_FORM_DATA,
   className,
   mode,
   onCancel,

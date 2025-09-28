@@ -1,6 +1,8 @@
 import { ROUTES } from '@/constants';
+import projectAction from '@/routes/actions/projectAction';
 import completedLoader from '@/routes/loaders/completedLoader';
 import inboxLoader from '@/routes/loaders/inboxLoader';
+import projectsLoader from '@/routes/loaders/projectsLoader';
 import todayLoader from '@/routes/loaders/todayLoader';
 import upcomingLoader from '@/routes/loaders/upcomingLoader';
 import { createElement, lazy } from 'react';
@@ -43,5 +45,10 @@ export const appRoutes: RouteObject[] = [
     path: ROUTES.APP_PATHS.COMPLETED,
     element: createElement(CompletedPage),
     loader: completedLoader,
+  },
+  {
+    path: ROUTES.APP_PATHS.PROJECTS,
+    action: projectAction,
+    loader: projectsLoader,
   },
 ];
