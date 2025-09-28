@@ -14,7 +14,6 @@ export const generateProjectTasks = async (prompt: string) => {
         responseMimeType: 'application/json',
       },
     });
-    console.log('ai generated tasks:', response.text);
     return response.text;
   } catch (error) {
     console.log('Error generating tasks: ', error);

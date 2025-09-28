@@ -37,7 +37,7 @@ const createProject = async (data: IProjectForm) => {
     const promises = aiGeneratedTasks.map((task) => {
       return databases.createDocument(env.appwriteDatabaseId, 'tasks', generateID(), {
         ...task,
-        project: project?.$id,
+        projectId: project?.$id,
         userId: getUserId(),
       });
     });
