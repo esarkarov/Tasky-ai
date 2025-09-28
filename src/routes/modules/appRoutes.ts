@@ -24,6 +24,11 @@ export const CompletedPage = lazy(() =>
     default: module.default,
   }))
 );
+export const ProjectsPage = lazy(() =>
+  import('@/pages/ProjectsPage').then((module) => ({
+    default: module.default,
+  }))
+);
 
 export const appRoutes: RouteObject[] = [
   {
@@ -48,6 +53,7 @@ export const appRoutes: RouteObject[] = [
   },
   {
     path: ROUTES.APP_PATHS.PROJECTS,
+    element: createElement(ProjectsPage),
     action: projectAction,
     loader: projectsLoader,
   },

@@ -9,7 +9,7 @@ import { IEmptyStateContent, IProject, ITaskForm } from '@/interfaces';
 import { TEmptyStateType } from '@/types';
 import { Calendar1, CalendarDays, CircleCheck, Inbox } from 'lucide-react';
 
-export const TOOLTIP_DELAY = 500;
+export const TIMEOUT_DELAY = 500;
 export const SCROLL_THRESHOLD = 70;
 export const GEMINI_DEFAULT_MODEL = 'gemini-2.5-flash';
 const DEFAULT_PROJECT_NAME = 'Untitled';
