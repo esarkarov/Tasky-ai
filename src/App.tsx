@@ -3,7 +3,7 @@ import { RouterProvider } from 'react-router';
 import { dark } from '@clerk/themes';
 import { ROUTES } from '@/constants';
 import { env } from '@/config/env';
-import router from '@/routes';
+import router from '@/router';
 
 const App = () => {
   return (

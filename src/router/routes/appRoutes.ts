@@ -11,7 +11,7 @@ import {
   TodayPage,
   upcomingLoader,
   UpcomingPage,
-} from '@/routes/lazy';
+} from '@/router/lazy/lazy';
 import { RouteObject } from 'react-router';
 
 export const appRoutes: RouteObject[] = [
