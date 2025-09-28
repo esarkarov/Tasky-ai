@@ -2,12 +2,15 @@ import { Page, PageHeader, PageList, PageTitle } from '@/components/layout/Page'
 import { TopAppBar } from '@/components/navigation/TopAppBar';
 import ProjectCard from '@/components/projects/ProjectCard';
 import { ProjectFormDialog } from '@/components/projects/ProjectFormDialog';
+import { ProjectSearchField } from '@/components/projects/ProjectSearchField';
 import { Head } from '@/components/shared/Head';
 import { Button } from '@/components/ui/button';
-import { ROUTES } from '@/constants';
+import { ROUTES, TIMEOUT_DELAY } from '@/constants';
 import { IDataType } from '@/interfaces';
 import { cn } from '@/lib/utils';
+import { TSearchingState } from '@/types';
 import { Plus } from 'lucide-react';
+import { useCallback, useRef, useState } from 'react';
 import { useFetcher, useLoaderData } from 'react-router';
 
 const ProjectsPage = () => {
@@ -15,6 +18,26 @@ const ProjectsPage = () => {
   const fetcherData = fetcher.data as IDataType;
   const loaderData = useLoaderData() as IDataType;
   const { projects } = fetcherData || loaderData;
+  const searchTimeout = useRef<NodeJS.Timeout | null>(null);
+  const [searchingState, setSearchingState] = useState<TSearchingState>('idle');
+
+  const handleProjectSearch = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (searchTimeout.current) {
+        clearTimeout(searchTimeout.current);
+      }
+      const submitTarget = e.currentTarget.form;
+
+      searchTimeout.current = setTimeout(async () => {
+        setSearchingState('searching');
+        await fetcher.submit(submitTarget);
+        setSearchingState('idle');
+      }, TIMEOUT_DELAY);
+
+      setSearchingState('loading');
+    },
+    [fetcher]
+  );
 
   return (
     <>
@@ -40,7 +63,12 @@ const ProjectsPage = () => {
 
           <fetcher.Form
             method="get"
-            action={ROUTES.APP_PATHS.PROJECTS}></fetcher.Form>
+            action={ROUTES.PROJECTS}>
+            <ProjectSearchField
+              handleChange={handleProjectSearch}
+              searchingState={searchingState}
+            />
+          </fetcher.Form>
         </PageHeader>
 
         <PageList>
