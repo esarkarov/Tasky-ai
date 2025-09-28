@@ -1,17 +1,14 @@
 import { Page, PageHeader, PageList, PageTitle } from '@/components/layout/Page';
 import { TopAppBar } from '@/components/navigation/TopAppBar';
+import ProjectCard from '@/components/projects/ProjectCard';
 import { ProjectFormDialog } from '@/components/projects/ProjectFormDialog';
 import { Head } from '@/components/shared/Head';
 import { Button } from '@/components/ui/button';
 import { ROUTES } from '@/constants';
+import { IDataType } from '@/interfaces';
 import { cn } from '@/lib/utils';
-import type { Models } from 'appwrite';
 import { Plus } from 'lucide-react';
 import { useFetcher, useLoaderData } from 'react-router';
-
-interface IDataType {
-  projects: Models.DocumentList<Models.Document>;
-}
 
 const ProjectsPage = () => {
   const fetcher = useFetcher();
@@ -52,6 +49,13 @@ const ProjectsPage = () => {
           </div>
 
           <div className={cn('opacity-25')}>
+            {projects.documents.map((project) => (
+              <ProjectCard
+                key={project.$id}
+                project={project}
+              />
+            ))}
+
             {projects.total === 0 && (
               <div className="h-14 flex justify-center items-center text-muted-foreground">
                 No project found

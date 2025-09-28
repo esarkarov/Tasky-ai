@@ -46,6 +46,9 @@ export interface IAIGenTask {
   content: string;
   due_date: Date | null;
 }
+export interface IDataType {
+  projects: Models.DocumentList<Models.Document>;
+}
 export interface IEmptyStateContent {
   img?: IImg;
   title: string;

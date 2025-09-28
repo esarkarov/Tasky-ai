@@ -49,7 +49,7 @@ const createProject = async (data: IProjectForm) => {
     }
   }
 
-  return redirect(`${ROUTES.PROJECT(project?.$id)}`);
+  return redirect(ROUTES.PROJECT(project?.$id));
 };
 
 const projectAction: ActionFunction = async ({ request }) => {
