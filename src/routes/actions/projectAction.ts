@@ -1,7 +1,7 @@
 import { generateProjectTasks } from '@/api/googleAI';
 import { env } from '@/config/env';
 import { HTTP_METHODS, ROUTES } from '@/constants';
-import { IAIGenTask, IProjectForm } from '@/interfaces';
+import { IAIGenTask, IProject, IProjectForm } from '@/interfaces';
 import { databases } from '@/lib/appwrite';
 import { generateID, getUserId } from '@/lib/utils';
 import type { Models } from 'appwrite';
@@ -52,12 +52,48 @@ const createProject = async (data: IProjectForm) => {
   return redirect(ROUTES.PROJECT(project?.$id));
 };
 
+const updateProject = async (data: IProject) => {
+  const documentId = data.id;
+
+  if (!documentId) throw new Error('Project id not found.');
+
+  try {
+    return await databases.updateDocument(env.appwriteDatabaseId, 'projects', documentId, {
+      name: data.name,
+      color_name: data.color_name,
+      color_hex: data.color_hex,
+    });
+  } catch (err) {
+    console.log('Error updating project: ', err);
+  }
+};
+
+const deleteProject = async (data: IProject) => {
+  const documentId = data.id;
+
+  if (!documentId) throw new Error('No project found with this id.');
+
+  try {
+    await databases.deleteDocument(env.appwriteDatabaseId, 'projects', documentId);
+  } catch (err) {
+    console.log('Error deleting project: ', err);
+  }
+};
+
 const projectAction: ActionFunction = async ({ request }) => {
   const method = request.method;
   const data = (await request.json()) as IProjectForm;
 
   if (method === HTTP_METHODS.POST) {
     return await createProject(data);
+  }
+
+  if (method === HTTP_METHODS.PUT) {
+    return await updateProject(data);
+  }
+
+  if (method === HTTP_METHODS.DELETE) {
+    return await deleteProject(data);
   }
 
   throw new Error('Invalid method');
