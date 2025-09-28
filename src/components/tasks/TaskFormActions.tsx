@@ -1,9 +1,9 @@
-import { TTaskMode } from '@/types';
 import { Button } from '@/components/ui/button';
+import { TActionMode } from '@/types';
 import { SendHorizonal, X } from 'lucide-react';
 
 interface TaskFormActionsProps {
-  mode: TTaskMode;
+  mode: TActionMode;
   isValid: boolean;
   onCancel?: () => void;
   onSubmit: () => void;
