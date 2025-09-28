@@ -45,7 +45,7 @@ export interface IImg {
 export interface IAIGenTask {
   content: string;
   due_date: Date | null;
-};
+}
 export interface IEmptyStateContent {
   img?: IImg;
   title: string;
