@@ -2,15 +2,7 @@ import { env } from '@/config/env';
 import { RELATIVE_DAYS, ROUTES } from '@/constants';
 import { ITaskCounts } from '@/interfaces';
 import { clsx, type ClassValue } from 'clsx';
-import {
-  format,
-  formatRelative,
-  isBefore,
-  isSameYear,
-  isToday,
-  isTomorrow,
-  startOfToday,
-} from 'date-fns';
+import { format, formatRelative, isBefore, isSameYear, isToday, isTomorrow, startOfToday } from 'date-fns';
 import { redirect } from 'react-router';
 import { twMerge } from 'tailwind-merge';
 
@@ -38,10 +30,7 @@ export function formatCustomDate(date: string | number | Date): string {
   }
 }
 
-export function getTaskDueDateColorClass(
-  dueDate: Date | null,
-  completed?: boolean
-): string | undefined {
+export function getTaskDueDateColorClass(dueDate: Date | null, completed?: boolean): string | undefined {
   if (dueDate === null || completed === undefined) return;
 
   if (isBefore(dueDate, startOfToday()) && !completed) {

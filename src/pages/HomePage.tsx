@@ -21,8 +21,7 @@ const HomePage = () => {
             </h1>
 
             <p className="max-w-[48ch] text-foreground/80 md:text-lg lg:text-xl">
-              Simplify life for both you and your team with the AI powered task manager and to-do
-              list app.
+              Simplify life for both you and your team with the AI powered task manager and to-do list app.
             </p>
 
             <Button

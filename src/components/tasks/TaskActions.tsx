@@ -59,8 +59,7 @@ export const TaskActions = ({ task, onEdit, onDelete }: TaskActionsProps) => (
         <AlertDialogHeader>
           <AlertDialogTitle>Delete task?</AlertDialogTitle>
           <AlertDialogDescription>
-            The <strong>{truncateString(task.content, 48)}</strong> task will be permanently
-            deleted.
+            The <strong>{truncateString(task.content, 48)}</strong> task will be permanently deleted.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

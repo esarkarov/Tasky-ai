@@ -1,13 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from '@/components/ui/command';
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -36,9 +29,7 @@ export const ProjectForm = ({
   onSubmit,
 }: ProjectFormProps) => {
   const [projectName, setProjectName] = useState<string>(defaultFormData.name);
-  const [projectNameCharCount, setProjectNameCharCount] = useState<number>(
-    defaultFormData.name.length
-  );
+  const [projectNameCharCount, setProjectNameCharCount] = useState<number>(defaultFormData.name.length);
   const [colorName, setColorName] = useState<string>(defaultFormData.color_name);
   const [colorHex, setColorHex] = useState<string>(defaultFormData.color_hex);
   const [colorOpen, setColorOpen] = useState<boolean>(false);

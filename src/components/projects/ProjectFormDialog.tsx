@@ -13,11 +13,7 @@ type ProjectFormDialogProps = {
   method: TActionMethod;
 };
 
-export const ProjectFormDialog = ({
-  defaultFormData,
-  children,
-  method,
-}: ProjectFormDialogProps) => {
+export const ProjectFormDialog = ({ defaultFormData, children, method }: ProjectFormDialogProps) => {
   const fetcher = useFetcher();
   const { toast } = useToast();
 

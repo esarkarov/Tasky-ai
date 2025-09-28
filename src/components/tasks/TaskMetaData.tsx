@@ -15,8 +15,7 @@ export const TaskMetadata = ({ task, project }: TaskMetadataProps) => {
   const location = useLocation();
 
   const showDueDate = task.due_date && location.pathname !== ROUTES.TODAY;
-  const showProject =
-    location.pathname !== ROUTES.INBOX && location.pathname !== ROUTES.PROJECT(project?.$id);
+  const showProject = location.pathname !== ROUTES.INBOX && location.pathname !== ROUTES.PROJECT(project?.$id);
 
   if (!showDueDate && !showProject) return null;
 

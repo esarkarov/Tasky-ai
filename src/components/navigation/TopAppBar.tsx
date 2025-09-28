@@ -47,9 +47,7 @@ export const TopAppBar = ({ title, taskCount }: TopAppBarProps) => {
         )}>
         <h1 className="font-semibold truncate">{title}</h1>
 
-        {Boolean(taskCount) && (
-          <div className="text-xs text-muted-foreground">{taskCount} tasks</div>
-        )}
+        {Boolean(taskCount) && <div className="text-xs text-muted-foreground">{taskCount} tasks</div>}
       </div>
     </div>
   );

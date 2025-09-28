@@ -15,11 +15,7 @@ interface ProjectActionMenuProps extends DropdownMenuContentProps {
   defaultFormData: IProject;
 }
 
-export const ProjectActionMenu = ({
-  children,
-  defaultFormData,
-  ...props
-}: ProjectActionMenuProps) => {
+export const ProjectActionMenu = ({ children, defaultFormData, ...props }: ProjectActionMenuProps) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>

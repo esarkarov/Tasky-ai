@@ -57,9 +57,7 @@ const ProjectsPage = () => {
             ))}
 
             {projects.total === 0 && (
-              <div className="h-14 flex justify-center items-center text-muted-foreground">
-                No project found
-              </div>
+              <div className="h-14 flex justify-center items-center text-muted-foreground">No project found</div>
             )}
           </div>
         </PageList>

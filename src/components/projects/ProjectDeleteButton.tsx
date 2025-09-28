@@ -77,8 +77,8 @@ export const ProjectDeleteButton = ({ defaultFormData }: ProjectDeleteButtonProp
           <AlertDialogTitle>Delete project?</AlertDialogTitle>
 
           <AlertDialogDescription>
-            The <strong>{truncateString(defaultFormData.name, 48)}</strong> project and all of its
-            tasks will be permanently deleted.
+            The <strong>{truncateString(defaultFormData.name, 48)}</strong> project and all of its tasks will be
+            permanently deleted.
           </AlertDialogDescription>
         </AlertDialogHeader>
 
