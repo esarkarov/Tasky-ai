@@ -1,15 +1,16 @@
-import { ClerkProvider } from '@clerk/clerk-react';
-import { RouterProvider } from 'react-router';
-import { dark } from '@clerk/themes';
-import { ROUTES } from '@/constants';
 import { env } from '@/config/env';
+import { ROUTES } from '@/constants';
 import router from '@/router';
+import { ClerkProvider } from '@clerk/clerk-react';
+import { dark } from '@clerk/themes';
+import { RouterProvider } from 'react-router';
+import { Toaster } from '@/components/ui/toaster';
 
 const App = () => {
   return (
     <ClerkProvider
       publishableKey={env.clerkPublishableKey}
-      afterSignOutUrl={ROUTES.AUTH_SYNC}
+      afterSignOutUrl={ROUTES.HOME}
       signInForceRedirectUrl={ROUTES.AUTH_SYNC}
       signUpForceRedirectUrl={ROUTES.AUTH_SYNC}
       appearance={{
@@ -27,6 +28,7 @@ const App = () => {
         },
       }}>
       <RouterProvider router={router} />
+      <Toaster />
     </ClerkProvider>
   );
 };

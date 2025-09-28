@@ -1,9 +1,12 @@
 import { Logo } from '@/components/shared/Logo';
 import { Button } from '@/components/ui/button';
 import { ROUTES } from '@/constants';
+import { useAuth } from '@clerk/clerk-react';
 import { Link, useLocation } from 'react-router';
+import { UserChip } from '@/components/shared/UserChip';
 
 export const Header = () => {
+  const { isSignedIn } = useAuth();
   const location = useLocation();
   const isLogin = location.pathname == ROUTES.LOGIN;
   const isRegister = location.pathname == ROUTES.REGISTER;
@@ -16,18 +19,26 @@ export const Header = () => {
         </Link>
 
         <div className="flex items-center gap-2">
-          {!isLogin && (
-            <Button
-              asChild
-              variant="ghost">
-              <Link to={ROUTES.LOGIN}>Sign in</Link>
-            </Button>
-          )}
+          {isSignedIn ? (
+            <UserChip />
+          ) : (
+            <>
+              {!isLogin && (
+                <Button
+                  asChild
+                  variant="secondary">
+                  <Link to={ROUTES.LOGIN}>Log in</Link>
+                </Button>
+              )}
 
-          {!isRegister && (
-            <Button asChild>
-              <Link to={ROUTES.REGISTER}>Start for free</Link>
-            </Button>
+              {!isRegister && (
+                <Button
+                  asChild
+                  variant="default">
+                  <Link to={ROUTES.REGISTER}>Sign Up</Link>
+                </Button>
+              )}
+            </>
           )}
         </div>
       </div>

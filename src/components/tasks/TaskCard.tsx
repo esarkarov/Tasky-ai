@@ -76,7 +76,7 @@ export const TaskCard = ({ id, content, completed, dueDate, project }: TaskCardP
           className="my-1"
           defaultFormData={{
             ...task,
-            projectId: '9249dbb79876',
+            projectId: project?.$id ?? null,
           }}
           mode="edit"
           onCancel={() => setIsEditing(false)}

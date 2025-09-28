@@ -2,7 +2,7 @@ import { Loader } from '@/components/shared/Loader';
 import { ROUTES } from '@/constants';
 import ErrorPage from '@/pages/ErrorPage';
 import { AppLayout, appLoader, RootLayout, taskAction } from '@/router/lazy/lazy';
-import { appRoutes } from '@/router/routes/appRoutes';
+import { appRoutes } from '@/router/routes/protectedRoutes';
 import { publicRoutes } from '@/router/routes/publicRoutes';
 import { createElement } from 'react';
 import { createBrowserRouter } from 'react-router';

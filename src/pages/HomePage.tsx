@@ -2,9 +2,12 @@ import { heroBannerLg, heroBannerSm } from '@/assets';
 import { Head } from '@/components/shared/Head';
 import { Button } from '@/components/ui/button';
 import { ROUTES } from '@/constants';
+import { useAuth } from '@clerk/clerk-react';
 import { Link } from 'react-router';
 
 const HomePage = () => {
+  const { isSignedIn } = useAuth();
+
   return (
     <>
       <Head title="Tasky AI | AI-Powered Task Management App" />
@@ -24,11 +27,21 @@ const HomePage = () => {
               Simplify life for both you and your team with the AI powered task manager and to-do list app.
             </p>
 
-            <Button
-              asChild
-              size="lg">
-              <Link to={ROUTES.REGISTER}>Start for free</Link>
-            </Button>
+            <div className="mt-8 flex gap-4 justify-center">
+              {isSignedIn ? (
+                <Button
+                  asChild
+                  size="lg">
+                  <Link to={ROUTES.APP}>Go to Dashboard</Link>
+                </Button>
+              ) : (
+                <Button
+                  asChild
+                  size="lg">
+                  <Link to={ROUTES.REGISTER}>Get Started</Link>
+                </Button>
+              )}
+            </div>
           </div>
 
           <figure className="bg-secondary rounded-2xl overflow-hidden aspect-square max-md:max-w-[480px] max-md:mx-auto md:aspect-video">

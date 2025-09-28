@@ -27,6 +27,7 @@ export const ROUTES = {
   TODAY: '/app/today',
   UPCOMING: '/app/upcoming',
   COMPLETED: '/app/completed',
+  PROJECTS: '/app/projects',
   PROJECT: (id: string | undefined) => `/app/projects/${id}`,
   NOT_FOUND: '*',
 

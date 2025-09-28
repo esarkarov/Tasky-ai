@@ -83,7 +83,7 @@ export function generateID(): string {
 }
 
 export function getUserId(): string {
-  const clerkUserId = localStorage.getItem(env.clerkUserStorageKey);
+  const clerkUserId = sessionStorage.getItem(env.clerkUserStorageKey);
 
   if (!clerkUserId) {
     redirect(ROUTES.AUTH_SYNC);

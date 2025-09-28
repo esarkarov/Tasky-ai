@@ -2,8 +2,8 @@ import { Textarea } from '@/components/ui/textarea';
 
 interface TaskContentInputProps {
   value: string;
-  onChange: (value: string) => void;
   onSubmit: () => void;
+  onChange: (value: string) => void;
 }
 
 export const TaskContentInput = ({ value, onChange, onSubmit }: TaskContentInputProps) => {

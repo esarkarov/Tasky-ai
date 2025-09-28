@@ -21,7 +21,7 @@ export const TaskFormActions = ({ mode, isValid, onCancel, onSubmit }: TaskFormA
     <Button
       disabled={!isValid}
       onClick={onSubmit}>
-      <span className="max-md:hidden">{mode === 'create' ? 'Add task' : 'Save'}</span>
+      <span className="max-md:hidden">{mode === 'create' ? 'Add' : 'Save'}</span>
       <SendHorizonal className="md:hidden" />
     </Button>
   </div>

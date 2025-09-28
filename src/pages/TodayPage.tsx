@@ -3,7 +3,7 @@ import { TopAppBar } from '@/components/navigation/TopAppBar';
 import { Head } from '@/components/shared/Head';
 import { TaskCard } from '@/components/tasks/TaskCard';
 import { TaskCardSkeleton } from '@/components/tasks/TaskCardSkeleton';
-import { TaskCreateButton } from '@/components/tasks/TaskCreateButton';
+import { TaskAddButton } from '@/components/tasks/TaskAddButton';
 import { TaskEmptyState } from '@/components/tasks/TaskEmptyState';
 import { TaskForm } from '@/components/tasks/TaskForm';
 import { HTTP_METHODS, ROUTES } from '@/constants';
@@ -66,7 +66,7 @@ const TodayPage = () => {
 
           {fetcher.state !== 'idle' && <TaskCardSkeleton />}
 
-          {!isFormOpen && <TaskCreateButton onClick={() => setIsFormOpen(true)} />}
+          {!isFormOpen && <TaskAddButton onClick={() => setIsFormOpen(true)} />}
 
           {!tasks.total && !isFormOpen && <TaskEmptyState />}
 

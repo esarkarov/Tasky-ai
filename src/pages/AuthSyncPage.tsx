@@ -12,8 +12,8 @@ const AuthSyncPage = () => {
     if (!isLoaded) return;
 
     if (!isSignedIn) {
-      if (localStorage.getItem(env.clerkUserStorageKey)) {
-        localStorage.removeItem(env.clerkUserStorageKey);
+      if (sessionStorage.getItem(env.clerkUserStorageKey)) {
+        sessionStorage.removeItem(env.clerkUserStorageKey);
       }
 
       navigate(ROUTES.HOME);
@@ -21,7 +21,7 @@ const AuthSyncPage = () => {
     }
 
     if (isSignedIn) {
-      localStorage.setItem(env.clerkUserStorageKey, userId);
+      sessionStorage.setItem(env.clerkUserStorageKey, userId);
       navigate(ROUTES.TODAY);
     }
   }, [userId, isSignedIn, isLoaded, navigate]);

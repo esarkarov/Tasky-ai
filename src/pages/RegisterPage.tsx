@@ -9,7 +9,17 @@ const RegisterPage = () => {
 
       <section>
         <div className="container flex justify-center">
-          <SignUp signInUrl={ROUTES.LOGIN} />
+          <SignUp
+            routing="path"
+            path={ROUTES.REGISTER}
+            signInUrl={ROUTES.LOGIN}
+            appearance={{
+              elements: {
+                rootBox: 'mx-auto',
+                card: 'shadow-lg',
+              },
+            }}
+          />
         </div>
       </section>
     </>
