@@ -76,7 +76,7 @@ const ProjectsPage = () => {
             <div className="text-sm">{projects.total} projects</div>
           </div>
 
-          <div className={cn('opacity-25')}>
+          <div className={cn(searchingState === 'searching' && 'opacity-25')}>
             {projects.documents.map((project) => (
               <ProjectCard
                 key={project.$id}

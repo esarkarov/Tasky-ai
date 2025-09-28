@@ -37,6 +37,7 @@ export const ROUTES = {
     UPCOMING: 'upcoming',
     COMPLETED: 'completed',
     PROJECTS: 'projects',
+    PROJECT_DETAIL: 'projects/:projectId',
   },
 } as const;
 

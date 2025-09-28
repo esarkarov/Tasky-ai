@@ -13,6 +13,7 @@ export const TodayPage = async () => createElement((await import('@/pages/TodayP
 export const UpcomingPage = async () => createElement((await import('@/pages/UpcomingPage')).default);
 export const CompletedPage = async () => createElement((await import('@/pages/CompletedPage')).default);
 export const ProjectsPage = async () => createElement((await import('@/pages/ProjectsPage')).default);
+export const ProjectDetailPage = async () => createElement((await import('@/pages/ProjectDetailPage')).default);
 
 export const taskAction = async () => (await import('@/router/actions/taskAction')).default;
 export const projectAction = async () => (await import('@/router/actions/projectAction')).default;
@@ -23,3 +24,4 @@ export const inboxLoader = async () => (await import('@/router/loaders/inboxLoad
 export const projectsLoader = async () => (await import('@/router/loaders/projectsLoader')).default;
 export const todayLoader = async () => (await import('@/router/loaders/todayLoader')).default;
 export const upcomingLoader = async () => (await import('@/router/loaders/upcomingLoader')).default;
+export const projectDetailLoader = async () => (await import('@/router/loaders/projectDetailLoader')).default;

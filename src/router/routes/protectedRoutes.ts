@@ -5,6 +5,8 @@ import {
   inboxLoader,
   InboxPage,
   projectAction,
+  projectDetailLoader,
+  ProjectDetailPage,
   projectsLoader,
   ProjectsPage,
   todayLoader,
@@ -49,6 +51,13 @@ export const appRoutes: RouteObject[] = [
       element: ProjectsPage,
       action: projectAction,
       loader: projectsLoader,
+    },
+  },
+  {
+    path: ROUTES.APP_PATHS.PROJECT_DETAIL,
+    lazy: {
+      element: ProjectDetailPage,
+      loader: projectDetailLoader,
     },
   },
 ];
