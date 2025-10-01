@@ -5,9 +5,11 @@ import { TaskFormActions } from '@/components/tasks/TaskFormActions';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { DEFAULT_TASK_FORM_DATA } from '@/constants';
+import { useProjectList } from '@/contexts/ProjectContext';
 import { IProjectInfo, ITaskForm } from '@/interfaces';
 import { cn } from '@/lib/utils';
 import { TActionMode } from '@/types';
+import { Models } from 'appwrite';
 import * as chrono from 'chrono-node';
 import type { ClassValue } from 'clsx';
 import { useCallback, useEffect, useState } from 'react';
@@ -27,9 +29,10 @@ export const TaskForm = ({
   onCancel,
   onSubmit,
 }: TaskFormProps) => {
+  const projects = useProjectList();
   const [taskContent, setTaskContent] = useState(defaultFormData.content);
   const [dueDate, setDueDate] = useState(defaultFormData.due_date);
-  const [projectId] = useState(defaultFormData.projectId);
+  const [projectId, setProjectId] = useState(defaultFormData.projectId);
   const [projectInfo, setProjectInfo] = useState<IProjectInfo>({
     name: '',
     colorHex: '',
@@ -42,12 +45,13 @@ export const TaskForm = ({
 
   useEffect(() => {
     if (projectId) {
+      const { name, color_hex } = projects?.documents.find(({ $id }) => projectId === $id) as Models.Document;
       setProjectInfo({
-        name: 'Project Name',
-        colorHex: '#000000',
+        name: name,
+        colorHex: color_hex,
       });
     }
-  }, [projectId]);
+  }, [projectId, projects?.documents]);
 
   useEffect(() => {
     setFormData((prevFormData) => ({
@@ -97,7 +101,12 @@ export const TaskForm = ({
       <Separator />
 
       <CardFooter className="grid grid-cols-[minmax(0,1fr),max-content] gap-2 p-2">
-        <ProjectSelector projectInfo={projectInfo} />
+        <ProjectSelector
+          setProjectInfo={setProjectInfo}
+          setProjectId={setProjectId}
+          projectInfo={projectInfo}
+          projects={projects}
+        />
 
         <TaskFormActions
           isValid={isValid}

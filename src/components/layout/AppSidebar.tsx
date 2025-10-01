@@ -35,7 +35,7 @@ export const AppSidebar = () => {
           onItemClick={handleNavigationClick}
         />
 
-        <ProjectsSection />
+        <ProjectsSection onItemClick={handleNavigationClick} />
       </SidebarContent>
 
       <SidebarFooter>

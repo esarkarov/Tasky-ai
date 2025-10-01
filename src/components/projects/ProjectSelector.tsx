@@ -1,16 +1,20 @@
 import { Button } from '@/components/ui/button';
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandList } from '@/components/ui/command';
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { IProjectInfo } from '@/interfaces';
-import { ChevronDown, Hash, Inbox } from 'lucide-react';
+import { TProjectList } from '@/types';
+import { Check, ChevronDown, Hash, Inbox } from 'lucide-react';
 import { useState } from 'react';
 
 interface ProjectSelectorProps {
+  setProjectInfo: (value: React.SetStateAction<IProjectInfo>) => void;
+  setProjectId: (value: React.SetStateAction<string | null>) => void;
   projectInfo: IProjectInfo;
+  projects: TProjectList;
 }
 
-export const ProjectSelector = ({ projectInfo }: ProjectSelectorProps) => {
+export const ProjectSelector = ({ projectInfo, projects, setProjectId, setProjectInfo }: ProjectSelectorProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   return (
@@ -38,7 +42,24 @@ export const ProjectSelector = ({ projectInfo }: ProjectSelectorProps) => {
           <CommandList>
             <ScrollArea>
               <CommandEmpty>No project found.</CommandEmpty>
-              <CommandGroup />
+              <CommandGroup>
+                {projects &&
+                  projects.documents.map(({ $id, name, color_hex }) => (
+                    <CommandItem
+                      key={$id}
+                      onSelect={(selectedValue) => {
+                        setProjectInfo({
+                          name: selectedValue === projectInfo.name ? '' : name,
+                          colorHex: selectedValue === projectInfo.name ? undefined : color_hex,
+                        });
+                        setProjectId(selectedValue === projectInfo.name ? null : $id);
+                        setIsOpen(false);
+                      }}>
+                      <Hash color={color_hex} /> {name}
+                      {projectInfo.name === name && <Check className="ms-auto" />}
+                    </CommandItem>
+                  ))}
+              </CommandGroup>
             </ScrollArea>
           </CommandList>
         </Command>
