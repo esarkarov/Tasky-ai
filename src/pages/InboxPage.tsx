@@ -57,7 +57,7 @@ const InboxPage = () => {
 
           {!isFormOpen && <TaskAddButton onClick={() => setIsFormOpen(true)} />}
 
-          {!isFormOpen && <TaskEmptyState type="inbox" />}
+          {!isFormOpen && !tasks.documents && <TaskEmptyState type="inbox" />}
 
           {isFormOpen && (
             <TaskForm

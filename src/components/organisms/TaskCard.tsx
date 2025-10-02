@@ -43,14 +43,20 @@ export const TaskCard = ({ id, content, completed, dueDate, project }: TaskCardP
 
   const handleSubmitEdit = useCallback(
     (formData: ITaskForm) => {
-      fetcher.submit(JSON.stringify(formData), {
-        action: ROUTES.APP,
-        method: HTTP_METHODS.PUT,
-        encType: 'application/json',
-      });
+      fetcher.submit(
+        JSON.stringify({
+          ...formData,
+          id: task.id,
+        }),
+        {
+          action: ROUTES.APP,
+          method: HTTP_METHODS.PUT,
+          encType: 'application/json',
+        }
+      );
       setIsEditing(false);
     },
-    [fetcher]
+    [fetcher, task.id]
   );
 
   const handleDelete = useCallback(() => {

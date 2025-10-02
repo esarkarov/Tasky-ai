@@ -1,17 +1,21 @@
 import { AITaskGenerator } from '@/components/molecules/AITaskGenerator';
-import { ColorSelector } from '@/components/molecules/ColorSelector';
 import { ProjectNameInput } from '@/components/molecules/ProjectNameInput';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
+import { Label } from '@/components/ui/label';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
-import { DEFAULT_PROJECT_FORM_DATA } from '@/constants';
+import { DEFAULT_PROJECT_FORM_DATA, PROJECT_COLORS } from '@/constants';
 import { IProject, IProjectForm } from '@/interfaces';
 import { TActionMode } from '@/types';
+import { Check, ChevronDown, Circle } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
 
 interface ProjectFormProps {
-  defaultFormData?: IProject;
   mode: TActionMode;
+  defaultFormData?: IProject;
   onCancel?: () => void;
   onSubmit?: (formData: IProjectForm) => void;
 }
@@ -27,6 +31,7 @@ export const ProjectForm = ({
   const [colorHex, setColorHex] = useState<string>(defaultFormData.color_hex);
   const [aiTaskGen, setAiTaskGen] = useState<boolean>(false);
   const [taskGenPrompt, setTaskGenPrompt] = useState<string>('');
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const formData = useMemo<IProjectForm>(
     () => ({
@@ -62,9 +67,11 @@ export const ProjectForm = ({
     [handleSubmit]
   );
 
-  const handleColorChange = (name: string, hex: string) => {
+  const handleColorSelect = (value: string) => {
+    const [name, hex] = value.split('=');
     setColorName(name);
     setColorHex(hex);
+    setIsOpen(false);
   };
 
   return (
@@ -82,11 +89,49 @@ export const ProjectForm = ({
           onKeyDown={handleKeySubmit}
         />
 
-        <ColorSelector
-          colorName={colorName}
-          colorHex={colorHex}
-          onColorChange={handleColorChange}
-        />
+        <div>
+          <Label htmlFor="color">Color</Label>
+          <Popover
+            modal
+            open={isOpen}
+            onOpenChange={setIsOpen}>
+            <PopoverTrigger asChild>
+              <Button
+                variant="outline"
+                className="w-full mt-2"
+                id="color">
+                <Circle fill={colorHex} />
+                {colorName}
+                <ChevronDown className="ms-auto" />
+              </Button>
+            </PopoverTrigger>
+
+            <PopoverContent
+              align="start"
+              className="p-0 w-[478px] max-sm:w-[360px]">
+              <Command>
+                <CommandInput placeholder="Search color..." />
+                <CommandList>
+                  <ScrollArea>
+                    <CommandEmpty>No color found.</CommandEmpty>
+                    <CommandGroup>
+                      {PROJECT_COLORS.map(({ name, hex }) => (
+                        <CommandItem
+                          key={name}
+                          value={`${name}=${hex}`}
+                          onSelect={handleColorSelect}>
+                          <Circle fill={hex} />
+                          {name}
+                          {colorName === name && <Check className="ms-auto" />}
+                        </CommandItem>
+                      ))}
+                    </CommandGroup>
+                  </ScrollArea>
+                </CommandList>
+              </Command>
+            </PopoverContent>
+          </Popover>
+        </div>
 
         {mode === 'create' && (
           <AITaskGenerator
