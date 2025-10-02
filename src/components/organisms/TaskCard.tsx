@@ -1,10 +1,11 @@
 import { TaskForm } from '@/components/organisms/TaskForm';
-import { HTTP_METHODS, ROUTES } from '@/constants';
 import { ITask, ITaskForm } from '@/interfaces';
 import type { Models } from 'appwrite';
 import { useCallback, useState } from 'react';
 import { useFetcher } from 'react-router';
 import { TaskDisplay } from './TaskDisplay';
+import { ROUTES } from '@/constants/routes';
+import { HTTP_METHODS } from '@/constants/http';
 
 interface TaskCardProps {
   id: string;

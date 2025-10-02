@@ -1,4 +1,4 @@
-import { EMPTY_STATES } from '@/constants';
+import { EMPTY_STATES } from '@/constants/states';
 import { TEmptyStateType } from '@/types';
 
 interface TaskEmptyStateProps {

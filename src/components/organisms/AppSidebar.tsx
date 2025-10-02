@@ -3,7 +3,7 @@ import { UserChip } from '@/components/atoms/UserChip';
 import { ProjectsSection } from '@/components/organisms/ProjectsSection';
 import { SideNavMenu } from '@/components/organisms/SideNavMenu';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, useSidebar } from '@/components/ui/sidebar';
-import { ROUTES } from '@/constants';
+import { ROUTES } from '@/constants/routes';
 import { IAppLoaderData } from '@/interfaces';
 import { Link, useLoaderData, useLocation } from 'react-router';
 

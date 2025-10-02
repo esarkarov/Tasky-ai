@@ -1,7 +1,7 @@
 import { AppSidebar } from '@/components/organisms/AppSidebar';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { TooltipProvider } from '@/components/ui/tooltip';
-import { TIMEOUT_DELAY } from '@/constants';
+import { TIMING } from '@/constants/timing';
 import { ProjectProvider } from '@/contexts/ProjectContext';
 import { IAppLoaderData } from '@/interfaces';
 import { cn } from '@/lib/utils';
@@ -16,7 +16,7 @@ export const AppTemplate = () => {
     <ProjectProvider projects={projects}>
       <SidebarProvider>
         <TooltipProvider
-          delayDuration={TIMEOUT_DELAY}
+          delayDuration={TIMING.DELAY_DURATION}
           disableHoverableContent>
           <AppSidebar />
 

@@ -1,6 +1,7 @@
 import { generateProjectTasks } from '@/api/googleAI';
 import { env } from '@/config/env';
-import { HTTP_METHODS, ROUTES } from '@/constants';
+import { HTTP_METHODS } from '@/constants/http';
+import { ROUTES } from '@/constants/routes';
 import { IAIGenTask, IProject, IProjectForm } from '@/interfaces';
 import { databases } from '@/lib/appwrite';
 import { generateID, getUserId } from '@/lib/utils';

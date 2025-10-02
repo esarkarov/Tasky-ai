@@ -1,5 +1,6 @@
 import { env } from '@/config/env';
-import { RELATIVE_DAYS, ROUTES } from '@/constants';
+import { ROUTES } from '@/constants/routes';
+import { WEEKDAYS } from '@/constants/weekdays';
 import { ITaskCounts } from '@/interfaces';
 import { clsx, type ClassValue } from 'clsx';
 import { format, formatRelative, isBefore, isSameYear, isToday, isTomorrow, startOfToday } from 'date-fns';
@@ -19,7 +20,7 @@ export function formatCustomDate(date: string | number | Date): string {
 
   const relativeDay = toTitleCase(formatRelative(date, today).split(' at ')[0]);
 
-  if (RELATIVE_DAYS.includes(relativeDay)) {
+  if (WEEKDAYS.includes(relativeDay)) {
     return relativeDay;
   }
 

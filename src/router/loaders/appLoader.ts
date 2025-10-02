@@ -1,5 +1,5 @@
 import { env } from '@/config/env';
-import { ROUTES } from '@/constants';
+import { ROUTES } from '@/constants/routes';
 import { ITaskCounts } from '@/interfaces';
 import { databases, Query } from '@/lib/appwrite';
 import { getUserId } from '@/lib/utils';

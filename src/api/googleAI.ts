@@ -1,4 +1,4 @@
-import { GEMINI_DEFAULT_MODEL } from '@/constants';
+import { GEMINI_DEFAULT_MODEL } from '@/constants/default';
 import { genAI } from '@/lib/googleAI';
 import { generateContents } from '@/lib/utils';
 

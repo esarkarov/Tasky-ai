@@ -1,4 +1,4 @@
-import { ROUTES } from '@/constants';
+import { ROUTES } from '@/constants/routes';
 import { AuthSyncPage, HomePage, LoginPage, RegisterPage } from '@/router/lazy/lazy';
 import { RouteObject } from 'react-router';
 

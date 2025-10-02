@@ -1,6 +1,7 @@
 import { TaskForm } from '@/components/organisms/TaskForm';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
-import { HTTP_METHODS, ROUTES } from '@/constants';
+import { HTTP_METHODS } from '@/constants/http';
+import { ROUTES } from '@/constants/routes';
 import { ITaskForm } from '@/interfaces';
 import { startOfToday } from 'date-fns';
 import type { PropsWithChildren } from 'react';

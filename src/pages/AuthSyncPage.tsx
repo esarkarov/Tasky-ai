@@ -1,5 +1,5 @@
 import { env } from '@/config/env';
-import { ROUTES } from '@/constants';
+import { ROUTES } from '@/constants/routes';
 import { useAuth } from '@clerk/clerk-react';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router';

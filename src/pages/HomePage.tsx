@@ -1,7 +1,7 @@
 import { heroBannerLg, heroBannerSm } from '@/assets';
 import { Head } from '@/components/atoms/Head';
 import { Button } from '@/components/ui/button';
-import { ROUTES } from '@/constants';
+import { ROUTES } from '@/constants/routes';
 import { useAuth } from '@clerk/clerk-react';
 import { Link } from 'react-router';
 

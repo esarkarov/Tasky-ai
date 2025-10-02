@@ -1,7 +1,7 @@
 import { Logo } from '@/components/atoms/Logo';
 import { UserChip } from '@/components/atoms/UserChip';
 import { Button } from '@/components/ui/button';
-import { ROUTES } from '@/constants';
+import { ROUTES } from '@/constants/routes';
 import { useAuth } from '@clerk/clerk-react';
 import { Link, useLocation } from 'react-router';
 

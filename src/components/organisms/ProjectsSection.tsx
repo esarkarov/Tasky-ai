@@ -11,7 +11,7 @@ import {
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { ROUTES } from '@/constants';
+import { ROUTES } from '@/constants/routes';
 import { useProjectList } from '@/contexts/ProjectContext';
 import { ChevronRight, Hash, MoreHorizontal, Plus } from 'lucide-react';
 import { Link } from 'react-router';

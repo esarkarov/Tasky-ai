@@ -1,5 +1,5 @@
-import { Separator } from '@/components/ui/separator';
-import { SOCIAL_LINKS } from '@/constants';
+import { SOCIAL_LINKS } from '@/constants/links';
+import { FooterLink } from '../atoms/FooterLink';
 
 export const Footer = () => {
   return (
@@ -9,23 +9,11 @@ export const Footer = () => {
 
         <ul className="flex flex-wrap items-center">
           {SOCIAL_LINKS.map(({ href, label }, index) => (
-            <li
-              key={index}
-              className="flex items-center">
-              <a
-                href={href}
-                className="text-sm text-muted-foreground hover:text-foreground"
-                target="_blank">
-                {label}
-              </a>
-
-              {index !== SOCIAL_LINKS.length - 1 && (
-                <Separator
-                  orientation="vertical"
-                  className="h-3 mx-3"
-                />
-              )}
-            </li>
+            <FooterLink
+              href={href}
+              label={label}
+              index={index}
+            />
           ))}
         </ul>
       </div>

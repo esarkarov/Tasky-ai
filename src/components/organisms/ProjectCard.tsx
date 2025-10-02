@@ -1,6 +1,6 @@
 import { ProjectActionMenu } from '@/components/organisms/ProjectActionMenu';
 import { Button } from '@/components/ui/button';
-import { ROUTES } from '@/constants';
+import { ROUTES } from '@/constants/routes';
 import type { Models } from 'appwrite';
 import { Hash, MoreHorizontal } from 'lucide-react';
 import { Link } from 'react-router';

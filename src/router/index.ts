@@ -1,5 +1,5 @@
 import { Loader } from '@/components/atoms/Loader';
-import { ROUTES } from '@/constants';
+import { ROUTES } from '@/constants/routes';
 import ErrorPage from '@/pages/ErrorPage';
 import { appLoader, AppTemplate, RootTemplate, taskAction } from '@/router/lazy/lazy';
 import { appRoutes } from '@/router/routes/protectedRoutes';

@@ -1,0 +1,5 @@
+export const TIMING = {
+  DELAY_DURATION: 500,
+  TOAST_DURATION: 3000,
+  SCROLL_THRESHOLD: 70,
+} as const;

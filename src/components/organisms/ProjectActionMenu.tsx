@@ -7,7 +7,9 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { HTTP_METHODS, ROUTES } from '@/constants';
+import { HTTP_METHODS } from '@/constants/http';
+import { ROUTES } from '@/constants/routes';
+import { TIMING } from '@/constants/timing';
 import { useToast } from '@/hooks/use-toast';
 import { IProject } from '@/interfaces';
 import { truncateString } from '@/lib/utils';
@@ -47,7 +49,7 @@ export const ProjectActionMenu = ({ children, defaultFormData, ...props }: Proje
         id,
         title: 'Project deleted',
         description: `The project ${truncateString(defaultFormData.name, 32)} has been successfully deleted.`,
-        duration: 5000,
+        duration: TIMING.TOAST_DURATION,
       });
     } catch (err) {
       console.log('Error deleting project: ', err);
@@ -55,7 +57,7 @@ export const ProjectActionMenu = ({ children, defaultFormData, ...props }: Proje
         id,
         title: 'Error deleting project',
         description: `An error occurred while deleting the project.`,
-        duration: 5000,
+        duration: TIMING.TOAST_DURATION,
       });
     }
   }, [defaultFormData, fetcher, location.pathname, navigate, toast]);

@@ -6,11 +6,12 @@ import { TaskEmptyState } from '@/components/atoms/TaskEmptyState';
 import { TaskForm } from '@/components/organisms/TaskForm';
 import { TopAppBar } from '@/components/organisms/TopAppBar';
 import { TaskCard } from '@/components/organisms/TaskCard';
-import { HTTP_METHODS, ROUTES } from '@/constants';
 import { ITaskForm } from '@/interfaces';
 import { Models } from 'appwrite';
 import { useCallback, useState } from 'react';
 import { useFetcher, useLoaderData } from 'react-router';
+import { ROUTES } from '@/constants/routes';
+import { HTTP_METHODS } from '@/constants/http';
 
 const InboxPage = () => {
   const fetcher = useFetcher();

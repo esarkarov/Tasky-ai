@@ -1,5 +1,5 @@
 import { Head } from '@/components/atoms/Head';
-import { ROUTES } from '@/constants';
+import { ROUTES } from '@/constants/routes';
 import { SignUp } from '@clerk/clerk-react';
 
 const RegisterPage = () => {

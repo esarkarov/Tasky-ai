@@ -1,6 +1,6 @@
 import { ProjectForm } from '@/components/organisms/ProjectForm';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
-import { ROUTES } from '@/constants';
+import { ROUTES } from '@/constants/routes';
 import { useToast } from '@/hooks/use-toast';
 import { IProject, IProjectForm } from '@/interfaces';
 import { truncateString } from '@/lib/utils';

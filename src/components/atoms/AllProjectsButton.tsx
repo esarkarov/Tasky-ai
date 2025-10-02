@@ -1,4 +1,4 @@
-import { ROUTES } from '@/constants';
+import { ROUTES } from '@/constants/routes';
 import { MoreHorizontal } from 'lucide-react';
 import { Link } from 'react-router';
 import { SidebarMenuButton } from '@/components/ui/sidebar';

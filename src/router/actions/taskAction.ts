@@ -1,5 +1,5 @@
 import { env } from '@/config/env';
-import { HTTP_METHODS } from '@/constants';
+import { HTTP_METHODS } from '@/constants/http';
 import { ITask } from '@/interfaces';
 import { databases } from '@/lib/appwrite';
 import { generateID, getUserId } from '@/lib/utils';

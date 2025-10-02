@@ -1,5 +1,5 @@
 import { CardFooter } from '@/components/ui/card';
-import { ROUTES } from '@/constants';
+import { ROUTES } from '@/constants/routes';
 import { ITask } from '@/interfaces';
 import { cn, formatCustomDate, getTaskDueDateColorClass } from '@/lib/utils';
 import { Models } from 'appwrite';

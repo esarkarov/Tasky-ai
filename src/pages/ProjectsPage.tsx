@@ -5,7 +5,8 @@ import ProjectCard from '@/components/organisms/ProjectCard';
 import { ProjectFormDialog } from '@/components/organisms/ProjectFormDialog';
 import { TopAppBar } from '@/components/organisms/TopAppBar';
 import { Button } from '@/components/ui/button';
-import { ROUTES, TIMEOUT_DELAY } from '@/constants';
+import { ROUTES } from '@/constants/routes';
+import { TIMING } from '@/constants/timing';
 import { IDataType } from '@/interfaces';
 import { cn } from '@/lib/utils';
 import { TSearchingState } from '@/types';
@@ -32,7 +33,7 @@ const ProjectsPage = () => {
         setSearchingState('searching');
         await fetcher.submit(submitTarget);
         setSearchingState('idle');
-      }, TIMEOUT_DELAY);
+      }, TIMING.DELAY_DURATION);
 
       setSearchingState('loading');
     },

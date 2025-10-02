@@ -7,7 +7,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { SIDEBAR_LINKS } from '@/constants';
+import { SIDEBAR_LINKS } from '@/constants/links';
 import { ITaskCounts } from '@/interfaces';
 import { CirclePlus } from 'lucide-react';
 

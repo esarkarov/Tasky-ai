@@ -3,7 +3,7 @@ import { CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } fr
 import { Label } from '@/components/ui/label';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { PROJECT_COLORS } from '@/constants';
+import { PROJECT_COLORS } from '@/constants/colors';
 import { Check, ChevronDown, Circle, Command } from 'lucide-react';
 import { useState } from 'react';
 
