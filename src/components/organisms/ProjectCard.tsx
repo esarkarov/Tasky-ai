@@ -1,4 +1,4 @@
-import { ProjectActionMenu } from '@/components/projects/ProjectActionMenu';
+import { ProjectActionMenu } from '@/components/organisms/ProjectActionMenu';
 import { Button } from '@/components/ui/button';
 import { ROUTES } from '@/constants';
 import type { Models } from 'appwrite';

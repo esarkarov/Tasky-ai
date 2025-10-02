@@ -1,4 +1,4 @@
-import { ProjectFormDialog } from '@/components/projects/ProjectFormDialog';
+import { ProjectFormDialog } from '@/components/organisms/ProjectFormDialog';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import {
   SidebarGroup,
@@ -15,7 +15,7 @@ import { ROUTES } from '@/constants';
 import { useProjectList } from '@/contexts/ProjectContext';
 import { ChevronRight, Hash, MoreHorizontal, Plus } from 'lucide-react';
 import { Link } from 'react-router';
-import { AllProjectsButton } from './AllProjectsButton';
+import { AllProjectsButton } from '../atoms/AllProjectsButton';
 import { ProjectActionMenu } from './ProjectActionMenu';
 
 interface ProjectsSectionProps {

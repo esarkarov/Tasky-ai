@@ -1,7 +1,7 @@
-import { SideNavMenu } from '@/components/navigation/SideNavMenu';
-import { ProjectsSection } from '@/components/projects/ProjectsSection';
-import { Logo } from '@/components/shared/Logo';
-import { UserChip } from '@/components/shared/UserChip';
+import { Logo } from '@/components/atoms/Logo';
+import { UserChip } from '@/components/atoms/UserChip';
+import { ProjectsSection } from '@/components/organisms/ProjectsSection';
+import { SideNavMenu } from '@/components/organisms/SideNavMenu';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, useSidebar } from '@/components/ui/sidebar';
 import { ROUTES } from '@/constants';
 import { IAppLoaderData } from '@/interfaces';

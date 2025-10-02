@@ -2,9 +2,10 @@ import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 import { TSearchingState } from '@/types';
 import { Loader2, Search } from 'lucide-react';
+import { ChangeEventHandler } from 'react';
 
 interface ProjectSearchFieldProps {
-  handleChange: React.ChangeEventHandler<HTMLInputElement>;
+  handleChange: ChangeEventHandler<HTMLInputElement>;
   searchingState: TSearchingState;
 }
 

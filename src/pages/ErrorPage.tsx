@@ -1,7 +1,7 @@
 import { pageNotFound } from '@/assets';
-import { Footer } from '@/components/layout/Footer';
-import { Header } from '@/components/layout/Header';
-import { Head } from '@/components/shared/Head';
+import { Head } from '@/components/atoms/Head';
+import { Footer } from '@/components/organisms/Footer';
+import { Header } from '@/components/organisms/Header';
 import { Button } from '@/components/ui/button';
 import { ROUTES } from '@/constants';
 import { isRouteErrorResponse, Link, useRouteError } from 'react-router';

@@ -1,4 +1,4 @@
-import { TaskForm } from '@/components/tasks/TaskForm';
+import { TaskForm } from '@/components/organisms/TaskForm';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { HTTP_METHODS, ROUTES } from '@/constants';
 import { ITaskForm } from '@/interfaces';

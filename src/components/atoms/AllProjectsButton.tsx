@@ -1,7 +1,7 @@
 import { ROUTES } from '@/constants';
 import { MoreHorizontal } from 'lucide-react';
 import { Link } from 'react-router';
-import { SidebarMenuButton } from '../ui/sidebar';
+import { SidebarMenuButton } from '@/components/ui/sidebar';
 
 interface AllProjectsButtonProps {
   onItemClick: () => void;

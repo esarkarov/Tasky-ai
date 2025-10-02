@@ -1,8 +1,8 @@
-import { Page, PageHeader, PageList, PageTitle } from '@/components/layout/Page';
-import { TopAppBar } from '@/components/navigation/TopAppBar';
-import { Head } from '@/components/shared/Head';
-import { TaskCard } from '@/components/tasks/TaskCard';
-import { TaskEmptyState } from '@/components/tasks/TaskEmptyState';
+import { Head } from '@/components/atoms/Head';
+import { Page, PageHeader, PageList, PageTitle } from '@/components/atoms/Page';
+import { TaskEmptyState } from '@/components/atoms/TaskEmptyState';
+import { TaskCard } from '@/components/organisms/TaskCard';
+import { TopAppBar } from '@/components/organisms/TopAppBar';
 import type { Models } from 'appwrite';
 import { useLoaderData } from 'react-router';
 

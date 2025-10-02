@@ -1,12 +1,12 @@
-import { ReactNode, useCallback, useState } from 'react';
-import { useFetcher } from 'react-router';
-import { truncateString } from '@/lib/utils';
-import { Dialog, DialogTrigger, DialogContent } from '@/components/ui/dialog';
-import { ProjectForm } from '@/components/projects/ProjectForm';
+import { ProjectForm } from '@/components/organisms/ProjectForm';
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+import { ROUTES } from '@/constants';
 import { useToast } from '@/hooks/use-toast';
 import { IProject, IProjectForm } from '@/interfaces';
+import { truncateString } from '@/lib/utils';
 import { TActionMethod } from '@/types';
-import { ROUTES } from '@/constants';
+import { ReactNode, useCallback, useState } from 'react';
+import { useFetcher } from 'react-router';
 
 interface ProjectFormDialogProps {
   defaultFormData?: IProject;

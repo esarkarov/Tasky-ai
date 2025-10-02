@@ -1,7 +1,7 @@
-import { Loader } from '@/components/shared/Loader';
+import { Loader } from '@/components/atoms/Loader';
 import { ROUTES } from '@/constants';
 import ErrorPage from '@/pages/ErrorPage';
-import { AppLayout, appLoader, RootLayout, taskAction } from '@/router/lazy/lazy';
+import { appLoader, AppTemplate, RootTemplate, taskAction } from '@/router/lazy/lazy';
 import { appRoutes } from '@/router/routes/protectedRoutes';
 import { publicRoutes } from '@/router/routes/publicRoutes';
 import { createElement } from 'react';
@@ -13,7 +13,7 @@ const router = createBrowserRouter([
     errorElement: createElement(ErrorPage),
     hydrateFallbackElement: createElement(Loader),
     lazy: {
-      element: RootLayout,
+      element: RootTemplate,
     },
     children: publicRoutes,
   },
@@ -22,7 +22,7 @@ const router = createBrowserRouter([
     errorElement: createElement(ErrorPage),
     hydrateFallbackElement: createElement(Loader),
     lazy: {
-      element: AppLayout,
+      element: AppTemplate,
       action: taskAction,
       loader: appLoader,
     },

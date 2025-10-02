@@ -1,6 +1,3 @@
-import { IProject, ITask } from '@/interfaces';
-import { truncateString } from '@/lib/utils';
-import { TItemType } from '@/types';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -11,15 +8,18 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from '../ui/alert-dialog';
-import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
-import { Button } from '../ui/button';
+} from '@/components/ui/alert-dialog';
+import { Button } from '@/components/ui/button';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { IProject, ITask } from '@/interfaces';
+import { truncateString } from '@/lib/utils';
+import { TItemType } from '@/types';
 import { Trash2 } from 'lucide-react';
 
 interface ConfirmationDialogProps {
   selectedItem: ITask | IProject;
-  onDelete: () => void;
   itemType: TItemType;
+  onDelete: () => void;
 }
 
 export const ConfirmationDialog = ({ selectedItem, onDelete, itemType }: ConfirmationDialogProps) => {

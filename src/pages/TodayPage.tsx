@@ -1,16 +1,16 @@
-import { Page, PageHeader, PageList, PageTitle } from '@/components/layout/Page';
-import { TopAppBar } from '@/components/navigation/TopAppBar';
-import { Head } from '@/components/shared/Head';
-import { TaskCard } from '@/components/tasks/TaskCard';
-import { TaskCardSkeleton } from '@/components/tasks/TaskCardSkeleton';
-import { TaskAddButton } from '@/components/tasks/TaskAddButton';
-import { TaskEmptyState } from '@/components/tasks/TaskEmptyState';
-import { TaskForm } from '@/components/tasks/TaskForm';
+import { Head } from '@/components/atoms/Head';
+import { Page, PageHeader, PageList, PageTitle } from '@/components/atoms/Page';
+import { TaskAddButton } from '@/components/atoms/TaskAddButton';
+import { TaskCardSkeleton } from '@/components/atoms/TaskCardSkeleton';
+import { TaskEmptyState } from '@/components/atoms/TaskEmptyState';
+import { TotalTasks } from '@/components/atoms/TotalTasks';
+import { TaskCard } from '@/components/organisms/TaskCard';
+import { TaskForm } from '@/components/organisms/TaskForm';
+import { TopAppBar } from '@/components/organisms/TopAppBar';
 import { HTTP_METHODS, ROUTES } from '@/constants';
 import { ITaskForm } from '@/interfaces';
 import type { Models } from 'appwrite';
 import { startOfToday } from 'date-fns';
-import { CheckCircle2 } from 'lucide-react';
 import { useCallback, useState } from 'react';
 import { useFetcher, useLoaderData } from 'react-router';
 
@@ -45,11 +45,7 @@ const TodayPage = () => {
         <PageHeader>
           <PageTitle>Today</PageTitle>
 
-          {tasks.total > 0 && (
-            <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
-              <CheckCircle2 size={16} /> {tasks.total} tasks
-            </div>
-          )}
+          {tasks.total > 0 && <TotalTasks total={tasks.total} />}
         </PageHeader>
 
         <PageList>

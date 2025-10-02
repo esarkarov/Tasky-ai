@@ -1,7 +1,7 @@
-import { ProjectSelector } from '@/components/projects/ProjectSelector';
-import { DueDateSelector } from '@/components/tasks/DueDateSelector';
-import { TaskContentInput } from '@/components/tasks/TaskContentInput';
-import { TaskFormActions } from '@/components/tasks/TaskFormActions';
+import { TaskContentInput } from '@/components/atoms/TaskContentInput';
+import { DueDateSelector } from '@/components/molecules/DueDateSelector';
+import { ProjectSelector } from '@/components/molecules/ProjectSelector';
+import { TaskFormActions } from '@/components/molecules/TaskFormActions';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { DEFAULT_TASK_FORM_DATA } from '@/constants';

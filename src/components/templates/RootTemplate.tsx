@@ -1,9 +1,9 @@
-import { Footer } from '@/components/layout/Footer';
-import { Header } from '@/components/layout/Header';
-import { Loader } from '@/components/shared/Loader';
+import { Footer } from '@/components/organisms/Footer';
+import { Header } from '@/components/organisms/Header';
+import { Loader } from '@/components/atoms/Loader';
 import { Outlet, useNavigation } from 'react-router';
 
-const RootLayout = () => {
+export const RootTemplate = () => {
   const navigation = useNavigation();
   const isLoading = navigation.state === 'loading' && !navigation.formData;
 
@@ -24,5 +24,3 @@ const RootLayout = () => {
     </div>
   );
 };
-
-export default RootLayout;

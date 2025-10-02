@@ -1,4 +1,5 @@
-import { ProjectFormDialog } from '@/components/projects/ProjectFormDialog';
+import { ConfirmationDialog } from '@/components/molecules/ConfirmationDialog';
+import { ProjectFormDialog } from '@/components/organisms/ProjectFormDialog';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -14,7 +15,6 @@ import type { DropdownMenuContentProps } from '@radix-ui/react-dropdown-menu';
 import { Edit } from 'lucide-react';
 import { useCallback } from 'react';
 import { useFetcher, useLocation, useNavigate } from 'react-router';
-import { ConfirmationDialog } from '@/components/shared/ConfirmationDialog';
 
 interface ProjectActionMenuProps extends DropdownMenuContentProps {
   defaultFormData: IProject;

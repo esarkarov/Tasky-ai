@@ -1,9 +1,9 @@
-import { Page, PageHeader, PageList, PageTitle } from '@/components/layout/Page';
-import { TopAppBar } from '@/components/navigation/TopAppBar';
-import ProjectCard from '@/components/projects/ProjectCard';
-import { ProjectFormDialog } from '@/components/projects/ProjectFormDialog';
-import { ProjectSearchField } from '@/components/projects/ProjectSearchField';
-import { Head } from '@/components/shared/Head';
+import { Head } from '@/components/atoms/Head';
+import { Page, PageHeader, PageList, PageTitle } from '@/components/atoms/Page';
+import { ProjectSearchField } from '@/components/atoms/ProjectSearchField';
+import ProjectCard from '@/components/organisms/ProjectCard';
+import { ProjectFormDialog } from '@/components/organisms/ProjectFormDialog';
+import { TopAppBar } from '@/components/organisms/TopAppBar';
 import { Button } from '@/components/ui/button';
 import { ROUTES, TIMEOUT_DELAY } from '@/constants';
 import { IDataType } from '@/interfaces';

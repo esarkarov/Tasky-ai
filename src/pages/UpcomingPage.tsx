@@ -1,10 +1,10 @@
-import { Page, PageHeader, PageList, PageTitle } from '@/components/layout/Page';
-import { TopAppBar } from '@/components/navigation/TopAppBar';
-import { Head } from '@/components/shared/Head';
-import { TaskCard } from '@/components/tasks/TaskCard';
-import { TaskEmptyState } from '@/components/tasks/TaskEmptyState';
+import { Head } from '@/components/atoms/Head';
+import { Page, PageHeader, PageList, PageTitle } from '@/components/atoms/Page';
+import { TaskEmptyState } from '@/components/atoms/TaskEmptyState';
+import { TotalTasks } from '@/components/atoms/TotalTasks';
+import { TaskCard } from '@/components/organisms/TaskCard';
+import { TopAppBar } from '@/components/organisms/TopAppBar';
 import type { Models } from 'appwrite';
-import { CheckCircle2 } from 'lucide-react';
 import { useLoaderData } from 'react-router';
 
 const UpcomingPage = () => {
@@ -25,11 +25,7 @@ const UpcomingPage = () => {
         <PageHeader>
           <PageTitle>Upcoming</PageTitle>
 
-          {tasks.total > 0 && (
-            <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
-              <CheckCircle2 size={16} /> {tasks.total} tasks
-            </div>
-          )}
+          {tasks.total > 0 && <TotalTasks total={tasks.total} />}
         </PageHeader>
 
         <PageList>

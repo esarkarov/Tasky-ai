@@ -1,4 +1,4 @@
-import { AppSidebar } from '@/components/layout/AppSidebar';
+import { AppSidebar } from '@/components/organisms/AppSidebar';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { TIMEOUT_DELAY } from '@/constants';
@@ -7,7 +7,7 @@ import { IAppLoaderData } from '@/interfaces';
 import { cn } from '@/lib/utils';
 import { Outlet, useLoaderData, useNavigation } from 'react-router';
 
-const AppLayout = () => {
+export const AppTemplate = () => {
   const navigation = useNavigation();
   const { projects } = useLoaderData<IAppLoaderData>();
   const isLoading = navigation.state === 'loading' && !navigation.formData;
@@ -28,5 +28,3 @@ const AppLayout = () => {
     </ProjectProvider>
   );
 };
-
-export default AppLayout;

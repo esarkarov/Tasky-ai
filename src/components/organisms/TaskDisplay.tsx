@@ -1,6 +1,6 @@
-import { TaskActions } from '@/components/tasks/TaskActions';
-import { TaskCompletionButton } from '@/components/tasks/TaskCompletionButton';
-import { TaskMetadata } from '@/components/tasks/TaskMetaData';
+import { TaskCompletionButton } from '@/components/atoms/TaskCompletionButton';
+import { TaskActionButtons } from '@/components/molecules/TaskActionButtons';
+import { TaskMetadata } from '@/components/molecules/TaskMetaData';
 import { Card, CardContent } from '@/components/ui/card';
 import { ITask } from '@/interfaces';
 import { cn } from '@/lib/utils';
@@ -36,7 +36,7 @@ export const TaskDisplay = ({ project, task, onToggleComplete, onEdit, onDelete 
       />
     </Card>
 
-    <TaskActions
+    <TaskActionButtons
       task={task}
       onEdit={onEdit}
       onDelete={onDelete}

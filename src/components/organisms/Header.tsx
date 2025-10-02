@@ -1,9 +1,9 @@
-import { Logo } from '@/components/shared/Logo';
+import { Logo } from '@/components/atoms/Logo';
+import { UserChip } from '@/components/atoms/UserChip';
 import { Button } from '@/components/ui/button';
 import { ROUTES } from '@/constants';
 import { useAuth } from '@clerk/clerk-react';
 import { Link, useLocation } from 'react-router';
-import { UserChip } from '@/components/shared/UserChip';
 
 export const Header = () => {
   const { isSignedIn } = useAuth();

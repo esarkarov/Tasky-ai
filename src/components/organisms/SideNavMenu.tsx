@@ -1,5 +1,5 @@
-import { SideNavItem } from '@/components/navigation/SideNavItem';
-import { TaskFormDialog } from '@/components/tasks/TaskFormDialog';
+import { SideNavItem } from '@/components/molecules/SideNavItem';
+import { TaskFormDialog } from '@/components/organisms/TaskFormDialog';
 import {
   SidebarGroup,
   SidebarGroupContent,
