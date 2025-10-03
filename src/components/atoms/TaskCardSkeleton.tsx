@@ -15,3 +15,5 @@ export const TaskCardSkeleton = memo(() => {
     </div>
   );
 });
+
+TaskCardSkeleton.displayName = 'TaskCardSkeleton';

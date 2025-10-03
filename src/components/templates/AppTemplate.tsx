@@ -5,9 +5,10 @@ import { TIMING } from '@/constants/timing';
 import { ProjectProvider } from '@/contexts/ProjectContext';
 import { IAppLoaderData } from '@/interfaces';
 import { cn } from '@/lib/utils';
+import { memo } from 'react';
 import { Outlet, useLoaderData, useNavigation } from 'react-router';
 
-export const AppTemplate = () => {
+export const AppTemplate = memo(() => {
   const navigation = useNavigation();
   const { projects } = useLoaderData<IAppLoaderData>();
   const isLoading = navigation.state === 'loading' && !navigation.formData;
@@ -18,13 +19,22 @@ export const AppTemplate = () => {
         <TooltipProvider
           delayDuration={TIMING.DELAY_DURATION}
           disableHoverableContent>
-          <AppSidebar />
+          <div className="flex h-screen w-full">
+            <AppSidebar />
 
-          <main className={cn('flex-1', isLoading && 'opacity-50 pointer-events-none')}>
-            <Outlet />
-          </main>
+            <main
+              id="main-content"
+              className={cn('flex-1 focus:outline-none', isLoading && 'pointer-events-none opacity-50')}
+              tabIndex={-1}
+              aria-busy={isLoading}
+              aria-live="polite">
+              <Outlet />
+            </main>
+          </div>
         </TooltipProvider>
       </SidebarProvider>
     </ProjectProvider>
   );
-};
+});
+
+AppTemplate.displayName = 'AppTemplate';
