@@ -4,13 +4,14 @@ interface KeyboardProps {
 
 export const Keyboard = ({ kbdList }: KeyboardProps) => {
   return (
-    <div className="space-x-1">
-      <span className="sr-only">Keyboard shortcut is, </span>
+    <div className="inline-flex items-center space-x-1 text-xs font-mono">
+      <span className="sr-only">Keyboard shortcut: </span>
 
       {kbdList.map((item, index) => (
         <kbd
           key={index}
-          className="inline-block px-1 py-0.5 bg-background/10 rounded-full">
+          className="rounded-md bg-background/10 px-1.5 py-0.5 text-foreground/90"
+          aria-label={item}>
           {item}
         </kbd>
       ))}

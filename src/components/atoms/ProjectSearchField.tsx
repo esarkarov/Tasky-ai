@@ -10,28 +10,47 @@ interface ProjectSearchFieldProps {
 }
 
 export const ProjectSearchField = ({ handleChange, searchingState }: ProjectSearchFieldProps) => {
+  const isLoading = searchingState !== 'idle';
+
   return (
     <div className="relative">
+      <label
+        htmlFor="project-search"
+        className="sr-only">
+        Search projects
+      </label>
+
       <Search
         size={18}
-        className="absolute top-1/2 -translate-y-1/2 left-2 text-muted-foreground pointer-events-none"
+        className="absolute left-2 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none"
+        aria-hidden="true"
       />
 
       <Input
-        type="text"
+        id="project-search"
+        type="search"
         name="q"
         placeholder="Search projects"
-        className="px-8"
+        className="pl-8 pr-8"
         onChange={handleChange}
+        aria-describedby="search-status"
       />
 
       <Loader2
         size={18}
         className={cn(
-          'absolute top-2 right-2 text-muted-foreground pointer-events-none hidden',
-          searchingState !== 'idle' && 'block animate-spin'
+          'absolute right-2 top-2 text-muted-foreground pointer-events-none hidden',
+          isLoading && 'block animate-spin'
         )}
+        aria-hidden={!isLoading}
       />
+
+      <span
+        id="search-status"
+        className="sr-only"
+        aria-live="polite">
+        {isLoading ? 'Searching...' : 'Idle'}
+      </span>
     </div>
   );
 };

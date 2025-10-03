@@ -22,7 +22,7 @@ export const TaskCompletionButton = ({ task, onToggleComplete }: TaskCompletionB
         title: '1 task completed',
         action: (
           <ToastAction
-            altText="Undo"
+            altText="Undo task completion"
             onClick={() => onToggleComplete(false)}>
             Undo
           </ToastAction>
@@ -33,20 +33,21 @@ export const TaskCompletionButton = ({ task, onToggleComplete }: TaskCompletionB
 
   return (
     <Button
+      type="button"
       variant="outline"
       size="icon"
-      className={cn('group/button rounded-full w-5 h-5 mt-2', task.completed && 'bg-border')}
+      className={cn('group/button mt-2 h-5 w-5 rounded-full', task.completed && 'bg-border')}
       role="checkbox"
       aria-checked={task.completed}
       aria-label={`Mark task as ${task.completed ? 'incomplete' : 'complete'}`}
-      aria-describedby="task-content"
       onClick={handleClick}>
       <Check
         strokeWidth={4}
         className={cn(
-          '!w-3 !h-3 text-muted-foreground group-hover/button:opacity-100 transition-opacity',
+          '!h-3 !w-3 text-muted-foreground transition-opacity group-hover/button:opacity-100',
           task.completed ? 'opacity-100' : 'opacity-0'
         )}
+        aria-hidden="true"
       />
     </Button>
   );

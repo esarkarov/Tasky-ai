@@ -8,19 +8,25 @@ interface FooterLinkProps {
 }
 
 export const FooterLink = ({ href, index, label }: FooterLinkProps) => {
+  const isLast = index === SOCIAL_LINKS.length - 1;
+
   return (
     <li className="flex items-center">
       <a
         href={href}
-        className="text-sm text-muted-foreground hover:text-foreground"
-        target="_blank">
+        className="text-sm text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={label}>
         {label}
       </a>
 
-      {index !== SOCIAL_LINKS.length - 1 && (
+      {!isLast && (
         <Separator
           orientation="vertical"
           className="h-3 mx-3"
+          aria-hidden="true"
+          role="presentation"
         />
       )}
     </li>

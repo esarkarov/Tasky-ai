@@ -1,29 +1,35 @@
 import { EMPTY_STATES } from '@/constants/states';
 import { TEmptyStateType } from '@/types';
+import { memo } from 'react';
 
 interface TaskEmptyStateProps {
   type?: TEmptyStateType;
 }
 
-export const TaskEmptyState = ({ type = 'today' }: TaskEmptyStateProps) => {
+export const TaskEmptyState = memo(({ type = 'today' }: TaskEmptyStateProps) => {
   const { img, title, description } = EMPTY_STATES[type];
 
   return (
-    <div className="max-w-[360px] mx-auto flex flex-col items-center text-center">
+    <section
+      className="mx-auto flex max-w-[360px] flex-col items-center text-center"
+      role="status"
+      aria-live="polite">
       {img && (
-        <figure>
+        <figure className="flex flex-col items-center">
           <img
             src={img.src}
             width={img.width}
             height={img.height}
-            alt={title}
+            alt=""
+            aria-hidden="true"
           />
+          <figcaption className="sr-only">{title}</figcaption>
         </figure>
       )}
 
-      <div className="mt-4 mb-2">{title}</div>
+      <h2 className="mt-4 mb-2 text-base font-semibold">{title}</h2>
 
-      <p className="text-sm text-muted-foreground px-4">{description}</p>
-    </div>
+      <p className="px-4 text-sm text-muted-foreground">{description}</p>
+    </section>
   );
-};
+});

@@ -84,7 +84,7 @@ export const ProjectsSection = ({ onItemClick }: ProjectsSectionProps) => {
                 </SidebarMenuItem>
               ))}
 
-              {projects !== null && projects.total > 8 && (
+              {projects !== null && projects.total > 1 && (
                 <SidebarMenuItem>
                   <AllProjectsButton onItemClick={onItemClick} />
                 </SidebarMenuItem>

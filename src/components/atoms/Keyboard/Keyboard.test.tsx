@@ -33,7 +33,7 @@ describe('Keyboard Component', () => {
 
     render(<Keyboard kbdList={kbdList} />);
 
-    const srText = screen.getByText('Keyboard shortcut is,');
+    const srText = screen.getByText('Keyboard shortcut:');
     expect(srText).toBeInTheDocument();
     expect(srText).toHaveClass('sr-only');
   });
@@ -43,7 +43,7 @@ describe('Keyboard Component', () => {
 
     render(<Keyboard kbdList={kbdList} />);
 
-    const containerDiv = screen.getByText('Keyboard shortcut is,').parentElement;
+    const containerDiv = screen.getByText('Keyboard shortcut:').parentElement;
     expect(containerDiv).toBeInTheDocument();
     expect(containerDiv?.querySelector('kbd')).not.toBeInTheDocument();
   });
