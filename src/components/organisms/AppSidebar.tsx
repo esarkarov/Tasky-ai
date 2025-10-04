@@ -19,11 +19,14 @@ export const AppSidebar = () => {
   };
 
   return (
-    <Sidebar>
+    <Sidebar
+      role="navigation"
+      aria-label="Main sidebar">
       <SidebarHeader>
         <Link
           to={ROUTES.INBOX}
-          className="p-2">
+          className="p-2"
+          aria-label="Go to inbox">
           <Logo />
         </Link>
       </SidebarHeader>

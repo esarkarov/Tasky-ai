@@ -76,14 +76,16 @@ export const ProjectForm = ({
   };
 
   return (
-    <Card>
+    <Card
+      role="form"
+      aria-labelledby="project-form-title">
       <CardHeader className="p-4">
-        <CardTitle>{mode === 'create' ? 'Add project' : 'Edit'}</CardTitle>
+        <CardTitle id="project-form-title">{mode === 'create' ? 'Add project' : 'Edit project'}</CardTitle>
       </CardHeader>
 
       <Separator />
 
-      <CardContent className="p-4 grid grid-cols-1 gap-2">
+      <CardContent className="p-4 grid grid-cols-1 gap-3">
         <ProjectNameInput
           value={projectName}
           onChange={setProjectName}
@@ -98,20 +100,35 @@ export const ProjectForm = ({
             onOpenChange={setIsOpen}>
             <PopoverTrigger asChild>
               <Button
+                id="color"
+                type="button"
                 variant="outline"
-                className="w-full mt-2"
-                id="color">
-                <Circle fill={colorHex} />
-                {colorName}
-                <ChevronDown className="ms-auto" />
+                className="w-full mt-2 justify-between"
+                aria-haspopup="listbox"
+                aria-expanded={isOpen}
+                aria-label={`Select project color (currently ${colorName})`}>
+                <Circle
+                  fill={colorHex}
+                  aria-hidden="true"
+                />
+                <span>{colorName}</span>
+                <ChevronDown
+                  className="ms-auto"
+                  aria-hidden="true"
+                />
               </Button>
             </PopoverTrigger>
 
             <PopoverContent
               align="start"
-              className="p-0 w-[478px] max-sm:w-[360px]">
+              className="p-0 w-[478px] max-sm:w-[360px]"
+              role="listbox"
+              aria-label="Available project colors">
               <Command>
-                <CommandInput placeholder="Search color..." />
+                <CommandInput
+                  placeholder="Search color..."
+                  aria-label="Search color"
+                />
                 <CommandList>
                   <ScrollArea>
                     <CommandEmpty>No color found.</CommandEmpty>
@@ -120,10 +137,20 @@ export const ProjectForm = ({
                         <CommandItem
                           key={name}
                           value={`${name}=${hex}`}
+                          role="option"
+                          aria-selected={colorName === name}
                           onSelect={handleColorSelect}>
-                          <Circle fill={hex} />
+                          <Circle
+                            fill={hex}
+                            aria-hidden="true"
+                          />{' '}
                           {name}
-                          {colorName === name && <Check className="ms-auto" />}
+                          {colorName === name && (
+                            <Check
+                              className="ms-auto"
+                              aria-hidden="true"
+                            />
+                          )}
                         </CommandItem>
                       ))}
                     </CommandGroup>
@@ -149,14 +176,18 @@ export const ProjectForm = ({
 
       <CardFooter className="flex justify-end gap-3 p-4">
         <Button
+          type="button"
           variant="secondary"
-          onClick={onCancel}>
+          onClick={onCancel}
+          aria-label="Cancel project form">
           Cancel
         </Button>
 
         <Button
-          disabled={!projectName || (aiTaskGen && !taskGenPrompt)}
-          onClick={handleSubmit}>
+          type="submit"
+          disabled={!isFormValid}
+          onClick={handleSubmit}
+          aria-label={mode === 'create' ? 'Add project' : 'Save project'}>
           {mode === 'create' ? 'Add' : 'Save'}
         </Button>
       </CardFooter>

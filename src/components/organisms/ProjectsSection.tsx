@@ -14,7 +14,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import { ROUTES } from '@/constants/routes';
 import { useProjectList } from '@/contexts/ProjectContext';
 import { ChevronRight, Hash, MoreHorizontal, Plus } from 'lucide-react';
-import { Link } from 'react-router';
+import { Link, useLocation } from 'react-router';
 import { AllProjectsButton } from '../atoms/AllProjectsButton';
 import { ProjectActionMenu } from './ProjectActionMenu';
 
@@ -24,6 +24,7 @@ interface ProjectsSectionProps {
 
 export const ProjectsSection = ({ onItemClick }: ProjectsSectionProps) => {
   const projects = useProjectList();
+  const location = useLocation();
 
   return (
     <Collapsible
@@ -33,7 +34,9 @@ export const ProjectsSection = ({ onItemClick }: ProjectsSectionProps) => {
         <SidebarGroupLabel
           asChild
           className="text-sm text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
-          <CollapsibleTrigger>
+          <CollapsibleTrigger
+            aria-expanded
+            aria-controls="projects-list">
             <ChevronRight className="me-2 transition-transform group-data-[state=open]/collapsible:rotate-90" />
             Projects
           </CollapsibleTrigger>
@@ -43,14 +46,14 @@ export const ProjectsSection = ({ onItemClick }: ProjectsSectionProps) => {
           <ProjectFormDialog method="POST">
             <TooltipTrigger asChild>
               <SidebarGroupAction aria-label="Add project">
-                <Plus />
+                <Plus aria-hidden="true" />
               </SidebarGroupAction>
             </TooltipTrigger>
           </ProjectFormDialog>
           <TooltipContent side="right">Add project</TooltipContent>
         </Tooltip>
 
-        <CollapsibleContent>
+        <CollapsibleContent id="projects-list">
           <SidebarGroupContent>
             <SidebarMenu>
               {projects?.documents.slice(0, 8).map(({ $id, name, color_hex, color_name }) => (
@@ -59,8 +62,14 @@ export const ProjectsSection = ({ onItemClick }: ProjectsSectionProps) => {
                     asChild
                     isActive={location.pathname === ROUTES.PROJECT($id)}
                     onClick={onItemClick}>
-                    <Link to={ROUTES.PROJECT($id)}>
-                      <Hash color={color_hex} />
+                    <Link
+                      to={ROUTES.PROJECT($id)}
+                      aria-label={`Open project ${name}`}
+                      aria-current={location.pathname === ROUTES.PROJECT($id) ? 'page' : undefined}>
+                      <Hash
+                        color={color_hex}
+                        aria-hidden="true"
+                      />
                       <span>{name}</span>
                     </Link>
                   </SidebarMenuButton>
@@ -68,17 +77,17 @@ export const ProjectsSection = ({ onItemClick }: ProjectsSectionProps) => {
                   <ProjectActionMenu
                     defaultFormData={{
                       id: $id,
-                      name: name,
-                      color_name: color_name,
-                      color_hex: color_hex,
+                      name,
+                      color_name,
+                      color_hex,
                     }}
                     side="right"
                     align="start">
                     <SidebarMenuAction
-                      aria-label="More actions"
+                      aria-label={`More actions for project ${name}`}
                       showOnHover
                       className="bg-sidebar-accent">
-                      <MoreHorizontal />
+                      <MoreHorizontal aria-hidden="true" />
                     </SidebarMenuAction>
                   </ProjectActionMenu>
                 </SidebarMenuItem>

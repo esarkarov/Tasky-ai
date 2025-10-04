@@ -83,8 +83,17 @@ export const TaskForm = ({
   const isValid = taskContent.trim().length > 0;
 
   return (
-    <Card className={cn('focus-within:border-foreground/30', className)}>
+    <Card
+      role="form"
+      aria-labelledby="task-form-title"
+      className={cn('focus-within:border-foreground/30', className)}>
       <CardContent className="p-2">
+        <h2
+          id="task-form-title"
+          className="sr-only">
+          {mode === 'create' ? 'Create task' : 'Edit task'}
+        </h2>
+
         <TaskContentInput
           value={taskContent}
           onChange={setTaskContent}

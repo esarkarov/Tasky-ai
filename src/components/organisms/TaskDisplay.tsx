@@ -15,7 +15,11 @@ interface TaskDisplayProps {
 }
 
 export const TaskDisplay = ({ project, task, onToggleComplete, onEdit, onDelete }: TaskDisplayProps) => (
-  <div className="group/card relative grid grid-cols-[max-content,minmax(0,1fr)] gap-3 border-b">
+  <div
+    className="group/card relative grid grid-cols-[max-content,minmax(0,1fr)] gap-3 border-b"
+    role="group"
+    aria-labelledby={`task-${task.id}-content`}
+    aria-describedby={`task-${task.id}-metadata`}>
     <TaskCompletionButton
       task={task}
       onToggleComplete={onToggleComplete}
@@ -24,7 +28,7 @@ export const TaskDisplay = ({ project, task, onToggleComplete, onEdit, onDelete 
     <Card className="rounded-none py-2 space-y-1.5 border-none">
       <CardContent className="p-0">
         <p
-          id="task-content"
+          id={`task-${task.id}-content`}
           className={cn('text-sm max-md:me-16', task.completed && 'text-muted-foreground line-through')}>
           {task.content}
         </p>

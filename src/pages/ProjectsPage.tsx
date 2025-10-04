@@ -1,7 +1,7 @@
 import { Head } from '@/components/atoms/Head';
 import { Page, PageHeader, PageList, PageTitle } from '@/components/atoms/Page';
 import { ProjectSearchField } from '@/components/atoms/ProjectSearchField';
-import ProjectCard from '@/components/organisms/ProjectCard';
+import { ProjectCard } from '@/components/organisms/ProjectCard';
 import { ProjectFormDialog } from '@/components/organisms/ProjectFormDialog';
 import { TopAppBar } from '@/components/organisms/TopAppBar';
 import { Button } from '@/components/ui/button';

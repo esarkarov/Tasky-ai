@@ -18,14 +18,18 @@ interface SideNavMenuProps {
 }
 
 export const SideNavMenu = ({ currentPath, taskCounts, onItemClick }: SideNavMenuProps) => (
-  <SidebarGroup>
+  <SidebarGroup
+    role="navigation"
+    aria-label="Primary navigation">
     <SidebarGroupContent>
       <SidebarMenu>
         <SidebarMenuItem>
           <TaskFormDialog>
-            <SidebarMenuButton className="!text-primary">
-              <CirclePlus />
-              Add task
+            <SidebarMenuButton
+              className="!text-primary"
+              aria-label="Add new task">
+              <CirclePlus aria-hidden="true" />
+              <span>Add task</span>
             </SidebarMenuButton>
           </TaskFormDialog>
         </SidebarMenuItem>

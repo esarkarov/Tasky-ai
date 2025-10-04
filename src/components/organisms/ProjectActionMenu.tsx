@@ -66,16 +66,20 @@ export const ProjectActionMenu = ({ children, defaultFormData, ...props }: Proje
     <DropdownMenu>
       <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
 
-      <DropdownMenuContent {...props}>
+      <DropdownMenuContent
+        {...props}
+        aria-label={`Actions for project ${defaultFormData.name}`}>
         <DropdownMenuItem asChild>
           <ProjectFormDialog
             method="PUT"
             defaultFormData={defaultFormData}>
             <Button
+              type="button"
               variant="ghost"
               size="sm"
-              className="w-full justify-start px-2">
-              <Edit /> Edit
+              className="w-full justify-start px-2"
+              aria-label={`Edit project ${defaultFormData.name}`}>
+              <Edit aria-hidden="true" /> Edit
             </Button>
           </ProjectFormDialog>
         </DropdownMenuItem>

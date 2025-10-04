@@ -1,7 +1,7 @@
 import { TaskForm } from '@/components/organisms/TaskForm';
 import { ITask, ITaskForm } from '@/interfaces';
 import type { Models } from 'appwrite';
-import { useCallback, useState } from 'react';
+import { memo, useCallback, useState } from 'react';
 import { useFetcher } from 'react-router';
 import { TaskDisplay } from './TaskDisplay';
 import { ROUTES } from '@/constants/routes';
@@ -15,7 +15,7 @@ interface TaskCardProps {
   project: Models.Document | null;
 }
 
-export const TaskCard = ({ id, content, completed, dueDate, project }: TaskCardProps) => {
+export const TaskCard = memo(({ id, content, completed, dueDate, project }: TaskCardProps) => {
   const fetcher = useFetcher();
   const [isEditing, setIsEditing] = useState<boolean>(false);
 
@@ -69,7 +69,11 @@ export const TaskCard = ({ id, content, completed, dueDate, project }: TaskCardP
   }, [fetcher, task.id]);
 
   return (
-    <>
+    <article
+      className="task-card"
+      role="listitem"
+      aria-label={`Task: ${task.content}`}
+      aria-checked={task.completed}>
       {!isEditing ? (
         <TaskDisplay
           task={task}
@@ -90,6 +94,8 @@ export const TaskCard = ({ id, content, completed, dueDate, project }: TaskCardP
           onSubmit={handleSubmitEdit}
         />
       )}
-    </>
+    </article>
   );
-};
+});
+
+TaskCard.displayName = 'TaskCard';

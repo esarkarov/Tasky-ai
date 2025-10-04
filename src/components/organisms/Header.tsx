@@ -12,9 +12,13 @@ export const Header = () => {
   const isRegister = location.pathname == ROUTES.REGISTER;
 
   return (
-    <header className="fixed z-40 top-0 left-0 w-full p-4">
-      <div className="container h-16 border backdrop-blur-3xl rounded-xl flex justify-between items-center">
-        <Link to={ROUTES.HOME}>
+    <header
+      className="fixed top-0 left-0 z-40 w-full p-4"
+      role="banner">
+      <div className="container flex h-16 items-center justify-between rounded-xl border backdrop-blur-3xl">
+        <Link
+          to={ROUTES.HOME}
+          aria-label="Go to home page">
           <Logo />
         </Link>
 
@@ -27,7 +31,11 @@ export const Header = () => {
                 <Button
                   asChild
                   variant="secondary">
-                  <Link to={ROUTES.LOGIN}>Log in</Link>
+                  <Link
+                    to={ROUTES.LOGIN}
+                    aria-label="Log in to your account">
+                    Log in
+                  </Link>
                 </Button>
               )}
 
@@ -35,7 +43,11 @@ export const Header = () => {
                 <Button
                   asChild
                   variant="default">
-                  <Link to={ROUTES.REGISTER}>Sign Up</Link>
+                  <Link
+                    to={ROUTES.REGISTER}
+                    aria-label="Create a new account">
+                    Sign Up
+                  </Link>
                 </Button>
               )}
             </>
