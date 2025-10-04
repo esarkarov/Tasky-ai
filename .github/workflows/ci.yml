@@ -178,4 +178,3 @@ jobs:
           target: 'http://localhost:4173'
           cmd_options: '-a'
           allow_issue_writing: false
-          artifact_name: 'zap-baseline-report'
