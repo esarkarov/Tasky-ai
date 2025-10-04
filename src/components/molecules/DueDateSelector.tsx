@@ -21,7 +21,9 @@ export const DueDateSelector = ({ dueDate, onDateChange, onDateRemove }: DueDate
   };
 
   return (
-    <div className="ring-1 ring-border rounded-md max-w-max">
+    <div
+      className="max-w-max rounded-md ring-1 ring-border"
+      aria-label="Due date selector">
       <Popover
         open={isOpen}
         onOpenChange={setIsOpen}>
@@ -30,19 +32,26 @@ export const DueDateSelector = ({ dueDate, onDateChange, onDateRemove }: DueDate
             type="button"
             variant="ghost"
             size="sm"
+            aria-haspopup="dialog"
+            aria-expanded={isOpen}
+            aria-controls="due-date-calendar"
             className={cn(getTaskDueDateColorClass(dueDate, false))}>
-            <CalendarIcon />
-            {dueDate ? formatCustomDate(dueDate) : 'Due date'}
+            <CalendarIcon aria-hidden="true" />
+            <span className="ml-1">{dueDate ? formatCustomDate(dueDate) : 'Due date'}</span>
           </Button>
         </PopoverTrigger>
 
-        <PopoverContent className="w-auto p-0">
+        <PopoverContent
+          id="due-date-calendar"
+          className="w-auto p-0"
+          role="dialog"
+          aria-label="Select due date">
           <Calendar
             mode="single"
             disabled={{ before: new Date() }}
             selected={dueDate ? new Date(dueDate) : undefined}
-            initialFocus
             onSelect={handleDateSelect}
+            initialFocus
           />
         </PopoverContent>
       </Popover>
@@ -51,12 +60,13 @@ export const DueDateSelector = ({ dueDate, onDateChange, onDateRemove }: DueDate
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
+              type="button"
               variant="ghost"
               size="sm"
               className="px-2 -ms-2"
               aria-label="Remove due date"
               onClick={onDateRemove}>
-              <X />
+              <X aria-hidden="true" />
             </Button>
           </TooltipTrigger>
           <TooltipContent>Remove due date</TooltipContent>

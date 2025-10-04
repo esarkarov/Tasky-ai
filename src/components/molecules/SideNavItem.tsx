@@ -2,6 +2,7 @@ import { SidebarMenuBadge, SidebarMenuButton, SidebarMenuItem } from '@/componen
 import { SIDEBAR_LINKS } from '@/constants/links';
 import { ITaskCounts } from '@/interfaces';
 import { getBadgeCount } from '@/lib/utils';
+import { memo } from 'react';
 import { Link } from 'react-router';
 
 interface SideNavItemProps {
@@ -11,8 +12,9 @@ interface SideNavItemProps {
   onItemClick: () => void;
 }
 
-export const SideNavItem = ({ item, isActive, taskCounts, onItemClick }: SideNavItemProps) => {
-  const badgeCount = getBadgeCount(item.href, taskCounts);
+export const SideNavItem = memo(({ item, isActive, taskCounts, onItemClick }: SideNavItemProps) => {
+  const { href, label } = item;
+  const badgeCount = getBadgeCount(href, taskCounts);
   const showBadge = Boolean(badgeCount && badgeCount > 0);
 
   return (
@@ -21,13 +23,18 @@ export const SideNavItem = ({ item, isActive, taskCounts, onItemClick }: SideNav
         asChild
         isActive={isActive}
         onClick={onItemClick}>
-        <Link to={item.href}>
-          <item.icon />
-          <span>{item.label}</span>
+        <Link
+          to={href}
+          aria-current={isActive ? 'page' : undefined}
+          aria-label={label}>
+          <item.icon aria-hidden="true" />
+          <span>{label}</span>
         </Link>
       </SidebarMenuButton>
 
-      {showBadge && <SidebarMenuBadge>{badgeCount}</SidebarMenuBadge>}
+      {showBadge && <SidebarMenuBadge aria-label={`${badgeCount} tasks`}>{badgeCount}</SidebarMenuBadge>}
     </SidebarMenuItem>
   );
-};
+});
+
+SideNavItem.displayName = 'SideNavItem';

@@ -12,32 +12,55 @@ interface AITaskGeneratorProps {
 }
 
 export const AITaskGenerator = ({ enabled, prompt, onToggle, onPromptChange, onKeyDown }: AITaskGeneratorProps) => (
-  <div className="border rounded-md mt-6">
-    <div className="flex items-center gap-3 py-2 px-3">
-      <Bot className="text-muted-foreground flex-shrink-0" />
-      <div className="space-y-0.5 me-auto">
+  <section
+    className="mt-6 rounded-md border"
+    aria-labelledby="ai-task-generator-label">
+    <div className="flex items-center gap-3 px-3 py-2">
+      <Bot
+        className="flex-shrink-0 text-muted-foreground"
+        aria-hidden="true"
+      />
+
+      <div className="me-auto space-y-0.5">
         <Label
+          id="ai-task-generator-label"
           htmlFor="ai_generate"
-          className="block text-sm">
+          className="block text-sm font-medium">
           AI Task Generator
         </Label>
-        <p className="text-xs text-muted-foreground">Automatically create tasks by providing a simple prompt.</p>
+        <p
+          id="ai-task-generator-description"
+          className="text-xs text-muted-foreground">
+          Automatically create tasks by providing a simple prompt.
+        </p>
       </div>
+
       <Switch
         id="ai_generate"
+        aria-describedby="ai-task-generator-description"
+        checked={enabled}
         onCheckedChange={onToggle}
       />
     </div>
 
     {enabled && (
-      <Textarea
-        autoFocus
-        placeholder="Tell me about your project. What you want to accomplish?"
-        className="border-none"
-        value={prompt}
-        onChange={(e) => onPromptChange(e.currentTarget.value)}
-        onKeyDown={onKeyDown}
-      />
+      <div className="px-3 pb-3">
+        <Label
+          htmlFor="ai_prompt"
+          className="sr-only">
+          AI task prompt
+        </Label>
+        <Textarea
+          id="ai_prompt"
+          autoFocus
+          placeholder="Tell me about your project. What do you want to accomplish?"
+          className="border-none focus-visible:ring-2 focus-visible:ring-ring"
+          value={prompt}
+          onChange={(e) => onPromptChange(e.currentTarget.value)}
+          onKeyDown={onKeyDown}
+          aria-describedby="ai-task-generator-description"
+        />
+      </div>
     )}
-  </div>
+  </section>
 );

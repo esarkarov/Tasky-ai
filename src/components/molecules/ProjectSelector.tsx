@@ -5,11 +5,11 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { IProjectInfo } from '@/interfaces';
 import { TProjectList } from '@/types';
 import { Check, ChevronDown, Hash, Inbox } from 'lucide-react';
-import { useState } from 'react';
+import { SetStateAction, useState } from 'react';
 
 interface ProjectSelectorProps {
-  setProjectInfo: (value: React.SetStateAction<IProjectInfo>) => void;
-  setProjectId: (value: React.SetStateAction<string | null>) => void;
+  setProjectInfo: (value: SetStateAction<IProjectInfo>) => void;
+  setProjectId: (value: SetStateAction<string | null>) => void;
   projectInfo: IProjectInfo;
   projects: TProjectList;
 }
@@ -24,41 +24,75 @@ export const ProjectSelector = ({ projectInfo, projects, setProjectId, setProjec
       modal>
       <PopoverTrigger asChild>
         <Button
+          type="button"
           variant="ghost"
           role="combobox"
           aria-expanded={isOpen}
+          aria-haspopup="listbox"
+          aria-label="Select project"
           className="max-w-max">
-          {projectInfo.name ? <Hash color={projectInfo.colorHex} /> : <Inbox />}
+          {projectInfo.name ? (
+            <Hash
+              color={projectInfo.colorHex}
+              aria-hidden="true"
+            />
+          ) : (
+            <Inbox aria-hidden="true" />
+          )}
           <span className="truncate">{projectInfo.name || 'Inbox'}</span>
-          <ChevronDown />
+          <ChevronDown
+            className="ml-1"
+            aria-hidden="true"
+          />
         </Button>
       </PopoverTrigger>
 
       <PopoverContent
         className="w-[240px] p-0"
-        align="start">
+        align="start"
+        role="listbox"
+        aria-label="Project list">
         <Command>
-          <CommandInput placeholder="Search project..." />
+          <CommandInput
+            placeholder="Search project..."
+            aria-label="Search project"
+          />
           <CommandList>
             <ScrollArea>
               <CommandEmpty>No project found.</CommandEmpty>
               <CommandGroup>
-                {projects &&
-                  projects.documents.map(({ $id, name, color_hex }) => (
+                {projects?.documents.map(({ $id, name, color_hex }) => {
+                  const isSelected = projectInfo.name === name;
+
+                  const handleProjectSelect = () => {
+                    setProjectInfo({
+                      name: isSelected ? '' : name,
+                      colorHex: isSelected ? undefined : color_hex,
+                    });
+                    setProjectId(isSelected ? null : $id);
+                    setIsOpen(false);
+                  };
+
+                  return (
                     <CommandItem
                       key={$id}
-                      onSelect={(selectedValue) => {
-                        setProjectInfo({
-                          name: selectedValue === projectInfo.name ? '' : name,
-                          colorHex: selectedValue === projectInfo.name ? undefined : color_hex,
-                        });
-                        setProjectId(selectedValue === projectInfo.name ? null : $id);
-                        setIsOpen(false);
-                      }}>
-                      <Hash color={color_hex} /> {name}
-                      {projectInfo.name === name && <Check className="ms-auto" />}
+                      role="option"
+                      aria-selected={isSelected}
+                      onSelect={handleProjectSelect}>
+                      <Hash
+                        color={color_hex}
+                        aria-hidden="true"
+                      />{' '}
+                      {name}
+                      {isSelected && (
+                        <Check
+                          className="ms-auto"
+                          aria-hidden="true"
+                        />
+                      )}
                     </CommandItem>
-                  ))}
+                  );
+                })}
               </CommandGroup>
             </ScrollArea>
           </CommandList>

@@ -17,17 +17,22 @@ export const ProjectNameInput = ({ value, onChange, onKeyDown }: ProjectNameInpu
 
   return (
     <div>
-      <Label htmlFor="project_name">Name</Label>
+      <Label htmlFor="project_name">Project name</Label>
       <Input
         type="text"
         id="project_name"
         className="mt-2 mb-1"
-        onInput={(e) => onChange(e.currentTarget.value)}
         value={value}
         maxLength={MAX_NAME_LENGTH}
+        onInput={(e) => onChange(e.currentTarget.value)}
         onKeyDown={onKeyDown}
+        aria-describedby="project-name-count"
+        aria-invalid={charCount > MAX_NAME_LENGTH}
       />
-      <div className={cn('text-xs text-muted-foreground max-w-max ms-auto', isNearLimit && 'text-destructive')}>
+      <div
+        id="project-name-count"
+        className={cn('ms-auto max-w-max text-xs text-muted-foreground', isNearLimit && 'text-destructive')}
+        aria-live="polite">
         {charCount}/{MAX_NAME_LENGTH}
       </div>
     </div>

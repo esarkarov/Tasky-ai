@@ -24,6 +24,7 @@ interface ConfirmationDialogProps {
 
 export const ConfirmationDialog = ({ selectedItem, onDelete, itemType }: ConfirmationDialogProps) => {
   const isTask = itemType === 'task';
+  const itemLabel = 'content' in selectedItem ? selectedItem.content : selectedItem.name;
 
   return (
     <AlertDialog>
@@ -34,16 +35,17 @@ export const ConfirmationDialog = ({ selectedItem, onDelete, itemType }: Confirm
               <Button
                 variant="ghost"
                 size="icon"
-                className="w-6 h-6 text-muted-foreground"
+                className="h-6 w-6 text-muted-foreground"
                 aria-label="Delete task">
-                <Trash2 />
+                <Trash2 aria-hidden="true" />
               </Button>
             ) : (
               <Button
                 variant="ghost"
                 size="sm"
-                className="w-full justify-start px-2 !text-destructive">
-                <Trash2 /> Delete
+                className="w-full justify-start px-2 !text-destructive"
+                aria-label="Delete project">
+                <Trash2 aria-hidden="true" /> <span>Delete</span>
               </Button>
             )}
           </AlertDialogTrigger>
@@ -51,20 +53,23 @@ export const ConfirmationDialog = ({ selectedItem, onDelete, itemType }: Confirm
         {isTask && <TooltipContent>Delete task</TooltipContent>}
       </Tooltip>
 
-      <AlertDialogContent>
+      <AlertDialogContent
+        role="alertdialog"
+        aria-describedby="delete-description">
         <AlertDialogHeader>
-          <AlertDialogTitle>Delete {'content' in selectedItem ? 'task' : 'project'}?</AlertDialogTitle>
-          <AlertDialogDescription>
-            The
-            <strong>
-              {truncateString('content' in selectedItem ? selectedItem.content : selectedItem.name, 48)}
-            </strong>{' '}
-            {'content' in selectedItem ? 'task' : 'project'} will be permanently deleted.
+          <AlertDialogTitle>Delete {isTask ? 'task' : 'project'}?</AlertDialogTitle>
+          <AlertDialogDescription id="delete-description">
+            The <strong>{truncateString(itemLabel, 48)}</strong> {isTask ? 'task' : 'project'} will be permanently
+            deleted.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={onDelete}>Delete</AlertDialogAction>
+          <AlertDialogCancel aria-label="Cancel deletion">Cancel</AlertDialogCancel>
+          <AlertDialogAction
+            aria-label={`Confirm delete ${isTask ? 'task' : 'project'}`}
+            onClick={onDelete}>
+            Delete
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

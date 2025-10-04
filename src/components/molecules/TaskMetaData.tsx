@@ -13,37 +13,48 @@ interface TaskMetadataProps {
 
 export const TaskMetadata = ({ task, project }: TaskMetadataProps) => {
   const location = useLocation();
-
-  const showDueDate = task.due_date && location.pathname !== ROUTES.TODAY;
+  const showDueDate = Boolean(task.due_date) && location.pathname !== ROUTES.TODAY;
   const showProject = location.pathname !== ROUTES.INBOX && location.pathname !== ROUTES.PROJECT(project?.$id);
 
   if (!showDueDate && !showProject) return null;
 
   return (
-    <CardFooter className="p-0 flex gap-4">
+    <CardFooter
+      className="flex gap-4 p-0"
+      role="contentinfo">
       {showDueDate && (
         <div
           className={cn(
             'flex items-center gap-1 text-xs text-muted-foreground',
             getTaskDueDateColorClass(task.due_date, task.completed)
-          )}>
-          <CalendarDays size={14} />
-          {formatCustomDate(task.due_date as Date)}
+          )}
+          aria-label="Task due date">
+          <CalendarDays
+            size={14}
+            aria-hidden="true"
+          />
+          <time dateTime={new Date(task.due_date as Date).toISOString()}>
+            {formatCustomDate(task.due_date as Date)}
+          </time>
         </div>
       )}
 
       {showProject && (
-        <div className="grid grid-cols-[minmax(0,180px),max-content] items-center gap-1 text-xs text-muted-foreground ms-auto">
+        <div
+          className="grid grid-cols-[minmax(0,180px),max-content] items-center gap-1 text-xs text-muted-foreground ms-auto"
+          aria-label="Task project">
           <div className="truncate text-right">{task.project?.name || 'Inbox'}</div>
           {task.project ? (
             <Hash
               size={14}
               color={task.project.color_hex}
+              aria-hidden="true"
             />
           ) : (
             <Inbox
               size={14}
               className="text-muted-foreground"
+              aria-hidden="true"
             />
           )}
         </div>

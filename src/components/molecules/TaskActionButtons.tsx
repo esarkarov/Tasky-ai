@@ -11,17 +11,21 @@ interface TaskActionButtonsProps {
 }
 
 export const TaskActionButtons = ({ task, onEdit, onDelete }: TaskActionButtonsProps) => (
-  <div className="absolute top-1.5 right-0 bg-background ps-1 shadow-[-10px_0_5px_hsl(var(--background))] flex items-center gap-1 opacity-0 group-hover/card:opacity-100 focus-within:opacity-100 max-md:opacity-100">
+  <div
+    className="absolute right-0 top-1.5 flex items-center gap-1 bg-background ps-1 opacity-0 shadow-[-10px_0_5px_hsl(var(--background))] group-hover/card:opacity-100 focus-within:opacity-100 max-md:opacity-100"
+    role="group"
+    aria-label="Task actions">
     {!task.completed && (
       <Tooltip>
         <TooltipTrigger asChild>
           <Button
+            type="button"
             variant="ghost"
             size="icon"
-            className="w-6 h-6 text-muted-foreground"
+            className="h-6 w-6 text-muted-foreground"
             aria-label="Edit task"
             onClick={onEdit}>
-            <Edit />
+            <Edit aria-hidden="true" />
           </Button>
         </TooltipTrigger>
         <TooltipContent>Edit task</TooltipContent>
