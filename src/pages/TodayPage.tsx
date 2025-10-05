@@ -10,6 +10,7 @@ import { TopAppBar } from '@/components/organisms/TopAppBar';
 import { HTTP_METHODS } from '@/constants/http';
 import { ROUTES } from '@/constants/routes';
 import { ITasksLoaderData } from '@/types/loader.types';
+import { IProject } from '@/types/project.types';
 import { ITaskFormData } from '@/types/task.types';
 import { startOfToday } from 'date-fns';
 import { useCallback, useState } from 'react';
@@ -51,14 +52,14 @@ export const TodayPage = () => {
         </PageHeader>
 
         <PageList aria-label="Today's tasks">
-          {tasks.documents.map(({ $id, content, completed, due_date, project }) => (
+          {tasks.documents.map(({ $id, content, completed, due_date, projectId }) => (
             <TaskCard
               key={$id}
               id={$id}
               content={content}
               completed={completed}
               dueDate={due_date as Date}
-              project={project}
+              project={projectId as IProject}
             />
           ))}
 

@@ -1,3 +1,4 @@
+import { IProject } from '@/types/project.types';
 import { Models } from 'appwrite';
 
 export interface ITask extends Models.Document {
@@ -5,7 +6,7 @@ export interface ITask extends Models.Document {
   due_date: Date | string | null;
   completed: boolean;
   userId: string;
-  projectId: string | null;
+  projectId: IProject | null;
 }
 export interface ITasksResponse {
   total: number;

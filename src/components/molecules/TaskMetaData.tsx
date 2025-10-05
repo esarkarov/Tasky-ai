@@ -26,7 +26,7 @@ export const TaskMetadata = ({ task, project }: TaskMetadataProps) => {
         <div
           className={cn(
             'flex items-center gap-1 text-xs text-muted-foreground',
-            getTaskDueDateColorClass(task.due_date ? new Date(task.due_date) : null, task.completed)
+            getTaskDueDateColorClass(task.due_date ? (task.due_date as Date) : null, task.completed)
           )}
           aria-label="Task due date">
           <CalendarDays
@@ -41,7 +41,7 @@ export const TaskMetadata = ({ task, project }: TaskMetadataProps) => {
         <div
           className="grid grid-cols-[minmax(0,180px),max-content] items-center gap-1 text-xs text-muted-foreground ms-auto"
           aria-label="Task project">
-          <div className="truncate text-right">{task.project?.name || 'Inbox'}</div>
+          <div className="truncate text-right">{task?.project?.name || 'Inbox'}</div>
           {task.project ? (
             <Hash
               size={14}

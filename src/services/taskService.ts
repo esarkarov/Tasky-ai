@@ -186,14 +186,3 @@ export const deleteTask = async (taskId: string): Promise<void> => {
     throw new Error('Failed to delete task');
   }
 };
-
-export const toggleTaskCompletion = async (taskId: string, completed: boolean): Promise<ITask> => {
-  const task = await databases.getDocument<ITask>(env.appwriteDatabaseId, env.appwriteTasksCollectionId, taskId);
-
-  return updateTask(taskId, {
-    content: task.content,
-    due_date: task.due_date,
-    completed,
-    projectId: task.projectId,
-  });
-};

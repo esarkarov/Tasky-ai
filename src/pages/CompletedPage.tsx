@@ -5,6 +5,7 @@ import { TotalTasks } from '@/components/atoms/TotalTasks';
 import { TaskCard } from '@/components/organisms/TaskCard';
 import { TopAppBar } from '@/components/organisms/TopAppBar';
 import { ITasksLoaderData } from '@/types/loader.types';
+import { IProject } from '@/types/project.types';
 import { useLoaderData } from 'react-router';
 
 export const CompletedPage = () => {
@@ -26,14 +27,14 @@ export const CompletedPage = () => {
         </PageHeader>
 
         <PageList aria-label="Completed tasks">
-          {tasks?.documents.map(({ $id, content, completed, due_date, project }) => (
+          {tasks?.documents.map(({ $id, content, completed, due_date, projectId }) => (
             <TaskCard
               key={$id}
               id={$id}
               content={content}
               completed={completed}
               dueDate={due_date as Date}
-              project={project}
+              project={projectId as IProject}
             />
           ))}
 

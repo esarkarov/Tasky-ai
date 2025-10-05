@@ -68,6 +68,8 @@ export const TaskCard = memo(({ id, content, completed, dueDate, project }: Task
     });
   }, [fetcher, task.id]);
 
+  console.log('assigned task:', task);
+
   return (
     <article
       className="task-card"
@@ -88,7 +90,7 @@ export const TaskCard = memo(({ id, content, completed, dueDate, project }: Task
           defaultFormData={{
             ...task,
             due_date: task.due_date,
-            projectId: project?.$id ?? null,
+            projectId: project && project?.$id,
           }}
           mode="edit"
           onCancel={() => setIsEditing(false)}
