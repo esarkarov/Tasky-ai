@@ -1,103 +1,81 @@
-import { generateProjectTasks } from '@/api/googleAI';
-import { env } from '@/config/env';
 import { HTTP_METHODS } from '@/constants/http';
 import { ROUTES } from '@/constants/routes';
-import { IAIGenTask, IProject, IProjectForm } from '@/interfaces';
-import { databases } from '@/lib/appwrite';
-import { generateID, getUserId } from '@/lib/utils';
-import type { Models } from 'appwrite';
+import { createProjectTasks } from '@/services/aiService';
+import {
+  createProject,
+  deleteProject,
+  IProjectFormData,
+  IProjectUpdateData,
+  updateProject,
+} from '@/services/projectService';
+import { createTasksForProject } from '@/services/taskService';
 import type { ActionFunction } from 'react-router';
 import { redirect } from 'react-router';
 
-const createProject = async (data: IProjectForm) => {
-  let aiGeneratedTasks: IAIGenTask[] = [];
-  let project: Models.Document | null = null;
-  const aiTaskGen = data.ai_task_gen;
-  const taskGenPrompt = data.task_gen_prompt;
-
-  try {
-    project = await databases.createDocument(env.appwriteDatabaseId, 'projects', generateID(), {
-      name: data.name,
-      color_name: data.color_name,
-      color_hex: data.color_hex,
-      userId: getUserId(),
-    });
-  } catch (err) {
-    console.log('Error creating project: ', err);
-  }
-
-  if (aiTaskGen) {
-    try {
-      aiGeneratedTasks = JSON.parse((await generateProjectTasks(taskGenPrompt)) || '');
-    } catch (err) {
-      console.log('Error generating tasks: ', err);
-    }
-  }
-
-  if (aiGeneratedTasks.length) {
-    const promises = aiGeneratedTasks.map((task) => {
-      return databases.createDocument(env.appwriteDatabaseId, 'tasks', generateID(), {
-        ...task,
-        projectId: project?.$id,
-        userId: getUserId(),
-      });
-    });
-
-    try {
-      await Promise.all(promises);
-    } catch (err) {
-      console.log('Error creating project tasks: ', err);
-    }
-  }
-
-  return redirect(ROUTES.PROJECT(project?.$id));
-};
-
-const updateProject = async (data: IProject) => {
-  const documentId = data.id;
-
-  if (!documentId) throw new Error('Project id not found.');
-
-  try {
-    return await databases.updateDocument(env.appwriteDatabaseId, 'projects', documentId, {
-      name: data.name,
-      color_name: data.color_name,
-      color_hex: data.color_hex,
-    });
-  } catch (err) {
-    console.log('Error updating project: ', err);
-  }
-};
-
-const deleteProject = async (data: IProject) => {
-  const documentId = data.id;
-
-  if (!documentId) throw new Error('No project found with this id.');
-
-  try {
-    await databases.deleteDocument(env.appwriteDatabaseId, 'projects', documentId);
-  } catch (err) {
-    console.log('Error deleting project: ', err);
-  }
-};
-
-const projectAction: ActionFunction = async ({ request }) => {
+export const projectAction: ActionFunction = async ({ request }) => {
   const method = request.method;
-  const data = (await request.json()) as IProjectForm;
 
-  if (method === HTTP_METHODS.POST) {
-    return await createProject(data);
+  try {
+    if (method === HTTP_METHODS.POST) {
+      const data = (await request.json()) as IProjectFormData;
+
+      const project = await createProject(data);
+
+      if (data.ai_task_gen && data.task_gen_prompt) {
+        const aiTasks = await createProjectTasks(data.task_gen_prompt);
+
+        if (aiTasks.length > 0) {
+          await createTasksForProject(project.$id, aiTasks);
+        }
+      }
+
+      return redirect(ROUTES.PROJECT(project.$id));
+    }
+
+    if (method === HTTP_METHODS.PUT) {
+      const data = (await request.json()) as IProjectUpdateData;
+
+      if (!data.id)
+        return new Response(JSON.stringify({ message: 'Project ID is required' }), {
+          status: 400,
+          headers: { 'Content-Type': 'application/json' },
+        });
+
+      await updateProject(data.id, {
+        name: data.name,
+        color_name: data.color_name,
+        color_hex: data.color_hex,
+      });
+    }
+
+    if (method === HTTP_METHODS.DELETE) {
+      const data = (await request.json()) as { id: string };
+
+      if (!data.id)
+        return new Response(JSON.stringify({ message: 'Project ID is required' }), {
+          status: 400,
+          headers: { 'Content-Type': 'application/json' },
+        });
+
+      await deleteProject(data.id);
+    }
+
+    return new Response(JSON.stringify({ message: 'Method not allowed' }), {
+      status: 405,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  } catch (error) {
+    console.error('Task action error:', error);
+
+    return new Response(
+      JSON.stringify({
+        success: false,
+        message: error instanceof Error ? error.message : 'Failed to process request',
+      }),
+      {
+        status: 500,
+        headers: { 'Content-Type': 'application/json' },
+      }
+    );
   }
-
-  if (method === HTTP_METHODS.PUT) {
-    return await updateProject(data);
-  }
-
-  if (method === HTTP_METHODS.DELETE) {
-    return await deleteProject(data);
-  }
-
-  throw new Error('Invalid method');
 };
-
-export default projectAction;

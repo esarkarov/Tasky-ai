@@ -16,13 +16,14 @@ export const CompletedPage = async () => createElement((await import('@/pages/Co
 export const ProjectsPage = async () => createElement((await import('@/pages/ProjectsPage')).default);
 export const ProjectDetailPage = async () => createElement((await import('@/pages/ProjectDetailPage')).default);
 
-export const taskAction = async () => (await import('@/router/actions/taskAction')).default;
-export const projectAction = async () => (await import('@/router/actions/projectAction')).default;
+export const taskAction = async () => (await import('@/router/actions/taskAction')).taskAction;
+export const projectAction = async () => (await import('@/router/actions/projectAction')).projectAction;
 
-export const appLoader = async () => (await import('@/router/loaders/appLoader')).default;
-export const completedLoader = async () => (await import('@/router/loaders/completedLoader')).default;
-export const inboxLoader = async () => (await import('@/router/loaders/inboxLoader')).default;
-export const projectsLoader = async () => (await import('@/router/loaders/projectsLoader')).default;
-export const todayLoader = async () => (await import('@/router/loaders/todayLoader')).default;
-export const upcomingLoader = async () => (await import('@/router/loaders/upcomingLoader')).default;
-export const projectDetailLoader = async () => (await import('@/router/loaders/projectDetailLoader')).default;
+export const appLoader = async () => (await import('@/router/loaders/appLoader')).appLoader;
+export const completedLoader = async () => (await import('@/router/loaders/completedLoader')).completedLoader;
+export const inboxLoader = async () => (await import('@/router/loaders/inboxLoader')).inboxLoader;
+export const projectsLoader = async () => (await import('@/router/loaders/projectsLoader')).projectsLoader;
+export const todayLoader = async () => (await import('@/router/loaders/todayLoader')).todayLoader;
+export const upcomingLoader = async () => (await import('@/router/loaders/upcomingLoader')).upcomingLoader;
+export const projectDetailLoader = async () =>
+  (await import('@/router/loaders/projectDetailLoader')).projectDetailLoader;

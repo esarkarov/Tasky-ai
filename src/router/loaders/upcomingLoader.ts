@@ -1,28 +1,12 @@
-import { env } from '@/config/env';
-import { databases, Query } from '@/lib/appwrite';
-import { getUserId } from '@/lib/utils';
-import { startOfToday } from 'date-fns';
+import { getUpcomingTasks, ITasksResponse } from '@/services/taskService';
 import type { LoaderFunction } from 'react-router';
 
-const getTasks = async () => {
-  try {
-    return await databases.listDocuments(env.appwriteDatabaseId, 'tasks', [
-      Query.equal('completed', false),
-      Query.isNotNull('due_date'),
-      Query.greaterThanEqual('due_date', startOfToday().toISOString()),
-      Query.orderAsc('due_date'),
-      Query.equal('userId', getUserId()),
-    ]);
-  } catch (err) {
-    console.log(err);
-    throw new Error('Error getting upcoming tasks');
-  }
-};
+export interface IUpcomingLoaderData {
+  tasks: ITasksResponse;
+}
 
-const upcomingLoader: LoaderFunction = async () => {
-  const tasks = await getTasks();
+export const upcomingLoader: LoaderFunction = async (): Promise<IUpcomingLoaderData> => {
+  const tasks = await getUpcomingTasks();
 
   return { tasks };
 };
-
-export default upcomingLoader;

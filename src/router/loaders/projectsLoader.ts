@@ -1,29 +1,14 @@
-import { env } from '@/config/env';
-import { databases, Query } from '@/lib/appwrite';
-import { getUserId } from '@/lib/utils';
+import { getProjects, IProjectsListResponse } from '@/services/projectService';
 import type { LoaderFunction } from 'react-router';
 
-const getProjects = async (query: string) => {
-  try {
-    return await databases.listDocuments(env.appwriteDatabaseId, 'projects', [
-      Query.contains('name', query),
-      Query.select(['$id', 'name', 'color_name', 'color_hex', '$createdAt']),
-      Query.equal('userId', getUserId()),
-      Query.orderDesc('$createdAt'),
-    ]);
-  } catch (err) {
-    console.log(err);
-    throw new Error('Error getting projects');
-  }
-};
+export interface IProjectsLoaderData {
+  projects: IProjectsListResponse;
+}
 
-const projectsLoader: LoaderFunction = async ({ request }) => {
-  const url = new URL(request.url);
-  const query = url.searchParams.get('q') || '';
+export const projectsLoader: LoaderFunction = async ({ request }): Promise<IProjectsLoaderData> => {
+  const searchQuery = new URL(request.url).searchParams.get('q') || '';
 
-  const projects = await getProjects(query);
+  const projects = await getProjects(searchQuery);
 
   return { projects };
 };
-
-export default projectsLoader;

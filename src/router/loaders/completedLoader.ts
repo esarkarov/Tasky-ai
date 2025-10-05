@@ -1,25 +1,12 @@
-import { env } from '@/config/env';
-import { databases, Query } from '@/lib/appwrite';
-import { getUserId } from '@/lib/utils';
+import { getCompletedTasks, ITasksResponse } from '@/services/taskService';
 import type { LoaderFunction } from 'react-router';
 
-const getTasks = async () => {
-  try {
-    return await databases.listDocuments(env.appwriteDatabaseId, 'tasks', [
-      Query.equal('completed', true),
-      Query.orderDesc('$updatedAt'),
-      Query.equal('userId', getUserId()),
-    ]);
-  } catch (err) {
-    console.log(err);
-    throw new Error('Error getting completed tasks');
-  }
-};
+export interface ICompletedLoaderData {
+  tasks: ITasksResponse;
+}
 
-const completedLoader: LoaderFunction = async () => {
-  const tasks = await getTasks();
+export const completedLoader: LoaderFunction = async (): Promise<ICompletedLoaderData> => {
+  const tasks = await getCompletedTasks();
 
   return { tasks };
 };
-
-export default completedLoader;

@@ -1,25 +1,12 @@
-import { env } from '@/config/env';
-import { databases, Query } from '@/lib/appwrite';
-import { getUserId } from '@/lib/utils';
+import { getInboxTasks, ITasksResponse } from '@/services/taskService';
 import type { LoaderFunction } from 'react-router';
 
-const getTasks = async () => {
-  try {
-    return await databases.listDocuments(env.appwriteDatabaseId, 'tasks', [
-      Query.equal('completed', false),
-      Query.isNull('projectId'),
-      Query.equal('userId', getUserId()),
-    ]);
-  } catch (err) {
-    console.log(err);
-    throw new Error('Error getting inbox tasks');
-  }
-};
+export interface IInboxLoaderData {
+  tasks: ITasksResponse;
+}
 
-const inboxLoader: LoaderFunction = async () => {
-  const tasks = await getTasks();
+export const inboxLoader: LoaderFunction = async (): Promise<IInboxLoaderData> => {
+  const tasks = await getInboxTasks();
 
   return { tasks };
 };
-
-export default inboxLoader;

@@ -58,3 +58,7 @@ export interface IAppLoaderData {
   projects: Models.DocumentList<Models.Document>;
   taskCounts: ITaskCounts;
 }
+export interface ILoaderError {
+  message: string;
+  status: number;
+}

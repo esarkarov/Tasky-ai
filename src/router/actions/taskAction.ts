@@ -1,64 +1,76 @@
-import { env } from '@/config/env';
 import { HTTP_METHODS } from '@/constants/http';
-import { ITask } from '@/interfaces';
-import { databases } from '@/lib/appwrite';
-import { generateID, getUserId } from '@/lib/utils';
+import { createTask, deleteTask, ITaskFormData, ITaskUpdateData, updateTask } from '@/services/taskService';
 import { ActionFunction } from 'react-router';
 
-const createTask = async (data: ITask) => {
-  try {
-    return await databases.createDocument(env.appwriteDatabaseId, 'tasks', generateID(), {
-      ...data,
-      userId: getUserId(),
-    });
-  } catch (err) {
-    console.log(err);
-  }
-};
-
-const updateTask = async (data: ITask) => {
-  const documentId = data.id;
-
-  if (!documentId) throw new Error('Task id not found.');
-
-  delete data.id;
-
-  try {
-    return await databases.updateDocument(env.appwriteDatabaseId, 'tasks', documentId, data);
-  } catch (err) {
-    console.log(err);
-  }
-};
-
-const deleteTask = async (data: ITask) => {
-  const documentId = data.id;
-
-  if (!documentId) throw new Error('Task id not found.');
-
-  try {
-    await databases.deleteDocument(env.appwriteDatabaseId, 'tasks', documentId);
-  } catch (err) {
-    console.log(err);
-  }
-};
-
-const taskAction: ActionFunction = async ({ request }) => {
+export const taskAction: ActionFunction = async ({ request }) => {
   const method = request.method;
-  const data = (await request.json()) as ITask;
 
-  if (method === HTTP_METHODS.POST) {
-    return await createTask(data);
+  try {
+    if (method === HTTP_METHODS.POST) {
+      const data = (await request.json()) as ITaskFormData;
+      const task = await createTask(data);
+
+      return {
+        success: true,
+        task,
+        message: 'Task created successfully',
+      };
+    }
+
+    if (method === HTTP_METHODS.PUT) {
+      const data = (await request.json()) as ITaskUpdateData;
+
+      if (!data.id) {
+        return new Response(JSON.stringify({ message: 'Task ID is required' }), {
+          status: 400,
+          headers: { 'Content-Type': 'application/json' },
+        });
+      }
+
+      const { id, ...updateData } = data;
+      const task = await updateTask(id, updateData);
+
+      return {
+        success: true,
+        task,
+        message: 'Task updated successfully',
+      };
+    }
+
+    if (method === HTTP_METHODS.DELETE) {
+      const data = (await request.json()) as { id: string };
+
+      if (!data.id) {
+        return new Response(JSON.stringify({ message: 'Task ID is required' }), {
+          status: 400,
+          headers: { 'Content-Type': 'application/json' },
+        });
+      }
+
+      await deleteTask(data.id);
+
+      return {
+        success: true,
+        message: 'Task deleted successfully',
+      };
+    }
+
+    return new Response(JSON.stringify({ message: 'Method not allowed' }), {
+      status: 405,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  } catch (error) {
+    console.error('Task action error:', error);
+
+    return new Response(
+      JSON.stringify({
+        success: false,
+        message: error instanceof Error ? error.message : 'Failed to process request',
+      }),
+      {
+        status: 500,
+        headers: { 'Content-Type': 'application/json' },
+      }
+    );
   }
-
-  if (method === HTTP_METHODS.PUT) {
-    return await updateTask(data);
-  }
-
-  if (method === HTTP_METHODS.DELETE) {
-    return await deleteTask(data);
-  }
-
-  throw new Error('Invalid method');
 };
-
-export default taskAction;
