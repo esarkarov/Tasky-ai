@@ -65,7 +65,6 @@ export const ProjectActionMenu = ({ children, defaultFormData, ...props }: Proje
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
-
       <DropdownMenuContent
         {...props}
         aria-label={`Actions for project ${defaultFormData.name}`}>
@@ -83,7 +82,6 @@ export const ProjectActionMenu = ({ children, defaultFormData, ...props }: Proje
             </Button>
           </ProjectFormDialog>
         </DropdownMenuItem>
-
         <DropdownMenuItem asChild>
           <ConfirmationDialog
             itemType="project"

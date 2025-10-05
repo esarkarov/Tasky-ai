@@ -1,7 +1,7 @@
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
-import { Textarea } from '@/components/ui/textarea';
 import { Bot } from 'lucide-react';
+import { AIPromptInput } from '../atoms/AIPromptInput';
 
 interface AITaskGeneratorProps {
   enabled: boolean;
@@ -44,23 +44,11 @@ export const AITaskGenerator = ({ enabled, prompt, onToggle, onPromptChange, onK
     </div>
 
     {enabled && (
-      <div className="px-3 pb-3">
-        <Label
-          htmlFor="ai_prompt"
-          className="sr-only">
-          AI task prompt
-        </Label>
-        <Textarea
-          id="ai_prompt"
-          autoFocus
-          placeholder="Tell me about your project. What do you want to accomplish?"
-          className="border-none focus-visible:ring-2 focus-visible:ring-ring"
-          value={prompt}
-          onChange={(e) => onPromptChange(e.currentTarget.value)}
-          onKeyDown={onKeyDown}
-          aria-describedby="ai-task-generator-description"
-        />
-      </div>
+      <AIPromptInput
+        prompt={prompt}
+        onKeyDown={onKeyDown}
+        onChange={onPromptChange}
+      />
     )}
   </section>
 );

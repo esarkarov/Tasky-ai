@@ -24,7 +24,6 @@ export const TaskDisplay = ({ project, task, onToggleComplete, onEdit, onDelete 
       task={task}
       onToggleComplete={onToggleComplete}
     />
-
     <Card className="rounded-none py-2 space-y-1.5 border-none">
       <CardContent className="p-0">
         <p
@@ -33,13 +32,11 @@ export const TaskDisplay = ({ project, task, onToggleComplete, onEdit, onDelete 
           {task.content}
         </p>
       </CardContent>
-
       <TaskMetadata
         task={task}
         project={project}
       />
     </Card>
-
     <TaskActionButtons
       task={task}
       onEdit={onEdit}

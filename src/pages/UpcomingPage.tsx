@@ -10,7 +10,6 @@ import { useLoaderData } from 'react-router';
 
 export const UpcomingPage = () => {
   const { tasks } = useLoaderData<ITasksLoaderData>();
-  console.log(tasks);
 
   return (
     <>
@@ -24,7 +23,6 @@ export const UpcomingPage = () => {
       <Page aria-labelledby="upcoming-page-title">
         <PageHeader>
           <PageTitle>Upcoming</PageTitle>
-
           {tasks.total > 0 && <TotalTasks total={tasks.total} />}
         </PageHeader>
 

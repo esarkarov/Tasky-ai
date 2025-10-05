@@ -21,7 +21,6 @@ export const AppTemplate = memo(() => {
           disableHoverableContent>
           <div className="flex h-screen w-full">
             <AppSidebar />
-
             <main
               id="main-content"
               className={cn('flex-1 focus:outline-none', isLoading && 'pointer-events-none opacity-50')}

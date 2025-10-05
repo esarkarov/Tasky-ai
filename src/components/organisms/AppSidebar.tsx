@@ -1,7 +1,7 @@
 import { Logo } from '@/components/atoms/Logo';
 import { UserChip } from '@/components/atoms/UserChip';
 import { ProjectsSection } from '@/components/organisms/ProjectsSection';
-import { SideNavMenu } from '@/components/organisms/SideNavMenu';
+import { SidebarNavGroup } from '@/components/organisms/SidebarNavGroup';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, useSidebar } from '@/components/ui/sidebar';
 import { ROUTES } from '@/constants/routes';
 import { IAppLoaderData } from '@/types/loader.types';
@@ -30,17 +30,14 @@ export const AppSidebar = () => {
           <Logo />
         </Link>
       </SidebarHeader>
-
       <SidebarContent>
-        <SideNavMenu
+        <SidebarNavGroup
           currentPath={location.pathname}
           taskCounts={taskCounts}
           onItemClick={handleNavigationClick}
         />
-
         <ProjectsSection onItemClick={handleNavigationClick} />
       </SidebarContent>
-
       <SidebarFooter>
         <UserChip />
       </SidebarFooter>

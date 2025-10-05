@@ -3,6 +3,7 @@ import { Page, PageHeader, PageList, PageTitle } from '@/components/atoms/Page';
 import { TaskAddButton } from '@/components/atoms/TaskAddButton';
 import { TaskCardSkeleton } from '@/components/atoms/TaskCardSkeleton';
 import { TaskEmptyState } from '@/components/atoms/TaskEmptyState';
+import { TotalTasks } from '@/components/atoms/TotalTasks';
 import { TaskCard } from '@/components/organisms/TaskCard';
 import { TaskForm } from '@/components/organisms/TaskForm';
 import { TopAppBar } from '@/components/organisms/TopAppBar';
@@ -41,6 +42,7 @@ export const InboxPage = () => {
       <Page aria-labelledby="inbox-page-title">
         <PageHeader>
           <PageTitle>Inbox</PageTitle>
+          {tasks.total > 0 && <TotalTasks total={tasks.total} />}
         </PageHeader>
 
         <PageList aria-label="Inbox tasks">

@@ -1,10 +1,10 @@
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn, formatCustomDate, getTaskDueDateColorClass } from '@/lib/utils';
-import { CalendarIcon, X } from 'lucide-react';
+import { CalendarIcon } from 'lucide-react';
 import { useState } from 'react';
+import { RemoveDueDateButton } from '../atoms/RemoveDueDateButton';
 
 interface DueDateSelectorProps {
   dueDate: Date | null;
@@ -56,22 +56,7 @@ export const DueDateSelector = ({ dueDate, onDateChange, onDateRemove }: DueDate
         </PopoverContent>
       </Popover>
 
-      {dueDate && (
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              className="px-2 -ms-2"
-              aria-label="Remove due date"
-              onClick={onDateRemove}>
-              <X aria-hidden="true" />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>Remove due date</TooltipContent>
-        </Tooltip>
-      )}
+      {dueDate && <RemoveDueDateButton onDateRemove={onDateRemove} />}
     </div>
   );
 };

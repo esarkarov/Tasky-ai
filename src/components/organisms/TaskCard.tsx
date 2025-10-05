@@ -1,3 +1,4 @@
+import { TaskDisplay } from '@/components/organisms/TaskDisplay';
 import { TaskForm } from '@/components/organisms/TaskForm';
 import { HTTP_METHODS } from '@/constants/http';
 import { ROUTES } from '@/constants/routes';
@@ -5,7 +6,6 @@ import { IProject } from '@/types/project.types';
 import { ITask, ITaskFormData } from '@/types/task.types';
 import { memo, useCallback, useState } from 'react';
 import { useFetcher } from 'react-router';
-import { TaskDisplay } from './TaskDisplay';
 
 interface TaskCardProps {
   id: string;
@@ -67,8 +67,6 @@ export const TaskCard = memo(({ id, content, completed, dueDate, project }: Task
       encType: 'application/json',
     });
   }, [fetcher, task.id]);
-
-  console.log('assigned task:', task);
 
   return (
     <article

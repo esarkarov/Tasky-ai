@@ -17,6 +17,7 @@ export const TaskMetadata = ({ task, project }: TaskMetadataProps) => {
   const showProject = location.pathname !== ROUTES.INBOX && location.pathname !== ROUTES.PROJECT(project?.$id);
 
   if (!showDueDate && !showProject) return null;
+  console.log(showDueDate);
 
   return (
     <CardFooter
@@ -41,7 +42,7 @@ export const TaskMetadata = ({ task, project }: TaskMetadataProps) => {
         <div
           className="grid grid-cols-[minmax(0,180px),max-content] items-center gap-1 text-xs text-muted-foreground ms-auto"
           aria-label="Task project">
-          <div className="truncate text-right">{task?.project?.name || 'Inbox'}</div>
+          <div className="truncate text-right">{task.project?.name || 'Inbox'}</div>
           {task.project ? (
             <Hash
               size={14}

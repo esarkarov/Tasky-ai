@@ -21,8 +21,6 @@ export const TodayPage = () => {
   const { tasks } = useLoaderData<ITasksLoaderData>();
   const [isFormOpen, setIsFormOpen] = useState<boolean>(false);
 
-  console.log(tasks);
-
   const handleSubmitCreate = useCallback(
     (formData: ITaskFormData) => {
       fetcher.submit(JSON.stringify(formData), {
@@ -34,7 +32,6 @@ export const TodayPage = () => {
     [fetcher]
   );
 
-  console.log(tasks);
   return (
     <>
       <Head title="Tasky AI | Today" />
@@ -47,7 +44,6 @@ export const TodayPage = () => {
       <Page aria-labelledby="today-page-title">
         <PageHeader>
           <PageTitle>Today</PageTitle>
-
           {tasks.total > 0 && <TotalTasks total={tasks.total} />}
         </PageHeader>
 

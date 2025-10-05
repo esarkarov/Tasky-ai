@@ -21,9 +21,7 @@ export const ProjectCard = memo(({ project }: ProjectCardProps) => {
         className="shrink-0"
         aria-hidden="true"
       />
-
       <p className="max-w-[48ch] truncate text-sm">{project.name}</p>
-
       <ProjectActionMenu
         defaultFormData={{
           id: project.$id,
@@ -40,7 +38,6 @@ export const ProjectCard = memo(({ project }: ProjectCardProps) => {
           <MoreHorizontal aria-hidden="true" />
         </Button>
       </ProjectActionMenu>
-
       <Link
         to={ROUTES.PROJECT(project.$id)}
         className="absolute inset-0 z-10"

@@ -104,12 +104,12 @@ export const ProjectDetailPage = () => {
             <TaskForm
               className="mt-1"
               mode="create"
-              onCancel={() => setIsFormShow(false)}
               defaultFormData={{
                 content: '',
                 due_date: null,
                 projectId: project.$id,
               }}
+              onCancel={() => setIsFormShow(false)}
               onSubmit={handleSubmitCreate}
             />
           )}

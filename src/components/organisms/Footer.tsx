@@ -10,9 +10,8 @@ export const Footer = () => {
         <p
           className="text-center text-sm"
           aria-label="Copyright notice">
-          &copy; 2025 ElvinWeb. All rights reserved.
+          &copy; All rights reserved.
         </p>
-
         <nav aria-label="Social media links">
           <ul className="flex flex-wrap items-center">
             {SOCIAL_LINKS.map(({ href, label }, index) => (

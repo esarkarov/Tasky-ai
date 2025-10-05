@@ -16,11 +16,11 @@ import type { ClassValue } from 'clsx';
 import { useCallback, useEffect, useState } from 'react';
 
 interface TaskFormProps {
-  defaultFormData?: ITaskFormData;
-  className?: ClassValue;
   mode: TActionMode;
-  onCancel?: () => void;
+  className?: ClassValue;
+  defaultFormData?: ITaskFormData;
   onSubmit?: (formData: ITaskFormData) => void;
+  onCancel: () => void;
 }
 
 export const TaskForm = ({
@@ -96,7 +96,7 @@ export const TaskForm = ({
     return () => document.removeEventListener('keydown', handleKeyPress);
   }, [handleKeyPress]);
 
-  const isValid = taskContent.trim().length > 0;
+  const isFormValid = taskContent.trim().length > 0;
 
   return (
     <Card
@@ -109,22 +109,18 @@ export const TaskForm = ({
           className="sr-only">
           {mode === 'create' ? 'Create task' : 'Edit task'}
         </h2>
-
         <TaskContentInput
           value={taskContent}
           onChange={setTaskContent}
           onSubmit={handleSubmit}
         />
-
         <DueDateSelector
           dueDate={dueDate as Date}
           onDateChange={setDueDate}
           onDateRemove={() => setDueDate(null)}
         />
       </CardContent>
-
       <Separator />
-
       <CardFooter className="grid grid-cols-[minmax(0,1fr),max-content] gap-2 p-2">
         <ProjectSelector
           setProjectInfo={setProjectInfo}
@@ -132,9 +128,8 @@ export const TaskForm = ({
           projectInfo={projectInfo}
           projects={projects}
         />
-
         <TaskFormActions
-          isValid={isValid}
+          isFormValid={isFormValid}
           mode={mode}
           onCancel={onCancel}
           onSubmit={handleSubmit}

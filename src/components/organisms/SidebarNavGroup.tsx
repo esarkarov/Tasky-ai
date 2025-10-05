@@ -17,7 +17,7 @@ interface SideNavMenuProps {
   onItemClick: () => void;
 }
 
-export const SideNavMenu = ({ currentPath, taskCounts, onItemClick }: SideNavMenuProps) => (
+export const SidebarNavGroup = ({ currentPath, taskCounts, onItemClick }: SideNavMenuProps) => (
   <SidebarGroup
     role="navigation"
     aria-label="Primary navigation">
@@ -33,7 +33,6 @@ export const SideNavMenu = ({ currentPath, taskCounts, onItemClick }: SideNavMen
             </SidebarMenuButton>
           </TaskFormDialog>
         </SidebarMenuItem>
-
         {SIDEBAR_LINKS.map((item, index) => (
           <SideNavItem
             key={index}

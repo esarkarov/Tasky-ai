@@ -46,7 +46,6 @@ export const TaskFormDialog: React.FC<PropsWithChildren> = ({ children }) => {
       open={isOpen}
       onOpenChange={setIsOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
-
       <DialogContent
         className="p-0 border-0 !rounded-xl"
         aria-label="Create new task form">

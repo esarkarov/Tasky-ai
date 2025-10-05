@@ -49,7 +49,6 @@ export const ProjectFormDialog = ({ defaultFormData, children, method }: Project
       open={isOpen}
       onOpenChange={setIsOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
-
       <DialogContent
         className="p-0 border-0 !rounded-xl"
         aria-label={method === 'POST' ? 'Create project form' : 'Edit project form'}>
