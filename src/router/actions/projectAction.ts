@@ -19,6 +19,19 @@ export const projectAction: ActionFunction = async ({ request }) => {
     if (method === HTTP_METHODS.POST) {
       const data = (await request.json()) as IProjectFormData;
 
+      if (!data.name || data.name.trim().length === 0) {
+        return new Response(
+          JSON.stringify({
+            success: false,
+            message: 'Project name is required',
+          }),
+          {
+            status: 400,
+            headers: { 'Content-Type': 'application/json' },
+          }
+        );
+      }
+
       const project = await createProject(data);
 
       if (data.ai_task_gen && data.task_gen_prompt) {
@@ -35,37 +48,77 @@ export const projectAction: ActionFunction = async ({ request }) => {
     if (method === HTTP_METHODS.PUT) {
       const data = (await request.json()) as IProjectUpdateData;
 
-      if (!data.id)
-        return new Response(JSON.stringify({ message: 'Project ID is required' }), {
-          status: 400,
-          headers: { 'Content-Type': 'application/json' },
-        });
+      if (!data.id) {
+        return new Response(
+          JSON.stringify({
+            success: false,
+            message: 'Project ID is required',
+          }),
+          {
+            status: 400,
+            headers: { 'Content-Type': 'application/json' },
+          }
+        );
+      }
 
-      await updateProject(data.id, {
-        name: data.name,
-        color_name: data.color_name,
-        color_hex: data.color_hex,
-      });
+      const { id, ...updateData } = data;
+      const project = await updateProject(id, updateData);
+
+      return new Response(
+        JSON.stringify({
+          success: true,
+          project,
+          message: 'Project updated successfully',
+        }),
+        {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
     }
 
     if (method === HTTP_METHODS.DELETE) {
       const data = (await request.json()) as { id: string };
 
-      if (!data.id)
-        return new Response(JSON.stringify({ message: 'Project ID is required' }), {
-          status: 400,
-          headers: { 'Content-Type': 'application/json' },
-        });
+      if (!data.id) {
+        return new Response(
+          JSON.stringify({
+            success: false,
+            message: 'Project ID is required',
+          }),
+          {
+            status: 400,
+            headers: { 'Content-Type': 'application/json' },
+          }
+        );
+      }
 
       await deleteProject(data.id);
+
+      return new Response(
+        JSON.stringify({
+          success: true,
+          message: 'Project deleted successfully',
+        }),
+        {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
     }
 
-    return new Response(JSON.stringify({ message: 'Method not allowed' }), {
-      status: 405,
-      headers: { 'Content-Type': 'application/json' },
-    });
+    return new Response(
+      JSON.stringify({
+        success: false,
+        message: 'Method not allowed',
+      }),
+      {
+        status: 405,
+        headers: { 'Content-Type': 'application/json' },
+      }
+    );
   } catch (error) {
-    console.error('Task action error:', error);
+    console.error('Project action error:', error);
 
     return new Response(
       JSON.stringify({

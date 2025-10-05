@@ -32,7 +32,7 @@ const HomePage = () => {
                 <Button
                   asChild
                   size="lg">
-                  <Link to={ROUTES.APP}>Go to Dashboard</Link>
+                  <Link to={ROUTES.TODAY}>Go to Dashboard</Link>
                 </Button>
               ) : (
                 <Button

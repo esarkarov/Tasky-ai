@@ -73,12 +73,27 @@ export const TaskForm = ({
   }, [taskContent]);
 
   const handleSubmit = useCallback(() => {
-    if (!taskContent) return;
+    if (!taskContent.trim()) return;
 
     if (onSubmit) onSubmit(formData);
 
     setTaskContent('');
   }, [taskContent, onSubmit, formData]);
+
+  const handleKeyPress = useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        handleSubmit();
+      }
+    },
+    [handleSubmit]
+  );
+
+  useEffect(() => {
+    document.addEventListener('keydown', handleKeyPress);
+    return () => document.removeEventListener('keydown', handleKeyPress);
+  }, [handleKeyPress]);
 
   const isValid = taskContent.trim().length > 0;
 

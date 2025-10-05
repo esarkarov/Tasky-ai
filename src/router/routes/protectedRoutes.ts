@@ -16,7 +16,7 @@ import {
 } from '@/router/lazy/lazy';
 import { RouteObject } from 'react-router';
 
-export const appRoutes: RouteObject[] = [
+export const protectedRoutes: RouteObject[] = [
   {
     path: ROUTES.APP_PATHS.INBOX,
     lazy: {

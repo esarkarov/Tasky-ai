@@ -2,7 +2,7 @@ import { Loader } from '@/components/atoms/Loader';
 import { ROUTES } from '@/constants/routes';
 import ErrorPage from '@/pages/ErrorPage';
 import { appLoader, AppTemplate, RootTemplate, taskAction } from '@/router/lazy/lazy';
-import { appRoutes } from '@/router/routes/protectedRoutes';
+import { protectedRoutes } from '@/router/routes/protectedRoutes';
 import { publicRoutes } from '@/router/routes/publicRoutes';
 import { createElement } from 'react';
 import { createBrowserRouter } from 'react-router';
@@ -26,7 +26,7 @@ const router = createBrowserRouter([
       action: taskAction,
       loader: appLoader,
     },
-    children: appRoutes,
+    children: protectedRoutes,
   },
   {
     path: ROUTES.NOT_FOUND,

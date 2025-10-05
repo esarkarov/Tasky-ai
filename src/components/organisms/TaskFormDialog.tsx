@@ -25,7 +25,6 @@ export const TaskFormDialog: React.FC<PropsWithChildren> = ({ children }) => {
     };
 
     document.addEventListener('keydown', listener);
-
     return () => document.removeEventListener('keydown', listener);
   }, []);
 
@@ -36,7 +35,6 @@ export const TaskFormDialog: React.FC<PropsWithChildren> = ({ children }) => {
         method: HTTP_METHODS.POST,
         encType: 'application/json',
       });
-
       setIsOpen(false);
     },
     [fetcher]
