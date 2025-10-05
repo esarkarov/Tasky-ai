@@ -14,7 +14,7 @@ import { Plus } from 'lucide-react';
 import { useCallback, useRef, useState } from 'react';
 import { useFetcher, useLoaderData } from 'react-router';
 
-const ProjectsPage = () => {
+export const ProjectsPage = () => {
   const fetcher = useFetcher();
   const fetcherData = fetcher.data as IDataType;
   const loaderData = useLoaderData() as IDataType;
@@ -44,9 +44,12 @@ const ProjectsPage = () => {
     <>
       <Head title="Tasky AI | My Projects" />
 
-      <TopAppBar title="My Projects" />
+      <TopAppBar
+        title="My Projects"
+        taskCount={projects.total}
+      />
 
-      <Page>
+      <Page aria-labelledby="projects-page-title">
         <PageHeader>
           <div className="flex items-center gap-2">
             <PageTitle>My Projects</PageTitle>
@@ -56,15 +59,16 @@ const ProjectsPage = () => {
                 variant="ghost"
                 size="icon"
                 className="w-8 h-8"
-                aria-label="Create a project">
-                <Plus />
+                aria-label="Create a new project">
+                <Plus aria-hidden="true" />
               </Button>
             </ProjectFormDialog>
           </div>
 
           <fetcher.Form
             method="get"
-            action={ROUTES.PROJECTS}>
+            action={ROUTES.PROJECTS}
+            role="search">
             <ProjectSearchField
               handleChange={handleProjectSearch}
               searchingState={searchingState}
@@ -72,9 +76,13 @@ const ProjectsPage = () => {
           </fetcher.Form>
         </PageHeader>
 
-        <PageList>
+        <PageList aria-label="Project list">
           <div className="h-8 flex items-center border-b">
-            <div className="text-sm">{projects.total} projects</div>
+            <div
+              className="text-sm"
+              aria-live="polite">
+              {projects.total} projects
+            </div>
           </div>
 
           <div className={cn(searchingState === 'searching' && 'opacity-25')}>
@@ -86,7 +94,11 @@ const ProjectsPage = () => {
             ))}
 
             {projects.total === 0 && (
-              <div className="h-14 flex justify-center items-center text-muted-foreground">No project found</div>
+              <p
+                className="h-14 flex justify-center items-center text-muted-foreground"
+                role="status">
+                No project found
+              </p>
             )}
           </div>
         </PageList>
@@ -94,5 +106,3 @@ const ProjectsPage = () => {
     </>
   );
 };
-
-export default ProjectsPage;

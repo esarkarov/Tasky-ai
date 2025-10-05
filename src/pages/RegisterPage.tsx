@@ -2,28 +2,33 @@ import { Head } from '@/components/atoms/Head';
 import { ROUTES } from '@/constants/routes';
 import { SignUp } from '@clerk/clerk-react';
 
-const RegisterPage = () => {
+export const RegisterPage = () => {
   return (
     <>
       <Head title="Tasky AI | Create an Account" />
 
-      <section>
-        <div className="container flex justify-center">
-          <SignUp
-            routing="path"
-            path={ROUTES.REGISTER}
-            signInUrl={ROUTES.LOGIN}
-            appearance={{
-              elements: {
-                rootBox: 'mx-auto',
-                card: 'shadow-lg',
-              },
-            }}
-          />
-        </div>
-      </section>
+      <main
+        role="main"
+        aria-labelledby="register-page-title"
+        className="flex justify-center py-12">
+        <h1
+          id="register-page-title"
+          className="sr-only">
+          Create a Tasky AI account
+        </h1>
+
+        <SignUp
+          routing="path"
+          path={ROUTES.REGISTER}
+          signInUrl={ROUTES.LOGIN}
+          appearance={{
+            elements: {
+              rootBox: 'mx-auto',
+              card: 'shadow-lg',
+            },
+          }}
+        />
+      </main>
     </>
   );
 };
-
-export default RegisterPage;

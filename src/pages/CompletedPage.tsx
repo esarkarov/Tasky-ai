@@ -6,7 +6,7 @@ import { TopAppBar } from '@/components/organisms/TopAppBar';
 import type { Models } from 'appwrite';
 import { useLoaderData } from 'react-router';
 
-const CompletedPage = () => {
+export const CompletedPage = () => {
   const { tasks } = useLoaderData<{
     tasks: Models.DocumentList<Models.Document>;
   }>();
@@ -15,14 +15,17 @@ const CompletedPage = () => {
     <>
       <Head title="Tasky AI | Completed" />
 
-      <TopAppBar title="Completed" />
+      <TopAppBar
+        title="Completed"
+        taskCount={tasks?.total}
+      />
 
-      <Page>
+      <Page aria-labelledby="completed-page-title">
         <PageHeader>
           <PageTitle>Completed</PageTitle>
         </PageHeader>
 
-        <PageList>
+        <PageList aria-label="Completed tasks">
           {tasks?.documents.map(({ $id, content, completed, due_date, project }) => (
             <TaskCard
               key={$id}
@@ -40,5 +43,3 @@ const CompletedPage = () => {
     </>
   );
 };
-
-export default CompletedPage;

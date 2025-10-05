@@ -4,7 +4,7 @@ import { useAuth } from '@clerk/clerk-react';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router';
 
-const AuthSyncPage = () => {
+export const AuthSyncPage = () => {
   const navigate = useNavigate();
   const { isSignedIn, isLoaded, userId } = useAuth();
 
@@ -28,5 +28,3 @@ const AuthSyncPage = () => {
 
   return <></>;
 };
-
-export default AuthSyncPage;

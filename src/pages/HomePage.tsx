@@ -5,17 +5,22 @@ import { ROUTES } from '@/constants/routes';
 import { useAuth } from '@clerk/clerk-react';
 import { Link } from 'react-router';
 
-const HomePage = () => {
+export const HomePage = () => {
   const { isSignedIn } = useAuth();
 
   return (
     <>
       <Head title="Tasky AI | AI-Powered Task Management App" />
 
-      <section>
+      <section
+        className="py-12"
+        role="main"
+        aria-labelledby="homepage-heading">
         <div className="container !px-8 grid grid-cols-1 gap-8 items-center xl:gap-12 xl:grid-cols-[1fr_1.5fr]">
           <div className="flex flex-col items-center text-center space-y-4 lg:text-left lg:items-start lg:space-y-6">
-            <h1 className="text-4xl font-semibold max-w-[22ch] md:text-5xl lg:text-6xl xl:text-5xl 2xl:text-6xl">
+            <h1
+              id="homepage-heading"
+              className="text-4xl font-semibold max-w-[22ch] md:text-5xl lg:text-6xl xl:text-5xl 2xl:text-6xl">
               Simplify Your Work and Life with{' '}
               <span className="inline-flex bg-gradient-to-t from-primary/50 to-primary/30 rounded-full px-2 overflow-hidden">
                 AI-Powered
@@ -23,22 +28,35 @@ const HomePage = () => {
               Task Management.
             </h1>
 
-            <p className="max-w-[48ch] text-foreground/80 md:text-lg lg:text-xl">
+            <p
+              className="max-w-[48ch] text-foreground/80 md:text-lg lg:text-xl"
+              aria-label="App description">
               Simplify life for both you and your team with the AI powered task manager and to-do list app.
             </p>
 
-            <div className="mt-8 flex gap-4 justify-center">
+            <div
+              className="mt-8 flex gap-4 justify-center"
+              role="group"
+              aria-label="Primary actions">
               {isSignedIn ? (
                 <Button
                   asChild
                   size="lg">
-                  <Link to={ROUTES.TODAY}>Go to Dashboard</Link>
+                  <Link
+                    to={ROUTES.TODAY}
+                    aria-label="Go to your dashboard">
+                    Go to Dashboard
+                  </Link>
                 </Button>
               ) : (
                 <Button
                   asChild
                   size="lg">
-                  <Link to={ROUTES.REGISTER}>Get Started</Link>
+                  <Link
+                    to={ROUTES.REGISTER}
+                    aria-label="Create your Tasky AI account">
+                    Get Started
+                  </Link>
                 </Button>
               )}
             </div>
@@ -49,14 +67,14 @@ const HomePage = () => {
               src={heroBannerSm}
               width={480}
               height={480}
-              alt="Tasky AI Website"
+              alt="Illustration of Tasky AI app interface on mobile"
               className="md:hidden"
             />
             <img
               src={heroBannerLg}
               width={960}
               height={540}
-              alt="Tasky AI Website"
+              alt="Illustration of Tasky AI app interface on desktop"
               className="max-md:hidden"
             />
           </figure>
@@ -65,5 +83,3 @@ const HomePage = () => {
     </>
   );
 };
-
-export default HomePage;

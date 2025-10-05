@@ -16,7 +16,7 @@ import { MoreHorizontal } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
 import { useFetcher, useLoaderData } from 'react-router';
 
-const ProjectDetailPage = () => {
+export const ProjectDetailPage = () => {
   const fetcher = useFetcher();
   const [isFormShow, setIsFormShow] = useState<boolean>(false);
   const { project } = useLoaderData<{ project: Models.Document }>();
@@ -46,11 +46,14 @@ const ProjectDetailPage = () => {
 
   return (
     <>
-      <Head title={'Tasky AI | ' + project.name} />
+      <Head title={`Tasky AI | ${project.name}`} />
 
-      <TopAppBar title={project.name} />
+      <TopAppBar
+        title={project.name}
+        taskCount={projectTasks.length}
+      />
 
-      <Page>
+      <Page aria-labelledby="project-detail-title">
         <PageHeader>
           <div className="flex items-center gap-2">
             <PageTitle>{project.name}</PageTitle>
@@ -66,14 +69,14 @@ const ProjectDetailPage = () => {
                 variant="ghost"
                 size="icon"
                 className="w-8 h-8 shrink-0"
-                aria-label="More actions">
-                <MoreHorizontal />
+                aria-label={`More actions for project ${project.name}`}>
+                <MoreHorizontal aria-hidden="true" />
               </Button>
             </ProjectActionMenu>
           </div>
         </PageHeader>
 
-        <PageList>
+        <PageList aria-label={`Tasks for project ${project.name}`}>
           {projectTasks.map(({ $id, content, completed, due_date }) => (
             <TaskCard
               key={$id}
@@ -87,7 +90,12 @@ const ProjectDetailPage = () => {
 
           {fetcher.state !== 'idle' && <TaskCardSkeleton />}
 
-          {!isFormShow && <TaskAddButton onClick={() => setIsFormShow(true)} />}
+          {!isFormShow && (
+            <TaskAddButton
+              onClick={() => setIsFormShow(true)}
+              aria-label="Add new task to this project"
+            />
+          )}
 
           {!projectTasks.length && !isFormShow && <TaskEmptyState type="project" />}
 
@@ -109,5 +117,3 @@ const ProjectDetailPage = () => {
     </>
   );
 };
-
-export default ProjectDetailPage;

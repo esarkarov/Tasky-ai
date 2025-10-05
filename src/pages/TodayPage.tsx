@@ -15,7 +15,7 @@ import { startOfToday } from 'date-fns';
 import { useCallback, useState } from 'react';
 import { useFetcher, useLoaderData } from 'react-router';
 
-const TodayPage = () => {
+export const TodayPage = () => {
   const fetcher = useFetcher();
   const { tasks } = useLoaderData<{
     tasks: Models.DocumentList<Models.Document>;
@@ -42,14 +42,14 @@ const TodayPage = () => {
         taskCount={tasks.total}
       />
 
-      <Page>
+      <Page aria-labelledby="today-page-title">
         <PageHeader>
           <PageTitle>Today</PageTitle>
 
           {tasks.total > 0 && <TotalTasks total={tasks.total} />}
         </PageHeader>
 
-        <PageList>
+        <PageList aria-label="Today's tasks">
           {tasks.documents.map(({ $id, content, completed, due_date, project }) => (
             <TaskCard
               key={$id}
@@ -63,9 +63,14 @@ const TodayPage = () => {
 
           {fetcher.state !== 'idle' && <TaskCardSkeleton />}
 
-          {!isFormOpen && <TaskAddButton onClick={() => setIsFormOpen(true)} />}
+          {!isFormOpen && (
+            <TaskAddButton
+              onClick={() => setIsFormOpen(true)}
+              aria-label="Add new task for today"
+            />
+          )}
 
-          {!tasks.total && !isFormOpen && <TaskEmptyState />}
+          {!tasks.total && !isFormOpen && <TaskEmptyState type="today" />}
 
           {isFormOpen && (
             <TaskForm
@@ -85,5 +90,3 @@ const TodayPage = () => {
     </>
   );
 };
-
-export default TodayPage;

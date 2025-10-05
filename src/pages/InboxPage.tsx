@@ -13,7 +13,7 @@ import { useFetcher, useLoaderData } from 'react-router';
 import { ROUTES } from '@/constants/routes';
 import { HTTP_METHODS } from '@/constants/http';
 
-const InboxPage = () => {
+export const InboxPage = () => {
   const fetcher = useFetcher();
   const { tasks } = useLoaderData<{
     tasks: Models.DocumentList<Models.Document>;
@@ -35,14 +35,17 @@ const InboxPage = () => {
     <>
       <Head title="Tasky AI | Inbox" />
 
-      <TopAppBar title="Inbox" />
+      <TopAppBar
+        title="Inbox"
+        taskCount={tasks?.total}
+      />
 
-      <Page>
+      <Page aria-labelledby="inbox-page-title">
         <PageHeader>
           <PageTitle>Inbox</PageTitle>
         </PageHeader>
 
-        <PageList>
+        <PageList aria-label="Inbox tasks">
           {tasks?.documents.map(({ $id, content, completed, due_date, project }) => (
             <TaskCard
               key={$id}
@@ -73,5 +76,3 @@ const InboxPage = () => {
     </>
   );
 };
-
-export default InboxPage;

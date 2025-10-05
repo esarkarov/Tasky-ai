@@ -7,7 +7,7 @@ import { TopAppBar } from '@/components/organisms/TopAppBar';
 import type { Models } from 'appwrite';
 import { useLoaderData } from 'react-router';
 
-const UpcomingPage = () => {
+export const UpcomingPage = () => {
   const { tasks } = useLoaderData<{
     tasks: Models.DocumentList<Models.Document>;
   }>();
@@ -21,14 +21,14 @@ const UpcomingPage = () => {
         taskCount={tasks.total}
       />
 
-      <Page>
+      <Page aria-labelledby="upcoming-page-title">
         <PageHeader>
           <PageTitle>Upcoming</PageTitle>
 
           {tasks.total > 0 && <TotalTasks total={tasks.total} />}
         </PageHeader>
 
-        <PageList>
+        <PageList aria-label="Upcoming tasks">
           {tasks?.documents.map(({ $id, content, completed, due_date, project }) => (
             <TaskCard
               key={$id}
@@ -46,5 +46,3 @@ const UpcomingPage = () => {
     </>
   );
 };
-
-export default UpcomingPage;
