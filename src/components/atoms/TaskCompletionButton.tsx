@@ -1,8 +1,8 @@
 import { Button } from '@/components/ui/button';
 import { ToastAction } from '@/components/ui/toast';
 import { useToast } from '@/hooks/use-toast';
-import { ITask } from '@/interfaces';
 import { cn } from '@/lib/utils';
+import { ITask } from '@/types/task.types';
 import { Check } from 'lucide-react';
 
 interface TaskCompletionButtonProps {

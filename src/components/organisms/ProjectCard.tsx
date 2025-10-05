@@ -1,13 +1,13 @@
 import { ProjectActionMenu } from '@/components/organisms/ProjectActionMenu';
 import { Button } from '@/components/ui/button';
 import { ROUTES } from '@/constants/routes';
-import type { Models } from 'appwrite';
+import { IProjectListItem } from '@/types/project.types';
 import { Hash, MoreHorizontal } from 'lucide-react';
 import { memo } from 'react';
 import { Link } from 'react-router';
 
 interface ProjectCardProps {
-  project: Models.Document;
+  project: IProjectListItem;
 }
 
 export const ProjectCard = memo(({ project }: ProjectCardProps) => {

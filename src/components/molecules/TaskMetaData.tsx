@@ -1,13 +1,13 @@
 import { CardFooter } from '@/components/ui/card';
 import { ROUTES } from '@/constants/routes';
-import { ITask } from '@/interfaces';
 import { cn, formatCustomDate, getTaskDueDateColorClass } from '@/lib/utils';
-import { Models } from 'appwrite';
+import { IProject } from '@/types/project.types';
+import { ITask } from '@/types/task.types';
 import { CalendarDays, Hash, Inbox } from 'lucide-react';
 import { useLocation } from 'react-router';
 
 interface TaskMetadataProps {
-  project: Models.Document | null;
+  project: IProject;
   task: ITask;
 }
 
@@ -26,16 +26,14 @@ export const TaskMetadata = ({ task, project }: TaskMetadataProps) => {
         <div
           className={cn(
             'flex items-center gap-1 text-xs text-muted-foreground',
-            getTaskDueDateColorClass(task.due_date, task.completed)
+            getTaskDueDateColorClass(task.due_date ? new Date(task.due_date) : null, task.completed)
           )}
           aria-label="Task due date">
           <CalendarDays
             size={14}
             aria-hidden="true"
           />
-          <time dateTime={new Date(task.due_date as Date).toISOString()}>
-            {formatCustomDate(task.due_date as Date)}
-          </time>
+          <time dateTime={new Date(task.due_date ?? '').toISOString()}>{formatCustomDate(task.due_date ?? '')}</time>
         </div>
       )}
 

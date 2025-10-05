@@ -3,14 +3,14 @@ import { SidebarProvider } from '@/components/ui/sidebar';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { TIMING } from '@/constants/timing';
 import { ProjectProvider } from '@/contexts/ProjectContext';
-import { IAppLoaderData } from '@/interfaces';
 import { cn } from '@/lib/utils';
+import { IProjectsLoaderData } from '@/types/loader.types';
 import { memo } from 'react';
 import { Outlet, useLoaderData, useNavigation } from 'react-router';
 
 export const AppTemplate = memo(() => {
   const navigation = useNavigation();
-  const { projects } = useLoaderData<IAppLoaderData>();
+  const { projects } = useLoaderData<IProjectsLoaderData>();
   const isLoading = navigation.state === 'loading' && !navigation.formData;
 
   return (

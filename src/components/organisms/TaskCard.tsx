@@ -1,25 +1,25 @@
 import { TaskForm } from '@/components/organisms/TaskForm';
-import { ITask, ITaskForm } from '@/interfaces';
-import type { Models } from 'appwrite';
+import { HTTP_METHODS } from '@/constants/http';
+import { ROUTES } from '@/constants/routes';
+import { IProject } from '@/types/project.types';
+import { ITask, ITaskFormData } from '@/types/task.types';
 import { memo, useCallback, useState } from 'react';
 import { useFetcher } from 'react-router';
 import { TaskDisplay } from './TaskDisplay';
-import { ROUTES } from '@/constants/routes';
-import { HTTP_METHODS } from '@/constants/http';
 
 interface TaskCardProps {
   id: string;
   content: string;
   completed: boolean;
   dueDate: Date;
-  project: Models.Document | null;
+  project: IProject;
 }
 
 export const TaskCard = memo(({ id, content, completed, dueDate, project }: TaskCardProps) => {
   const fetcher = useFetcher();
   const [isEditing, setIsEditing] = useState<boolean>(false);
 
-  const fetcherTask = fetcher.json as unknown as ITask;
+  const fetcherTask = fetcher.json as ITask;
   const task: ITask = Object.assign(
     {
       id,
@@ -43,7 +43,7 @@ export const TaskCard = memo(({ id, content, completed, dueDate, project }: Task
   );
 
   const handleSubmitEdit = useCallback(
-    (formData: ITaskForm) => {
+    (formData: ITaskFormData) => {
       fetcher.submit(
         JSON.stringify({
           ...formData,
@@ -87,6 +87,7 @@ export const TaskCard = memo(({ id, content, completed, dueDate, project }: Task
           className="my-1"
           defaultFormData={{
             ...task,
+            due_date: task.due_date,
             projectId: project?.$id ?? null,
           }}
           mode="edit"

@@ -1,5 +1,5 @@
 import { generateProjectTasks } from '@/api/googleAI';
-import { IAIGeneratedTask } from '@/services/taskService';
+import { IAIGeneratedTask } from '@/types/task.types';
 
 export const createProjectTasks = async (prompt: string): Promise<IAIGeneratedTask[]> => {
   try {

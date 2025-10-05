@@ -2,7 +2,7 @@ import { TaskForm } from '@/components/organisms/TaskForm';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { HTTP_METHODS } from '@/constants/http';
 import { ROUTES } from '@/constants/routes';
-import { ITaskForm } from '@/interfaces';
+import { ITaskFormData } from '@/types/task.types';
 import { startOfToday } from 'date-fns';
 import type { PropsWithChildren } from 'react';
 import { useCallback, useEffect, useState } from 'react';
@@ -12,6 +12,7 @@ export const TaskFormDialog: React.FC<PropsWithChildren> = ({ children }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const location = useLocation();
   const fetcher = useFetcher();
+  const isToday = location.pathname === ROUTES.TODAY;
 
   useEffect(() => {
     const listener = (event: KeyboardEvent) => {
@@ -29,7 +30,7 @@ export const TaskFormDialog: React.FC<PropsWithChildren> = ({ children }) => {
   }, []);
 
   const handleSubmitCreate = useCallback(
-    (formData: ITaskForm) => {
+    (formData: ITaskFormData) => {
       fetcher.submit(JSON.stringify(formData), {
         action: ROUTES.APP,
         method: HTTP_METHODS.POST,
@@ -52,7 +53,7 @@ export const TaskFormDialog: React.FC<PropsWithChildren> = ({ children }) => {
         <TaskForm
           defaultFormData={{
             content: '',
-            due_date: location.pathname === ROUTES.TODAY ? startOfToday() : null,
+            due_date: isToday ? startOfToday() : null,
             projectId: null,
           }}
           mode="create"

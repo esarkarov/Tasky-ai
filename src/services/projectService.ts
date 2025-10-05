@@ -1,43 +1,8 @@
 import { env } from '@/config/env';
 import { databases } from '@/lib/appwrite';
 import { generateID, getUserId } from '@/lib/utils';
-import { Models, Query } from 'appwrite';
-
-export interface IProject extends Models.Document {
-  name: string;
-  color_name: string;
-  color_hex: string;
-  userId: string;
-  tasks: string | null;
-}
-
-export interface IProjectListItem extends Models.Document {
-  $id: string;
-  name: string;
-  color_name: string;
-  color_hex: string;
-  $createdAt: string;
-}
-
-export interface IProjectsListResponse {
-  total: number;
-  documents: IProjectListItem[];
-}
-
-export interface IProjectFormData {
-  name: string;
-  color_name: string;
-  color_hex: string;
-  ai_task_gen?: boolean;
-  task_gen_prompt?: string;
-}
-
-export interface IProjectUpdateData {
-  id: string;
-  name: string;
-  color_name: string;
-  color_hex: string;
-}
+import { IProject, IProjectFormData, IProjectListItem, IProjectsListResponse } from '@/types/project.types';
+import { Query } from 'appwrite';
 
 export const getProjectById = async (projectId: string): Promise<IProject> => {
   try {
@@ -117,7 +82,7 @@ export const createProject = async (data: IProjectFormData): Promise<IProject> =
   }
 };
 
-export const updateProject = async (projectId: string, data: Omit<IProjectUpdateData, 'id'>): Promise<IProject> => {
+export const updateProject = async (projectId: string, data: Omit<IProjectFormData, 'id'>): Promise<IProject> => {
   try {
     const project = await databases.updateDocument<IProject>(
       env.appwriteDatabaseId,

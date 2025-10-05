@@ -8,7 +8,7 @@ interface AITaskGeneratorProps {
   prompt: string;
   onToggle: (enabled: boolean) => void;
   onPromptChange: (prompt: string) => void;
-  onKeyDown: (e: React.KeyboardEvent<HTMLTextAreaElement>) => void;
+  onKeyDown: (event: React.KeyboardEvent<HTMLTextAreaElement>) => void;
 }
 
 export const AITaskGenerator = ({ enabled, prompt, onToggle, onPromptChange, onKeyDown }: AITaskGeneratorProps) => (

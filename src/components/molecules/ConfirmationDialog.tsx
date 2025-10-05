@@ -11,13 +11,14 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { IProject, ITask } from '@/interfaces';
 import { truncateString } from '@/lib/utils';
 import { TItemType } from '@/types';
+import { IProjectBase } from '@/types/project.types';
+import { ITask } from '@/types/task.types';
 import { Trash2 } from 'lucide-react';
 
 interface ConfirmationDialogProps {
-  selectedItem: ITask | IProject;
+  selectedItem: ITask | IProjectBase;
   itemType: TItemType;
   onDelete: () => void;
 }

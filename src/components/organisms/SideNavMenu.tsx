@@ -8,7 +8,7 @@ import {
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { SIDEBAR_LINKS } from '@/constants/links';
-import { ITaskCounts } from '@/interfaces';
+import { ITaskCounts } from '@/types/task.types';
 import { CirclePlus } from 'lucide-react';
 
 interface SideNavMenuProps {

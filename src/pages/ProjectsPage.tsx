@@ -7,20 +7,20 @@ import { TopAppBar } from '@/components/organisms/TopAppBar';
 import { Button } from '@/components/ui/button';
 import { ROUTES } from '@/constants/routes';
 import { TIMING } from '@/constants/timing';
-import { IDataType } from '@/interfaces';
 import { cn } from '@/lib/utils';
-import { TSearchingState } from '@/types';
+import { TSearchStatus } from '@/types';
+import { IProjectsLoaderData } from '@/types/loader.types';
 import { Plus } from 'lucide-react';
 import { useCallback, useRef, useState } from 'react';
 import { useFetcher, useLoaderData } from 'react-router';
 
 export const ProjectsPage = () => {
   const fetcher = useFetcher();
-  const fetcherData = fetcher.data as IDataType;
-  const loaderData = useLoaderData() as IDataType;
+  const fetcherData = fetcher.data as IProjectsLoaderData;
+  const loaderData = useLoaderData<IProjectsLoaderData>();
   const { projects } = fetcherData || loaderData;
   const searchTimeout = useRef<NodeJS.Timeout | null>(null);
-  const [searchingState, setSearchingState] = useState<TSearchingState>('idle');
+  const [searchingState, setSearchingState] = useState<TSearchStatus>('idle');
 
   const handleProjectSearch = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -71,7 +71,7 @@ export const ProjectsPage = () => {
             role="search">
             <ProjectSearchField
               handleChange={handleProjectSearch}
-              searchingState={searchingState}
+              searchStatus={searchingState}
             />
           </fetcher.Form>
         </PageHeader>

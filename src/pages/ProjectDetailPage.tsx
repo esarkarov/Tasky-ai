@@ -10,7 +10,8 @@ import { TopAppBar } from '@/components/organisms/TopAppBar';
 import { Button } from '@/components/ui/button';
 import { HTTP_METHODS } from '@/constants/http';
 import { ROUTES } from '@/constants/routes';
-import { ITaskForm } from '@/interfaces';
+import { IProjectDetailLoaderData } from '@/types/loader.types';
+import { ITaskFormData } from '@/types/task.types';
 import type { Models } from 'appwrite';
 import { MoreHorizontal } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
@@ -19,10 +20,10 @@ import { useFetcher, useLoaderData } from 'react-router';
 export const ProjectDetailPage = () => {
   const fetcher = useFetcher();
   const [isFormShow, setIsFormShow] = useState<boolean>(false);
-  const { project } = useLoaderData<{ project: Models.Document }>();
+  const { project } = useLoaderData<IProjectDetailLoaderData>();
 
   const projectTasks = useMemo(() => {
-    const incompleteTasks = project.tasks.filter((task: Models.Document) => !task.completed) as Models.Document[];
+    const incompleteTasks = project.tasks?.filter((task: Models.Document) => !task.completed) as Models.Document[];
 
     const sortedTasks = incompleteTasks.sort((taskA, taskB) => {
       const dateA = new Date(taskA.due_date);
@@ -34,7 +35,7 @@ export const ProjectDetailPage = () => {
   }, [project.tasks]);
 
   const handleSubmitCreate = useCallback(
-    (formData: ITaskForm) => {
+    (formData: ITaskFormData) => {
       fetcher.submit(JSON.stringify(formData), {
         action: ROUTES.APP,
         method: HTTP_METHODS.POST,

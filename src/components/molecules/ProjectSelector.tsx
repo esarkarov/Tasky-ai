@@ -2,8 +2,8 @@ import { Button } from '@/components/ui/button';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { IProjectInfo } from '@/interfaces';
 import { TProjectList } from '@/types';
+import { IProjectInfo } from '@/types/project.types';
 import { Check, ChevronDown, Hash, Inbox } from 'lucide-react';
 import { SetStateAction, useState } from 'react';
 
@@ -67,7 +67,7 @@ export const ProjectSelector = ({ projectInfo, projects, setProjectId, setProjec
                   const handleProjectSelect = () => {
                     setProjectInfo({
                       name: isSelected ? '' : name,
-                      colorHex: isSelected ? undefined : color_hex,
+                      colorHex: isSelected ? '' : color_hex,
                     });
                     setProjectId(isSelected ? null : $id);
                     setIsOpen(false);

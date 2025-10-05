@@ -1,7 +1,7 @@
 import { SidebarMenuBadge, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { SIDEBAR_LINKS } from '@/constants/links';
-import { ITaskCounts } from '@/interfaces';
 import { getBadgeCount } from '@/lib/utils';
+import { ITaskCounts } from '@/types/task.types';
 import { memo } from 'react';
 import { Link } from 'react-router';
 

@@ -3,25 +3,23 @@ import { Page, PageHeader, PageList, PageTitle } from '@/components/atoms/Page';
 import { TaskAddButton } from '@/components/atoms/TaskAddButton';
 import { TaskCardSkeleton } from '@/components/atoms/TaskCardSkeleton';
 import { TaskEmptyState } from '@/components/atoms/TaskEmptyState';
+import { TaskCard } from '@/components/organisms/TaskCard';
 import { TaskForm } from '@/components/organisms/TaskForm';
 import { TopAppBar } from '@/components/organisms/TopAppBar';
-import { TaskCard } from '@/components/organisms/TaskCard';
-import { ITaskForm } from '@/interfaces';
-import { Models } from 'appwrite';
+import { HTTP_METHODS } from '@/constants/http';
+import { ROUTES } from '@/constants/routes';
+import { ITasksLoaderData } from '@/types/loader.types';
+import { ITaskFormData } from '@/types/task.types';
 import { useCallback, useState } from 'react';
 import { useFetcher, useLoaderData } from 'react-router';
-import { ROUTES } from '@/constants/routes';
-import { HTTP_METHODS } from '@/constants/http';
 
 export const InboxPage = () => {
   const fetcher = useFetcher();
-  const { tasks } = useLoaderData<{
-    tasks: Models.DocumentList<Models.Document>;
-  }>();
+  const { tasks } = useLoaderData<ITasksLoaderData>();
   const [isFormOpen, setIsFormOpen] = useState<boolean>(false);
 
   const handleSubmitCreate = useCallback(
-    (formData: ITaskForm) => {
+    (formData: ITaskFormData) => {
       fetcher.submit(JSON.stringify(formData), {
         action: ROUTES.APP,
         method: HTTP_METHODS.POST,
@@ -52,7 +50,7 @@ export const InboxPage = () => {
               id={$id}
               content={content}
               completed={completed}
-              dueDate={due_date}
+              dueDate={due_date as Date}
               project={project}
             />
           ))}

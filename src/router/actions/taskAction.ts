@@ -1,5 +1,6 @@
 import { HTTP_METHODS } from '@/constants/http';
-import { createTask, deleteTask, ITaskFormData, ITaskUpdateData, updateTask } from '@/services/taskService';
+import { createTask, deleteTask, updateTask } from '@/services/taskService';
+import { ITaskFormData } from '@/types/task.types';
 import { ActionFunction } from 'react-router';
 
 export const taskAction: ActionFunction = async ({ request }) => {
@@ -38,7 +39,7 @@ export const taskAction: ActionFunction = async ({ request }) => {
     }
 
     if (method === HTTP_METHODS.PUT) {
-      const data = (await request.json()) as ITaskUpdateData;
+      const data = (await request.json()) as ITaskFormData;
 
       if (!data.id) {
         return new Response(
@@ -99,7 +100,7 @@ export const taskAction: ActionFunction = async ({ request }) => {
       );
     }
 
-    return new Response(JSON.stringify({ message: 'Method not allowed' }), {
+    return new Response(JSON.stringify({ success: false, message: 'Method not allowed' }), {
       status: 405,
       headers: { 'Content-Type': 'application/json' },
     });

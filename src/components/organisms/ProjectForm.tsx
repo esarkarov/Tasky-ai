@@ -9,16 +9,16 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { PROJECT_COLORS } from '@/constants/colors';
 import { DEFAULT_PROJECT_FORM_DATA } from '@/constants/default';
-import { IProject, IProjectForm } from '@/interfaces';
 import { TActionMode } from '@/types';
+import { IProjectBase, IProjectFormData } from '@/types/project.types';
 import { Check, ChevronDown, Circle } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
 
 interface ProjectFormProps {
   mode: TActionMode;
-  defaultFormData?: IProject;
+  defaultFormData?: IProjectBase;
   onCancel?: () => void;
-  onSubmit?: (formData: IProjectForm) => void;
+  onSubmit?: (formData: IProjectFormData) => void;
 }
 
 export const ProjectForm = ({
@@ -34,7 +34,7 @@ export const ProjectForm = ({
   const [taskGenPrompt, setTaskGenPrompt] = useState<string>('');
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  const formData = useMemo<IProjectForm>(
+  const formData = useMemo<IProjectFormData>(
     () => ({
       ...defaultFormData,
       name: projectName,

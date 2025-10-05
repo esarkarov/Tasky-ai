@@ -9,21 +9,21 @@ import { TaskForm } from '@/components/organisms/TaskForm';
 import { TopAppBar } from '@/components/organisms/TopAppBar';
 import { HTTP_METHODS } from '@/constants/http';
 import { ROUTES } from '@/constants/routes';
-import { ITaskForm } from '@/interfaces';
-import type { Models } from 'appwrite';
+import { ITasksLoaderData } from '@/types/loader.types';
+import { ITaskFormData } from '@/types/task.types';
 import { startOfToday } from 'date-fns';
 import { useCallback, useState } from 'react';
 import { useFetcher, useLoaderData } from 'react-router';
 
 export const TodayPage = () => {
   const fetcher = useFetcher();
-  const { tasks } = useLoaderData<{
-    tasks: Models.DocumentList<Models.Document>;
-  }>();
+  const { tasks } = useLoaderData<ITasksLoaderData>();
   const [isFormOpen, setIsFormOpen] = useState<boolean>(false);
 
+  console.log(tasks);
+
   const handleSubmitCreate = useCallback(
-    (formData: ITaskForm) => {
+    (formData: ITaskFormData) => {
       fetcher.submit(JSON.stringify(formData), {
         action: ROUTES.APP,
         method: HTTP_METHODS.POST,
@@ -33,6 +33,7 @@ export const TodayPage = () => {
     [fetcher]
   );
 
+  console.log(tasks);
   return (
     <>
       <Head title="Tasky AI | Today" />
@@ -56,7 +57,7 @@ export const TodayPage = () => {
               id={$id}
               content={content}
               completed={completed}
-              dueDate={due_date}
+              dueDate={due_date as Date}
               project={project}
             />
           ))}

@@ -2,16 +2,16 @@ import { TaskCompletionButton } from '@/components/atoms/TaskCompletionButton';
 import { TaskActionButtons } from '@/components/molecules/TaskActionButtons';
 import { TaskMetadata } from '@/components/molecules/TaskMetaData';
 import { Card, CardContent } from '@/components/ui/card';
-import { ITask } from '@/interfaces';
 import { cn } from '@/lib/utils';
-import { Models } from 'appwrite';
+import { IProject } from '@/types/project.types';
+import { ITask } from '@/types/task.types';
 
 interface TaskDisplayProps {
-  project: Models.Document | null;
+  project: IProject;
   task: ITask;
-  onToggleComplete: (completed: boolean) => Promise<void>;
   onEdit: () => void;
   onDelete: () => void;
+  onToggleComplete: (completed: boolean) => Promise<void>;
 }
 
 export const TaskDisplay = ({ project, task, onToggleComplete, onEdit, onDelete }: TaskDisplayProps) => (

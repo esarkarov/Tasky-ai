@@ -3,7 +3,7 @@ import { type PropsWithChildren, memo } from 'react';
 const Page: React.FC<PropsWithChildren> = memo(({ children }) => {
   return (
     <main
-      className="container md:max-w-screen-md"
+      className="container md:max-w-screen-lg"
       role="main"
       aria-label="Page content">
       {children}

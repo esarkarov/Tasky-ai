@@ -1,7 +1,7 @@
 import { ConfirmationDialog } from '@/components/molecules/ConfirmationDialog';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { ITask } from '@/interfaces';
+import { ITask } from '@/types/task.types';
 import { Edit } from 'lucide-react';
 
 interface TaskActionButtonsProps {

@@ -1,14 +1,9 @@
 import { HTTP_METHODS } from '@/constants/http';
 import { ROUTES } from '@/constants/routes';
 import { createProjectTasks } from '@/services/aiService';
-import {
-  createProject,
-  deleteProject,
-  IProjectFormData,
-  IProjectUpdateData,
-  updateProject,
-} from '@/services/projectService';
+import { createProject, deleteProject, updateProject } from '@/services/projectService';
 import { createTasksForProject } from '@/services/taskService';
+import { IProjectFormData } from '@/types/project.types';
 import type { ActionFunction } from 'react-router';
 import { redirect } from 'react-router';
 
@@ -46,7 +41,7 @@ export const projectAction: ActionFunction = async ({ request }) => {
     }
 
     if (method === HTTP_METHODS.PUT) {
-      const data = (await request.json()) as IProjectUpdateData;
+      const data = (await request.json()) as IProjectFormData;
 
       if (!data.id) {
         return new Response(

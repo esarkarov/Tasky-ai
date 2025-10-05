@@ -11,15 +11,15 @@ import { HTTP_METHODS } from '@/constants/http';
 import { ROUTES } from '@/constants/routes';
 import { TIMING } from '@/constants/timing';
 import { useToast } from '@/hooks/use-toast';
-import { IProject } from '@/interfaces';
 import { truncateString } from '@/lib/utils';
+import { IProjectBase } from '@/types/project.types';
 import type { DropdownMenuContentProps } from '@radix-ui/react-dropdown-menu';
 import { Edit } from 'lucide-react';
 import { useCallback } from 'react';
 import { useFetcher, useLocation, useNavigate } from 'react-router';
 
 interface ProjectActionMenuProps extends DropdownMenuContentProps {
-  defaultFormData: IProject;
+  defaultFormData: IProjectBase;
 }
 
 export const ProjectActionMenu = ({ children, defaultFormData, ...props }: ProjectActionMenuProps) => {

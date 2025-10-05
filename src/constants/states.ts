@@ -5,8 +5,8 @@ import {
   todayTaskEmptyState,
   upcomingTaskEmptyState,
 } from '@/assets';
-import { IEmptyStateContent } from '@/interfaces';
 import { TEmptyStateType } from '@/types';
+import { IEmptyStateContent } from '@/types/empty.types';
 
 const EMPTY_STATE_IMAGE_HEIGHT = 260;
 

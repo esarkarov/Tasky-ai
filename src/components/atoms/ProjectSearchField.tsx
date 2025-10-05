@@ -1,16 +1,16 @@
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
-import { TSearchingState } from '@/types';
+import { TSearchStatus } from '@/types';
 import { Loader2, Search } from 'lucide-react';
 import { ChangeEventHandler } from 'react';
 
 interface ProjectSearchFieldProps {
   handleChange: ChangeEventHandler<HTMLInputElement>;
-  searchingState: TSearchingState;
+  searchStatus: TSearchStatus;
 }
 
-export const ProjectSearchField = ({ handleChange, searchingState }: ProjectSearchFieldProps) => {
-  const isLoading = searchingState !== 'idle';
+export const ProjectSearchField = ({ handleChange, searchStatus }: ProjectSearchFieldProps) => {
+  const isLoading = searchStatus !== 'idle';
 
   return (
     <div className="relative">

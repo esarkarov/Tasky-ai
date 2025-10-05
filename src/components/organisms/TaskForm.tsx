@@ -6,20 +6,21 @@ import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { DEFAULT_TASK_FORM_DATA } from '@/constants/default';
 import { useProjectList } from '@/contexts/ProjectContext';
-import { IProjectInfo, ITaskForm } from '@/interfaces';
 import { cn } from '@/lib/utils';
 import { TActionMode } from '@/types';
+import { IProjectInfo } from '@/types/project.types';
+import { ITaskFormData } from '@/types/task.types';
 import { Models } from 'appwrite';
 import * as chrono from 'chrono-node';
 import type { ClassValue } from 'clsx';
 import { useCallback, useEffect, useState } from 'react';
 
 interface TaskFormProps {
-  defaultFormData?: ITaskForm;
+  defaultFormData?: ITaskFormData;
   className?: ClassValue;
   mode: TActionMode;
   onCancel?: () => void;
-  onSubmit?: (formData: ITaskForm) => void;
+  onSubmit?: (formData: ITaskFormData) => void;
 }
 
 export const TaskForm = ({
@@ -37,7 +38,7 @@ export const TaskForm = ({
     name: '',
     colorHex: '',
   });
-  const [formData, setFormData] = useState<ITaskForm>({
+  const [formData, setFormData] = useState<ITaskFormData>({
     content: '',
     due_date: null,
     projectId: null,
@@ -116,7 +117,7 @@ export const TaskForm = ({
         />
 
         <DueDateSelector
-          dueDate={dueDate}
+          dueDate={dueDate as Date}
           onDateChange={setDueDate}
           onDateRemove={() => setDueDate(null)}
         />

@@ -2,16 +2,16 @@ import { ProjectForm } from '@/components/organisms/ProjectForm';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { ROUTES } from '@/constants/routes';
 import { useToast } from '@/hooks/use-toast';
-import { IProject, IProjectForm } from '@/interfaces';
 import { truncateString } from '@/lib/utils';
-import { TActionMethod } from '@/types';
+import { THttpMethod } from '@/types';
+import { IProjectBase, IProjectFormData } from '@/types/project.types';
 import { ReactNode, useCallback, useState } from 'react';
 import { useFetcher } from 'react-router';
 
 interface ProjectFormDialogProps {
-  defaultFormData?: IProject;
+  defaultFormData?: IProjectBase;
   children: ReactNode;
-  method: TActionMethod;
+  method: THttpMethod;
 }
 
 export const ProjectFormDialog = ({ defaultFormData, children, method }: ProjectFormDialogProps) => {
@@ -20,7 +20,7 @@ export const ProjectFormDialog = ({ defaultFormData, children, method }: Project
   const fetcher = useFetcher();
 
   const handleProjectCreate = useCallback(
-    async (data: IProjectForm) => {
+    async (data: IProjectFormData) => {
       setIsOpen(false);
 
       const { id, update } = toast({

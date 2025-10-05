@@ -4,13 +4,11 @@ import { TaskEmptyState } from '@/components/atoms/TaskEmptyState';
 import { TotalTasks } from '@/components/atoms/TotalTasks';
 import { TaskCard } from '@/components/organisms/TaskCard';
 import { TopAppBar } from '@/components/organisms/TopAppBar';
-import type { Models } from 'appwrite';
+import { ITasksLoaderData } from '@/types/loader.types';
 import { useLoaderData } from 'react-router';
 
 export const UpcomingPage = () => {
-  const { tasks } = useLoaderData<{
-    tasks: Models.DocumentList<Models.Document>;
-  }>();
+  const { tasks } = useLoaderData<ITasksLoaderData>();
 
   return (
     <>
@@ -35,7 +33,7 @@ export const UpcomingPage = () => {
               id={$id}
               content={content}
               completed={completed}
-              dueDate={due_date}
+              dueDate={due_date as Date}
               project={project}
             />
           ))}

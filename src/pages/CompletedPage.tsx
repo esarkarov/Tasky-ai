@@ -1,15 +1,14 @@
 import { Head } from '@/components/atoms/Head';
 import { Page, PageHeader, PageList, PageTitle } from '@/components/atoms/Page';
 import { TaskEmptyState } from '@/components/atoms/TaskEmptyState';
+import { TotalTasks } from '@/components/atoms/TotalTasks';
 import { TaskCard } from '@/components/organisms/TaskCard';
 import { TopAppBar } from '@/components/organisms/TopAppBar';
-import type { Models } from 'appwrite';
+import { ITasksLoaderData } from '@/types/loader.types';
 import { useLoaderData } from 'react-router';
 
 export const CompletedPage = () => {
-  const { tasks } = useLoaderData<{
-    tasks: Models.DocumentList<Models.Document>;
-  }>();
+  const { tasks } = useLoaderData<ITasksLoaderData>();
 
   return (
     <>
@@ -23,6 +22,7 @@ export const CompletedPage = () => {
       <Page aria-labelledby="completed-page-title">
         <PageHeader>
           <PageTitle>Completed</PageTitle>
+          {tasks.total > 0 && <TotalTasks total={tasks.total} />}
         </PageHeader>
 
         <PageList aria-label="Completed tasks">
@@ -32,7 +32,7 @@ export const CompletedPage = () => {
               id={$id}
               content={content}
               completed={completed}
-              dueDate={due_date}
+              dueDate={due_date as Date}
               project={project}
             />
           ))}

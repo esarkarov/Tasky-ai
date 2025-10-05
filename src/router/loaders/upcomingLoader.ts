@@ -1,11 +1,8 @@
-import { getUpcomingTasks, ITasksResponse } from '@/services/taskService';
+import { getUpcomingTasks } from '@/services/taskService';
+import { ITasksLoaderData } from '@/types/loader.types';
 import type { LoaderFunction } from 'react-router';
 
-export interface IUpcomingLoaderData {
-  tasks: ITasksResponse;
-}
-
-export const upcomingLoader: LoaderFunction = async (): Promise<IUpcomingLoaderData> => {
+export const upcomingLoader: LoaderFunction = async (): Promise<ITasksLoaderData> => {
   const tasks = await getUpcomingTasks();
 
   return { tasks };

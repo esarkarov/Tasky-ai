@@ -1,9 +1,6 @@
-import { getProjectById, IProject } from '@/services/projectService';
+import { getProjectById } from '@/services/projectService';
+import { IProjectDetailLoaderData } from '@/types/loader.types';
 import type { LoaderFunction } from 'react-router';
-
-export interface IProjectDetailLoaderData {
-  project: IProject;
-}
 
 export const projectDetailLoader: LoaderFunction = async ({ params }): Promise<IProjectDetailLoaderData> => {
   const { projectId } = params as { projectId: string };

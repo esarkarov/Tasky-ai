@@ -1,43 +1,8 @@
 import { env } from '@/config/env';
-import { ITaskCounts } from '@/interfaces';
 import { databases, Query } from '@/lib/appwrite';
 import { generateID, getUserId } from '@/lib/utils';
-import { Models } from 'appwrite';
+import { IAIGeneratedTask, ITask, ITaskCounts, ITaskFormData, ITasksResponse } from '@/types/task.types';
 import { startOfToday, startOfTomorrow } from 'date-fns';
-
-export interface ITask extends Models.Document {
-  content: string;
-  due_date: string | null;
-  completed: boolean;
-  userId: string;
-  projectId: string | null;
-}
-
-export interface ITasksResponse {
-  total: number;
-  documents: ITask[];
-}
-
-export interface IAIGeneratedTask {
-  content: string;
-  due_date?: string | null;
-  completed?: boolean;
-}
-
-export interface ITaskFormData {
-  content: string;
-  due_date?: string | null;
-  completed?: boolean;
-  projectId?: string | null;
-}
-
-export interface ITaskUpdateData {
-  id: string;
-  content?: string;
-  due_date?: string | null;
-  completed?: boolean;
-  projectId?: string | null;
-}
 
 export const getUpcomingTasks = async (): Promise<ITasksResponse> => {
   try {
@@ -197,7 +162,7 @@ export const createTask = async (data: ITaskFormData): Promise<ITask> => {
   }
 };
 
-export const updateTask = async (taskId: string, data: Omit<ITaskUpdateData, 'id'>): Promise<ITask> => {
+export const updateTask = async (taskId: string, data: Omit<ITaskFormData, 'id'>): Promise<ITask> => {
   try {
     const task = await databases.updateDocument<ITask>(
       env.appwriteDatabaseId,
@@ -223,5 +188,12 @@ export const deleteTask = async (taskId: string): Promise<void> => {
 };
 
 export const toggleTaskCompletion = async (taskId: string, completed: boolean): Promise<ITask> => {
-  return updateTask(taskId, { completed });
+  const task = await databases.getDocument<ITask>(env.appwriteDatabaseId, env.appwriteTasksCollectionId, taskId);
+
+  return updateTask(taskId, {
+    content: task.content,
+    due_date: task.due_date,
+    completed,
+    projectId: task.projectId,
+  });
 };

@@ -1,11 +1,8 @@
-import { getInboxTasks, ITasksResponse } from '@/services/taskService';
+import { getInboxTasks } from '@/services/taskService';
+import { ITasksLoaderData } from '@/types/loader.types';
 import type { LoaderFunction } from 'react-router';
 
-export interface IInboxLoaderData {
-  tasks: ITasksResponse;
-}
-
-export const inboxLoader: LoaderFunction = async (): Promise<IInboxLoaderData> => {
+export const inboxLoader: LoaderFunction = async (): Promise<ITasksLoaderData> => {
   const tasks = await getInboxTasks();
 
   return { tasks };

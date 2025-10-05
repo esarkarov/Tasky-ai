@@ -1,11 +1,8 @@
-import { getCompletedTasks, ITasksResponse } from '@/services/taskService';
+import { getCompletedTasks } from '@/services/taskService';
+import { ITasksLoaderData } from '@/types/loader.types';
 import type { LoaderFunction } from 'react-router';
 
-export interface ICompletedLoaderData {
-  tasks: ITasksResponse;
-}
-
-export const completedLoader: LoaderFunction = async (): Promise<ICompletedLoaderData> => {
+export const completedLoader: LoaderFunction = async (): Promise<ITasksLoaderData> => {
   const tasks = await getCompletedTasks();
 
   return { tasks };
