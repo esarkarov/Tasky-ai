@@ -1,10 +1,10 @@
 import { ProjectActionMenu } from '@/components/organisms/ProjectActionMenu';
-import { Button } from '@/components/ui/button';
 import { ROUTES } from '@/constants/routes';
 import { IProjectListItem } from '@/types/project.types';
 import { Hash, MoreHorizontal } from 'lucide-react';
 import { memo } from 'react';
 import { Link } from 'react-router';
+import { Button } from '../ui/button';
 
 interface ProjectCardProps {
   project: IProjectListItem;

@@ -1,4 +1,4 @@
-import { TaskContentInput } from '@/components/atoms/TaskContentInput';
+import { TaskContentInput } from '@/components/molecules/TaskContentInput';
 import { DueDateSelector } from '@/components/molecules/DueDateSelector';
 import { ProjectSelector } from '@/components/molecules/ProjectSelector';
 import { TaskFormActions } from '@/components/molecules/TaskFormActions';

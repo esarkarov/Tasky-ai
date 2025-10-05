@@ -14,10 +14,10 @@ import { CirclePlus } from 'lucide-react';
 interface SideNavMenuProps {
   currentPath: string;
   taskCounts: ITaskCounts;
-  onItemClick: () => void;
+  onNavigationClick: () => void;
 }
 
-export const SidebarNavGroup = ({ currentPath, taskCounts, onItemClick }: SideNavMenuProps) => (
+export const SidebarNavGroup = ({ currentPath, taskCounts, onNavigationClick }: SideNavMenuProps) => (
   <SidebarGroup
     role="navigation"
     aria-label="Primary navigation">
@@ -39,7 +39,7 @@ export const SidebarNavGroup = ({ currentPath, taskCounts, onItemClick }: SideNa
             item={item}
             isActive={currentPath === item.href}
             taskCounts={taskCounts}
-            onItemClick={onItemClick}
+            onNavigationClick={onNavigationClick}
           />
         ))}
       </SidebarMenu>

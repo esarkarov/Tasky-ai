@@ -1,6 +1,6 @@
 import { Logo } from '@/components/atoms/Logo';
 import { UserChip } from '@/components/atoms/UserChip';
-import { ProjectsSection } from '@/components/organisms/ProjectsSection';
+import { SidebarProjectsSection } from '@/components/organisms/SidebarProjectsSection';
 import { SidebarNavGroup } from '@/components/organisms/SidebarNavGroup';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, useSidebar } from '@/components/ui/sidebar';
 import { ROUTES } from '@/constants/routes';
@@ -34,9 +34,9 @@ export const AppSidebar = () => {
         <SidebarNavGroup
           currentPath={location.pathname}
           taskCounts={taskCounts}
-          onItemClick={handleNavigationClick}
+          onNavigationClick={handleNavigationClick}
         />
-        <ProjectsSection onItemClick={handleNavigationClick} />
+        <SidebarProjectsSection onNavigationClick={handleNavigationClick} />
       </SidebarContent>
       <SidebarFooter>
         <UserChip />

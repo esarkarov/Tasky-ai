@@ -1,7 +1,7 @@
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Bot } from 'lucide-react';
-import { AIPromptInput } from '../atoms/AIPromptInput';
+import { AIPromptInput } from './AIPromptInput';
 
 interface AITaskGeneratorProps {
   enabled: boolean;

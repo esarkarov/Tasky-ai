@@ -2,7 +2,8 @@ import { Head } from '@/components/atoms/Head';
 import { Page, PageHeader, PageList, PageTitle } from '@/components/atoms/Page';
 import { TaskAddButton } from '@/components/atoms/TaskAddButton';
 import { TaskCardSkeleton } from '@/components/atoms/TaskCardSkeleton';
-import { TaskEmptyState } from '@/components/atoms/TaskEmptyState';
+import { TaskEmptyState } from '@/components/organisms/TaskEmptyState';
+import { TotalTasks } from '@/components/atoms/TotalTasks';
 import { ProjectActionMenu } from '@/components/organisms/ProjectActionMenu';
 import { TaskCard } from '@/components/organisms/TaskCard';
 import { TaskForm } from '@/components/organisms/TaskForm';
@@ -75,6 +76,7 @@ export const ProjectDetailPage = () => {
               </Button>
             </ProjectActionMenu>
           </div>
+          {projectTasks.length > 0 && <TotalTasks total={projectTasks.length} />}
         </PageHeader>
 
         <PageList aria-label={`Tasks for project ${project.name}`}>

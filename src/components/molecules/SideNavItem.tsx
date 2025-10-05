@@ -9,10 +9,10 @@ interface SideNavItemProps {
   item: (typeof SIDEBAR_LINKS)[number];
   isActive: boolean;
   taskCounts: ITaskCounts;
-  onItemClick: () => void;
+  onNavigationClick: () => void;
 }
 
-export const SideNavItem = memo(({ item, isActive, taskCounts, onItemClick }: SideNavItemProps) => {
+export const SideNavItem = memo(({ item, isActive, taskCounts, onNavigationClick }: SideNavItemProps) => {
   const { href, label } = item;
   const badgeCount = getBadgeCount(href, taskCounts);
   const showBadge = Boolean(badgeCount && badgeCount > 0);
@@ -22,7 +22,7 @@ export const SideNavItem = memo(({ item, isActive, taskCounts, onItemClick }: Si
       <SidebarMenuButton
         asChild
         isActive={isActive}
-        onClick={onItemClick}>
+        onClick={onNavigationClick}>
         <Link
           to={href}
           aria-current={isActive ? 'page' : undefined}

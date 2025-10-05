@@ -4,11 +4,11 @@ import { ProjectAddButton } from '../atoms/ProjectAddButton';
 import { ProjectsGroupLabel } from '../molecules/ProjectsGroupLabel';
 import { ProjectsNavContent } from './ProjectsNavContent';
 
-interface ProjectsSectionProps {
-  onItemClick: () => void;
+interface SidebarProjectsSectionProps {
+  onNavigationClick: () => void;
 }
 
-export const ProjectsSection = ({ onItemClick }: ProjectsSectionProps) => {
+export const SidebarProjectsSection = ({ onNavigationClick }: SidebarProjectsSectionProps) => {
   return (
     <Collapsible
       defaultOpen
@@ -16,7 +16,7 @@ export const ProjectsSection = ({ onItemClick }: ProjectsSectionProps) => {
       <SidebarGroup>
         <ProjectsGroupLabel />
         <ProjectAddButton />
-        <ProjectsNavContent onItemClick={onItemClick} />
+        <ProjectsNavContent onNavigationClick={onNavigationClick} />
       </SidebarGroup>
     </Collapsible>
   );

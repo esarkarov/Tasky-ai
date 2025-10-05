@@ -8,10 +8,10 @@ import { Hash, MoreHorizontal } from 'lucide-react';
 import { AllProjectsButton } from '../atoms/AllProjectsButton';
 
 interface ProjectsNavContentProps {
-  onItemClick: () => void;
+  onNavigationClick: () => void;
 }
 
-export const ProjectsNavContent = ({ onItemClick }: ProjectsNavContentProps) => {
+export const ProjectsNavContent = ({ onNavigationClick }: ProjectsNavContentProps) => {
   const projects = useProjectList();
   const location = useLocation();
 
@@ -24,7 +24,7 @@ export const ProjectsNavContent = ({ onItemClick }: ProjectsNavContentProps) => 
               <SidebarMenuButton
                 asChild
                 isActive={location.pathname === ROUTES.PROJECT($id)}
-                onClick={onItemClick}>
+                onClick={onNavigationClick}>
                 <Link
                   to={ROUTES.PROJECT($id)}
                   aria-label={`Open project ${name}`}
@@ -57,7 +57,7 @@ export const ProjectsNavContent = ({ onItemClick }: ProjectsNavContentProps) => 
           ))}
           {projects !== null && projects.total > 1 && (
             <SidebarMenuItem>
-              <AllProjectsButton onItemClick={onItemClick} />
+              <AllProjectsButton onNavigationClick={onNavigationClick} />
             </SidebarMenuItem>
           )}
           {!projects?.total && (

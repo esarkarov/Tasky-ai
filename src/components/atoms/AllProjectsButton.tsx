@@ -4,10 +4,10 @@ import { Link, useLocation } from 'react-router';
 import { SidebarMenuButton } from '@/components/ui/sidebar';
 
 interface AllProjectsButtonProps {
-  onItemClick: () => void;
+  onNavigationClick: () => void;
 }
 
-export const AllProjectsButton = ({ onItemClick }: AllProjectsButtonProps) => {
+export const AllProjectsButton = ({ onNavigationClick }: AllProjectsButtonProps) => {
   const location = useLocation();
   const isActive = location.pathname === ROUTES.PROJECTS;
 
@@ -21,7 +21,7 @@ export const AllProjectsButton = ({ onItemClick }: AllProjectsButtonProps) => {
         aria-label="View all projects"
         aria-current={isActive ? 'page' : undefined}
         title="All projects"
-        onClick={onItemClick}>
+        onClick={onNavigationClick}>
         <div className="inline-flex items-center gap-2">
           <MoreHorizontal
             aria-hidden="true"

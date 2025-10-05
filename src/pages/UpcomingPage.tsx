@@ -1,6 +1,6 @@
 import { Head } from '@/components/atoms/Head';
 import { Page, PageHeader, PageList, PageTitle } from '@/components/atoms/Page';
-import { TaskEmptyState } from '@/components/atoms/TaskEmptyState';
+import { TaskEmptyState } from '@/components/organisms/TaskEmptyState';
 import { TotalTasks } from '@/components/atoms/TotalTasks';
 import { TaskCard } from '@/components/organisms/TaskCard';
 import { TopAppBar } from '@/components/organisms/TopAppBar';
