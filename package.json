@@ -67,6 +67,7 @@
     "eslint-plugin-react-refresh": "^0.4.20",
     "globals": "^16.4.0",
     "jsdom": "^27.0.0",
+    "lodash": "^4.17.15",
     "msw": "^2.11.3",
     "postcss": "^8.5.6",
     "prettier": "3.6.2",
