@@ -38,7 +38,6 @@
     "cmdk": "^1.1.1",
     "date-fns": "^4.1.0",
     "eslint-plugin-prettier": "^5.5.4",
-    "lodash": "^4.17.15",
     "lucide-react": "^0.544.0",
     "react": "^19.1.1",
     "react-day-picker": "^9.11.0",

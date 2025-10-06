@@ -130,7 +130,6 @@ jobs:
       - name: Install dependencies
         run: npm ci --legacy-peer-deps
 
-      # OWASP Dependency-Check
       - name: Run OWASP Dependency-Check
         uses: dependency-check/Dependency-Check_Action@main
         with:
@@ -174,7 +173,6 @@ jobs:
       - name: Install dependencies
         run: npm ci --legacy-peer-deps
 
-      # CodeQL Analysis
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
         with:
@@ -193,7 +191,6 @@ jobs:
     timeout-minutes: 30
     permissions:
       contents: read
-      issues: write
       actions: read
 
     steps:
@@ -233,10 +230,10 @@ jobs:
 
       - name: Run OWASP ZAP Baseline Scan
         uses: zaproxy/action-baseline@v0.12.0
-        continue-on-error: true
         with:
-          target: 'http://localhost:4173'
-          fail_action: false
+          target: 'http://localhost:5174'
+          rules_file_name: '.zap/rules.tsv'
+          cmd_options: '-a'
 
       - name: Stop application server
         if: always()
