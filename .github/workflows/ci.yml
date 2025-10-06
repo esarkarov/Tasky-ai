@@ -233,7 +233,7 @@ jobs:
         with:
           target: 'http://localhost:4173'
           rules_file_name: '.zap/rules.tsv'
-          cmd_options: '-a'
+          cmd_options: '-I'
 
       - name: Stop application server
         if: always()
