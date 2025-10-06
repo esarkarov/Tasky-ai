@@ -1,11 +1,10 @@
 {
   "ci": {
     "collect": {
+      "startServerCommand": "npm run dev",
       "staticDistDir": "./dist",
-      "numberOfRuns": 3,
-      "settings": {
-        "chromeFlags": "--no-sandbox --disable-gpu"
-      }
+      "url": ["http://localhost:5174"],
+      "numberOfRuns": 3
     },
     "assert": {
       "preset": "lighthouse:recommended",
