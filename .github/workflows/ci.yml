@@ -179,10 +179,10 @@ jobs:
         if: always()
         with:
           name: lighthouse-report
-        path: |
-          .lighthouseci/*.html
-          .lighthouseci/*.json
-        retention-days: 7
+          path: |
+            .lighthouseci/*.html
+            .lighthouseci/*.json
+          retention-days: 7
 
   # dast:
   #   name: DAST Testing
