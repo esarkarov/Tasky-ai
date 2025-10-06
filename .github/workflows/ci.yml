@@ -146,6 +146,7 @@ jobs:
   lhci:
     name: Lighthouse CI
     runs-on: ubuntu-latest
+    needs: [build]
 
     steps:
       - name: Checkout code
