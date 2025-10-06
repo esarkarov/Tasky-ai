@@ -107,6 +107,13 @@ jobs:
       security-events: write
       contents: read
 
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - language: javascript-typescript
+            build-mode: none
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -120,28 +127,29 @@ jobs:
       - name: Install dependencies
         run: npm install --legacy-peer-deps
 
-      - name: OWASP Dependency-Check
-        uses: dependency-check/Dependency-Check_Action@main
+      - name: Run Trivy SCA
+        uses: aquasecurity/trivy-action@master
         with:
-          project: 'tasky-ai'
-          path: '.'
-          format: 'HTML'
+          scan-type: 'fs'
+          scan-ref: '.'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
 
-      - name: Upload OWASP Dependency-Check Report
-        uses: actions/upload-artifact@v4
-        if: always()
+      - name: Upload Trivy results to GitHub Security
+        uses: github/codeql-action/upload-sarif@v3
         with:
-          name: dependency-check-report
-          path: reports/dependency-check-report.html
-          retention-days: 7
+          sarif_file: 'trivy-results.sarif'
 
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
         with:
-          languages: javascript-typescript
+          languages: ${{ matrix.language }}
+          build-mode: ${{ matrix.build-mode }}
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
+        with:
+          category: '/language:${{matrix.language}}'
 
   dast:
     name: DAST Testing
@@ -177,44 +185,3 @@ jobs:
           target: 'http://localhost:5174'
           rules_file_name: '.zap/rules.tsv'
           cmd_options: '-a'
-
-  # lhci:
-  #   name: Lighthouse CI
-  #   runs-on: ubuntu-latest
-  #   needs: [build]
-
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v4
-
-  #     - name: Setup Node.js
-  #       uses: actions/setup-node@v4
-  #       with:
-  #         node-version: '20'
-  #         cache: 'npm'
-
-  #     - name: Install dependencies
-  #       run: npm install --legacy-peer-deps
-
-  #     - name: Download build artifacts
-  #       uses: actions/download-artifact@v4
-  #       with:
-  #         name: build-output
-  #         path: dist/
-
-  #     - name: Run Lighthouse CI
-  #       run: |
-  #         npm install -g @lhci/cli@0.6.x
-  #         lhci autorun --upload.target=temporary-public-storage || echo "LHCI failed!"
-  #       env:
-  #         LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
-
-  #     - name: Upload Lighthouse reports
-  #       uses: actions/upload-artifact@v4
-  #       if: always()
-  #       with:
-  #         name: lighthouse-report
-  #         path: |
-  #           .lighthouseci/*.html
-  #           .lighthouseci/*.json
-  #         retention-days: 7
