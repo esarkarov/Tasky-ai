@@ -22,7 +22,7 @@ export const ProjectsPage = () => {
   const searchTimeout = useRef<NodeJS.Timeout | null>(null);
   const [searchingState, setSearchingState] = useState<TSearchStatus>('idle');
 
-  const handleProjectSearch = useCallback(
+  const handleSearchChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       if (searchTimeout.current) {
         clearTimeout(searchTimeout.current);
@@ -70,7 +70,7 @@ export const ProjectsPage = () => {
             action={ROUTES.PROJECTS}
             role="search">
             <ProjectSearchField
-              handleChange={handleProjectSearch}
+              handleChange={handleSearchChange}
               searchStatus={searchingState}
             />
           </fetcher.Form>

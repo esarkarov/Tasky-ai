@@ -20,7 +20,7 @@ import { Trash2 } from 'lucide-react';
 interface ConfirmationDialogProps {
   selectedItem: ITask | IProjectBase;
   itemType: TItemType;
-  onDelete: () => void;
+  onDelete: (taskId: string) => Promise<void>;
 }
 
 export const ConfirmationDialog = ({ selectedItem, onDelete, itemType }: ConfirmationDialogProps) => {
@@ -68,7 +68,7 @@ export const ConfirmationDialog = ({ selectedItem, onDelete, itemType }: Confirm
           <AlertDialogCancel aria-label="Cancel deletion">Cancel</AlertDialogCancel>
           <AlertDialogAction
             aria-label={`Confirm delete ${isTask ? 'task' : 'project'}`}
-            onClick={onDelete}>
+            onClick={() => onDelete(selectedItem.id as string)}>
             Delete
           </AlertDialogAction>
         </AlertDialogFooter>

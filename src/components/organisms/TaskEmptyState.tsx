@@ -3,10 +3,10 @@ import { TEmptyStateType } from '@/types';
 import { memo } from 'react';
 
 interface TaskEmptyStateProps {
-  type?: TEmptyStateType;
+  type: TEmptyStateType;
 }
 
-export const TaskEmptyState = memo(({ type = 'today' }: TaskEmptyStateProps) => {
+export const TaskEmptyState = memo(({ type }: TaskEmptyStateProps) => {
   const { img, title, description } = EMPTY_STATES[type];
 
   return (

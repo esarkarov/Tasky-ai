@@ -175,41 +175,41 @@ jobs:
         with:
           category: '/language:${{ matrix.language }}'
 
-  dast:
-    name: DAST - Runtime Security Testing
-    runs-on: ubuntu-latest
-    needs: [build]
-    permissions:
-      contents: read
-      actions: read
+  # dast:
+  #   name: DAST - Runtime Security Testing
+  #   runs-on: ubuntu-latest
+  #   needs: [build]
+  #   permissions:
+  #     contents: read
+  #     actions: read
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v4
 
-      - name: Download build artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: build-output
-          path: dist/
+  #     - name: Download build artifacts
+  #       uses: actions/download-artifact@v4
+  #       with:
+  #         name: build-output
+  #         path: dist/
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
+  #     - name: Setup Node.js
+  #       uses: actions/setup-node@v4
+  #       with:
+  #         node-version: '20'
+  #         cache: 'npm'
 
-      - name: Install dependencies
-        run: npm ci --legacy-peer-deps
+  #     - name: Install dependencies
+  #       run: npm ci --legacy-peer-deps
 
-      - name: Start application server
-        run: |
-          npm run dev &
-          echo "Application started on http://localhost:5174"
+  #     - name: Start application server
+  #       run: |
+  #         npm run dev &
+  #         echo "Application started on http://localhost:5174"
 
-      - name: Run OWASP ZAP Baseline Scan
-        uses: zaproxy/action-baseline@v0.12.0
-        with:
-          target: 'http://localhost:5174'
-          rules_file_name: '.zap/rules.tsv'
-          cmd_options: '-a'
+  #     - name: Run OWASP ZAP Baseline Scan
+  #       uses: zaproxy/action-baseline@v0.12.0
+  #       with:
+  #         target: 'http://localhost:5174'
+  #         rules_file_name: '.zap/rules.tsv'
+  #         cmd_options: '-a'

@@ -2,33 +2,21 @@ import { Head } from '@/components/atoms/Head';
 import { Page, PageHeader, PageList, PageTitle } from '@/components/atoms/Page';
 import { TaskAddButton } from '@/components/atoms/TaskAddButton';
 import { TaskCardSkeleton } from '@/components/atoms/TaskCardSkeleton';
-import { TaskEmptyState } from '@/components/organisms/TaskEmptyState';
 import { TotalTasks } from '@/components/atoms/TotalTasks';
 import { TaskCard } from '@/components/organisms/TaskCard';
+import { TaskEmptyState } from '@/components/organisms/TaskEmptyState';
 import { TaskForm } from '@/components/organisms/TaskForm';
 import { TopAppBar } from '@/components/organisms/TopAppBar';
-import { HTTP_METHODS } from '@/constants/http';
-import { ROUTES } from '@/constants/routes';
+import { useTaskOperations } from '@/hooks/use-taskOperations';
 import { ITasksLoaderData } from '@/types/loader.types';
-import { ITaskFormData } from '@/types/task.types';
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import { useFetcher, useLoaderData } from 'react-router';
 
 export const InboxPage = () => {
   const fetcher = useFetcher();
   const { tasks } = useLoaderData<ITasksLoaderData>();
   const [isFormOpen, setIsFormOpen] = useState<boolean>(false);
-
-  const handleSubmitCreate = useCallback(
-    (formData: ITaskFormData) => {
-      fetcher.submit(JSON.stringify(formData), {
-        action: ROUTES.APP,
-        method: HTTP_METHODS.POST,
-        encType: 'application/json',
-      });
-    },
-    [fetcher]
-  );
+  const { createTask } = useTaskOperations();
 
   return (
     <>
@@ -68,7 +56,7 @@ export const InboxPage = () => {
               className="mt-1"
               mode="create"
               onCancel={() => setIsFormOpen(false)}
-              onSubmit={handleSubmitCreate}
+              onSubmit={createTask}
             />
           )}
         </PageList>

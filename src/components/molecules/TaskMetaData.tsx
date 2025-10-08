@@ -17,7 +17,6 @@ export const TaskMetadata = ({ task, project }: TaskMetadataProps) => {
   const showProject = location.pathname !== ROUTES.INBOX && location.pathname !== ROUTES.PROJECT(project?.$id);
 
   if (!showDueDate && !showProject) return null;
-  console.log(showDueDate);
 
   return (
     <CardFooter

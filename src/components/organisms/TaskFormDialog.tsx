@@ -1,17 +1,18 @@
 import { TaskForm } from '@/components/organisms/TaskForm';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
-import { HTTP_METHODS } from '@/constants/http';
 import { ROUTES } from '@/constants/routes';
-import { ITaskFormData } from '@/types/task.types';
+import { useTaskOperations } from '@/hooks/use-taskOperations';
 import { startOfToday } from 'date-fns';
 import type { PropsWithChildren } from 'react';
-import { useCallback, useEffect, useState } from 'react';
-import { useFetcher, useLocation } from 'react-router';
+import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router';
 
 export const TaskFormDialog: React.FC<PropsWithChildren> = ({ children }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const { createTask } = useTaskOperations({
+    onSuccess: () => setIsOpen(false),
+  });
   const location = useLocation();
-  const fetcher = useFetcher();
   const isToday = location.pathname === ROUTES.TODAY;
 
   useEffect(() => {
@@ -29,18 +30,6 @@ export const TaskFormDialog: React.FC<PropsWithChildren> = ({ children }) => {
     return () => document.removeEventListener('keydown', listener);
   }, []);
 
-  const handleSubmitCreate = useCallback(
-    (formData: ITaskFormData) => {
-      fetcher.submit(JSON.stringify(formData), {
-        action: ROUTES.APP,
-        method: HTTP_METHODS.POST,
-        encType: 'application/json',
-      });
-      setIsOpen(false);
-    },
-    [fetcher]
-  );
-
   return (
     <Dialog
       open={isOpen}
@@ -57,7 +46,7 @@ export const TaskFormDialog: React.FC<PropsWithChildren> = ({ children }) => {
           }}
           mode="create"
           onCancel={() => setIsOpen(false)}
-          onSubmit={handleSubmitCreate}
+          onSubmit={createTask}
         />
       </DialogContent>
     </Dialog>

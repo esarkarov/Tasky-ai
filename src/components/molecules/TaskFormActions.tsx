@@ -6,7 +6,7 @@ interface TaskFormActionsProps {
   mode: TActionMode;
   isFormValid: boolean;
   onCancel: () => void;
-  onSubmit: () => void;
+  onSubmit: () => Promise<void>;
 }
 
 export const TaskFormActions = ({ mode, isFormValid, onCancel, onSubmit }: TaskFormActionsProps) => (
@@ -16,8 +16,8 @@ export const TaskFormActions = ({ mode, isFormValid, onCancel, onSubmit }: TaskF
     aria-label="Task form actions">
     <TaskCancelButton onCancel={onCancel} />
     <TaskSubmitButton
-      isFormValid={isFormValid}
       mode={mode}
+      isFormValid={isFormValid}
       onSubmit={onSubmit}
     />
   </div>

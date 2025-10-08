@@ -49,10 +49,10 @@ export const ProjectForm = ({
   }, [projectName, aiTaskGen, taskGenPrompt]);
 
   const handleSubmit = useCallback(() => {
-    if (isFormValid && onSubmit) {
+    if (onSubmit) {
       onSubmit(formData);
     }
-  }, [isFormValid, onSubmit, formData]);
+  }, [onSubmit, formData]);
 
   const handleKeySubmit = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => {

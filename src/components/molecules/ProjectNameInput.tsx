@@ -1,6 +1,7 @@
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { cn } from '@/lib/utils';
+import { MAX_NAME_LENGTH, NAME_WARNING_THRESHOLD } from '@/constants/validation';
+import { InputValueCount } from '@/components/atoms/InputValueCount';
 
 interface ProjectNameInputProps {
   value: string;
@@ -8,13 +9,7 @@ interface ProjectNameInputProps {
   onKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => void;
 }
 
-const MAX_NAME_LENGTH = 120;
-const NAME_WARNING_THRESHOLD = 110;
-
 export const ProjectNameInput = ({ value, onChange, onKeyDown }: ProjectNameInputProps) => {
-  const charCount = value.length;
-  const isNearLimit = charCount >= NAME_WARNING_THRESHOLD;
-
   return (
     <div>
       <Label htmlFor="project_name">Project name</Label>
@@ -27,14 +22,13 @@ export const ProjectNameInput = ({ value, onChange, onKeyDown }: ProjectNameInpu
         onInput={(e) => onChange(e.currentTarget.value)}
         onKeyDown={onKeyDown}
         aria-describedby="project-name-count"
-        aria-invalid={charCount > MAX_NAME_LENGTH}
+        aria-invalid={value.length > MAX_NAME_LENGTH}
       />
-      <div
-        id="project-name-count"
-        className={cn('ms-auto max-w-max text-xs text-muted-foreground', isNearLimit && 'text-destructive')}
-        aria-live="polite">
-        {charCount}/{MAX_NAME_LENGTH}
-      </div>
+      <InputValueCount
+        value={value}
+        maxLength={MAX_NAME_LENGTH}
+        threshold={NAME_WARNING_THRESHOLD}
+      />
     </div>
   );
 };

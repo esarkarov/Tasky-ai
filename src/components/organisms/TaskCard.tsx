@@ -1,11 +1,9 @@
 import { TaskDisplay } from '@/components/organisms/TaskDisplay';
 import { TaskForm } from '@/components/organisms/TaskForm';
-import { HTTP_METHODS } from '@/constants/http';
-import { ROUTES } from '@/constants/routes';
+import { useTaskOperations } from '@/hooks/use-taskOperations';
 import { IProject } from '@/types/project.types';
-import { ITask, ITaskFormData } from '@/types/task.types';
-import { memo, useCallback, useState } from 'react';
-import { useFetcher } from 'react-router';
+import { ITask } from '@/types/task.types';
+import { memo, useState } from 'react';
 
 interface TaskCardProps {
   id: string;
@@ -16,10 +14,11 @@ interface TaskCardProps {
 }
 
 export const TaskCard = memo(({ id, content, completed, dueDate, project }: TaskCardProps) => {
-  const fetcher = useFetcher();
   const [isEditing, setIsEditing] = useState<boolean>(false);
+  const { updateTask, fetcher } = useTaskOperations({
+    onSuccess: () => setIsEditing(false),
+  });
 
-  const fetcherTask = fetcher.json as ITask;
   const task: ITask = Object.assign(
     {
       id,
@@ -28,45 +27,8 @@ export const TaskCard = memo(({ id, content, completed, dueDate, project }: Task
       due_date: dueDate,
       project,
     },
-    fetcherTask
+    fetcher.json as ITask
   );
-
-  const handleToggleComplete = useCallback(
-    async (newCompletedState: boolean) => {
-      await fetcher.submit(JSON.stringify({ id: task.id, completed: newCompletedState }), {
-        action: ROUTES.APP,
-        method: HTTP_METHODS.PUT,
-        encType: 'application/json',
-      });
-    },
-    [fetcher, task.id]
-  );
-
-  const handleSubmitEdit = useCallback(
-    (formData: ITaskFormData) => {
-      fetcher.submit(
-        JSON.stringify({
-          ...formData,
-          id: task.id,
-        }),
-        {
-          action: ROUTES.APP,
-          method: HTTP_METHODS.PUT,
-          encType: 'application/json',
-        }
-      );
-      setIsEditing(false);
-    },
-    [fetcher, task.id]
-  );
-
-  const handleDelete = useCallback(() => {
-    fetcher.submit(JSON.stringify({ id: task.id }), {
-      action: ROUTES.APP,
-      method: HTTP_METHODS.DELETE,
-      encType: 'application/json',
-    });
-  }, [fetcher, task.id]);
 
   return (
     <article
@@ -78,21 +40,18 @@ export const TaskCard = memo(({ id, content, completed, dueDate, project }: Task
         <TaskDisplay
           task={task}
           project={project}
-          onToggleComplete={handleToggleComplete}
           onEdit={() => setIsEditing(true)}
-          onDelete={handleDelete}
         />
       ) : (
         <TaskForm
           className="my-1"
           defaultFormData={{
             ...task,
-            due_date: task.due_date,
             projectId: project && project?.$id,
           }}
           mode="edit"
           onCancel={() => setIsEditing(false)}
-          onSubmit={handleSubmitEdit}
+          onSubmit={updateTask}
         />
       )}
     </article>

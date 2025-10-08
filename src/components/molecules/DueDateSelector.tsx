@@ -3,12 +3,12 @@ import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { cn, formatCustomDate, getTaskDueDateColorClass } from '@/lib/utils';
 import { CalendarIcon } from 'lucide-react';
-import { useState } from 'react';
+import { SetStateAction, useState } from 'react';
 import { RemoveDueDateButton } from '../atoms/RemoveDueDateButton';
 
 interface DueDateSelectorProps {
   dueDate: Date | null;
-  onDateChange: (date: Date | null) => void;
+  onDateChange: (date: SetStateAction<Date | string | null>) => void;
   onDateRemove: () => void;
 }
 
@@ -51,7 +51,7 @@ export const DueDateSelector = ({ dueDate, onDateChange, onDateRemove }: DueDate
             disabled={{ before: new Date() }}
             selected={dueDate ? new Date(dueDate) : undefined}
             onSelect={handleDateSelect}
-            initialFocus
+            autoFocus
           />
         </PopoverContent>
       </Popover>

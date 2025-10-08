@@ -1,6 +1,6 @@
-import { TaskContentInput } from '@/components/molecules/TaskContentInput';
 import { DueDateSelector } from '@/components/molecules/DueDateSelector';
 import { ProjectSelector } from '@/components/molecules/ProjectSelector';
+import { TaskContentInput } from '@/components/molecules/TaskContentInput';
 import { TaskFormActions } from '@/components/molecules/TaskFormActions';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
@@ -8,9 +8,8 @@ import { DEFAULT_TASK_FORM_DATA } from '@/constants/default';
 import { useProjectList } from '@/contexts/ProjectContext';
 import { cn } from '@/lib/utils';
 import { TActionMode } from '@/types';
-import { IProjectInfo } from '@/types/project.types';
+import { IProject, IProjectInfo } from '@/types/project.types';
 import { ITaskFormData } from '@/types/task.types';
-import { Models } from 'appwrite';
 import * as chrono from 'chrono-node';
 import type { ClassValue } from 'clsx';
 import { useCallback, useEffect, useState } from 'react';
@@ -19,7 +18,7 @@ interface TaskFormProps {
   mode: TActionMode;
   className?: ClassValue;
   defaultFormData?: ITaskFormData;
-  onSubmit?: (formData: ITaskFormData) => void;
+  onSubmit?: (formData: ITaskFormData, taskId?: string) => Promise<void>;
   onCancel: () => void;
 }
 
@@ -46,11 +45,13 @@ export const TaskForm = ({
 
   useEffect(() => {
     if (projectId) {
-      const { name, color_hex } = projects?.documents.find(({ $id }) => projectId === $id) as Models.Document;
-      setProjectInfo({
-        name: name,
-        colorHex: color_hex,
-      });
+      const project = projects?.documents.find(({ $id }) => projectId === $id) as IProject;
+      if (project) {
+        setProjectInfo({
+          name: project.name,
+          colorHex: project.color_hex,
+        });
+      }
     }
   }, [projectId, projects?.documents]);
 
@@ -64,37 +65,34 @@ export const TaskForm = ({
   }, [taskContent, dueDate, projectId]);
 
   useEffect(() => {
-    const chronoParsed = chrono.parse(taskContent);
+    if (taskContent) {
+      const chronoParsed = chrono.parse(taskContent);
 
-    if (chronoParsed.length) {
-      const lastDate = chronoParsed[chronoParsed.length - 1];
-
-      setDueDate(lastDate.date());
+      if (chronoParsed.length) {
+        const lastDate = chronoParsed[chronoParsed.length - 1];
+        setDueDate(lastDate.date());
+      }
     }
   }, [taskContent]);
 
-  const handleSubmit = useCallback(() => {
-    if (!taskContent.trim()) return;
+  const handleSubmit = useCallback(async () => {
+    if (onSubmit) {
+      await onSubmit(formData, defaultFormData.id);
+    }
+    setFormData(DEFAULT_TASK_FORM_DATA);
+  }, [onSubmit, defaultFormData.id, formData]);
 
-    if (onSubmit) onSubmit(formData);
-
-    setTaskContent('');
-  }, [taskContent, onSubmit, formData]);
-
-  const handleKeyPress = useCallback(
-    (e: KeyboardEvent) => {
+  useEffect(() => {
+    const listener = (e: KeyboardEvent) => {
       if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
         handleSubmit();
       }
-    },
-    [handleSubmit]
-  );
+    };
 
-  useEffect(() => {
-    document.addEventListener('keydown', handleKeyPress);
-    return () => document.removeEventListener('keydown', handleKeyPress);
-  }, [handleKeyPress]);
+    document.addEventListener('keydown', listener);
+    return () => document.removeEventListener('keydown', listener);
+  }, [handleSubmit]);
 
   const isFormValid = taskContent.trim().length > 0;
 
@@ -112,7 +110,6 @@ export const TaskForm = ({
         <TaskContentInput
           value={taskContent}
           onChange={setTaskContent}
-          onSubmit={handleSubmit}
         />
         <DueDateSelector
           dueDate={dueDate as Date}

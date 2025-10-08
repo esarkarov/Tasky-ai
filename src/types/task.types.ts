@@ -2,10 +2,10 @@ import { IProject } from '@/types/project.types';
 import { Models } from 'appwrite';
 
 export interface ITask extends Models.Document {
+  id: string;
   content: string;
   due_date: Date | string | null;
   completed: boolean;
-  userId: string;
   projectId: IProject | null;
 }
 export interface ITasksResponse {

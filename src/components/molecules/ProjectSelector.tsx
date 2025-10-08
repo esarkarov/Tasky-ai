@@ -9,7 +9,7 @@ import { SetStateAction, useState } from 'react';
 
 interface ProjectSelectorProps {
   setProjectInfo: (value: SetStateAction<IProjectInfo>) => void;
-  setProjectId: (value: SetStateAction<string | null>) => void;
+  setProjectId: (value: string | null) => void;
   projectInfo: IProjectInfo;
   projects: TProjectList;
 }

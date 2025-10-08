@@ -2,26 +2,25 @@ import { Head } from '@/components/atoms/Head';
 import { Page, PageHeader, PageList, PageTitle } from '@/components/atoms/Page';
 import { TaskAddButton } from '@/components/atoms/TaskAddButton';
 import { TaskCardSkeleton } from '@/components/atoms/TaskCardSkeleton';
-import { TaskEmptyState } from '@/components/organisms/TaskEmptyState';
 import { TotalTasks } from '@/components/atoms/TotalTasks';
 import { ProjectActionMenu } from '@/components/organisms/ProjectActionMenu';
 import { TaskCard } from '@/components/organisms/TaskCard';
+import { TaskEmptyState } from '@/components/organisms/TaskEmptyState';
 import { TaskForm } from '@/components/organisms/TaskForm';
 import { TopAppBar } from '@/components/organisms/TopAppBar';
 import { Button } from '@/components/ui/button';
-import { HTTP_METHODS } from '@/constants/http';
-import { ROUTES } from '@/constants/routes';
+import { useTaskOperations } from '@/hooks/use-taskOperations';
 import { IProjectDetailLoaderData } from '@/types/loader.types';
-import { ITaskFormData } from '@/types/task.types';
 import type { Models } from 'appwrite';
 import { MoreHorizontal } from 'lucide-react';
-import { useCallback, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useFetcher, useLoaderData } from 'react-router';
 
 export const ProjectDetailPage = () => {
   const fetcher = useFetcher();
   const [isFormShow, setIsFormShow] = useState<boolean>(false);
   const { project } = useLoaderData<IProjectDetailLoaderData>();
+  const { createTask } = useTaskOperations();
 
   const projectTasks = useMemo(() => {
     const incompleteTasks = project.tasks?.filter((task: Models.Document) => !task.completed) as Models.Document[];
@@ -34,17 +33,6 @@ export const ProjectDetailPage = () => {
 
     return sortedTasks;
   }, [project.tasks]);
-
-  const handleSubmitCreate = useCallback(
-    (formData: ITaskFormData) => {
-      fetcher.submit(JSON.stringify(formData), {
-        action: ROUTES.APP,
-        method: HTTP_METHODS.POST,
-        encType: 'application/json',
-      });
-    },
-    [fetcher]
-  );
 
   return (
     <>
@@ -112,7 +100,7 @@ export const ProjectDetailPage = () => {
                 projectId: project.$id,
               }}
               onCancel={() => setIsFormShow(false)}
-              onSubmit={handleSubmitCreate}
+              onSubmit={createTask}
             />
           )}
         </PageList>

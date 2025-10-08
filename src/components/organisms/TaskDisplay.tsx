@@ -10,20 +10,15 @@ interface TaskDisplayProps {
   project: IProject;
   task: ITask;
   onEdit: () => void;
-  onDelete: () => void;
-  onToggleComplete: (completed: boolean) => Promise<void>;
 }
 
-export const TaskDisplay = ({ project, task, onToggleComplete, onEdit, onDelete }: TaskDisplayProps) => (
+export const TaskDisplay = ({ project, task, onEdit }: TaskDisplayProps) => (
   <div
     className="group/card relative grid grid-cols-[max-content,minmax(0,1fr)] gap-3 border-b"
     role="group"
     aria-labelledby={`task-${task.id}-content`}
     aria-describedby={`task-${task.id}-metadata`}>
-    <TaskCompletionButton
-      task={task}
-      onToggleComplete={onToggleComplete}
-    />
+    <TaskCompletionButton task={task} />
     <Card className="rounded-none py-2 space-y-1.5 border-none">
       <CardContent className="p-0">
         <p
@@ -40,7 +35,6 @@ export const TaskDisplay = ({ project, task, onToggleComplete, onEdit, onDelete 
     <TaskActionButtons
       task={task}
       onEdit={onEdit}
-      onDelete={onDelete}
     />
   </div>
 );

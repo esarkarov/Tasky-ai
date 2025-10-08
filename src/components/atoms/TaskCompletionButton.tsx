@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { ToastAction } from '@/components/ui/toast';
+import { useTaskOperations } from '@/hooks/use-taskOperations';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import { ITask } from '@/types/task.types';
@@ -7,15 +8,15 @@ import { Check } from 'lucide-react';
 
 interface TaskCompletionButtonProps {
   task: ITask;
-  onToggleComplete: (completed: boolean) => Promise<void>;
 }
 
-export const TaskCompletionButton = ({ task, onToggleComplete }: TaskCompletionButtonProps) => {
+export const TaskCompletionButton = ({ task }: TaskCompletionButtonProps) => {
+  const { toggleTaskComplete } = useTaskOperations();
   const { toast } = useToast();
 
   const handleClick = async () => {
     const newCompletedState = !task.completed;
-    await onToggleComplete(newCompletedState);
+    await toggleTaskComplete(task.id, newCompletedState);
 
     if (newCompletedState) {
       toast({
@@ -23,7 +24,7 @@ export const TaskCompletionButton = ({ task, onToggleComplete }: TaskCompletionB
         action: (
           <ToastAction
             altText="Undo task completion"
-            onClick={() => onToggleComplete(false)}>
+            onClick={() => toggleTaskComplete(task.id, false)}>
             Undo
           </ToastAction>
         ),
