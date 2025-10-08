@@ -4,3 +4,4 @@ export const MAX_PROMPT_LENGTH = 150;
 export const CONTENT_WARNING_THRESHOLD = 290;
 export const PROMPT_WARNING_LENGTH = 140;
 export const NAME_WARNING_THRESHOLD = 40;
+export const MAX_TRUNCATE_LENGTH = 32;

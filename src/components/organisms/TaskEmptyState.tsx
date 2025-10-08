@@ -1,4 +1,4 @@
-import { EMPTY_STATES } from '@/constants/states';
+import { EMPTY_STATE_CONTENTS } from '@/constants/contents';
 import { TEmptyStateType } from '@/types';
 import { memo } from 'react';
 
@@ -7,7 +7,7 @@ interface TaskEmptyStateProps {
 }
 
 export const TaskEmptyState = memo(({ type }: TaskEmptyStateProps) => {
-  const { img, title, description } = EMPTY_STATES[type];
+  const { img, title, description } = EMPTY_STATE_CONTENTS[type];
 
   return (
     <section

@@ -1,72 +1,89 @@
+import { TOAST_CONTENTS } from '@/constants/contents';
 import { HTTP_METHODS } from '@/constants/http';
 import { ROUTES } from '@/constants/routes';
 import { TIMING } from '@/constants/timing';
-import { truncateString } from '@/lib/utils';
-import { useCallback } from 'react';
-import { useFetcher, useLocation, useNavigate } from 'react-router';
+import { MAX_TRUNCATE_LENGTH } from '@/constants/validation';
 import { useToast } from '@/hooks/use-toast';
-import { IProjectBase, IProjectFormData } from '@/types/project.types';
-import { THttpMethod } from '@/types';
+import { truncateString } from '@/lib/utils';
+import { IUseProjectOperationsParams, IUseProjectOperationsResult } from '@/types/hook.types';
+import { IProjectFormData } from '@/types/project.types';
+import { useCallback, useMemo } from 'react';
+import { useFetcher, useLocation, useNavigate } from 'react-router';
 
-interface UseProjectOperationsParams {
-  onSuccess: () => void;
-  projectData: IProjectBase;
-  method: THttpMethod;
-}
-type PartialUseProjectOperationsParams = Partial<UseProjectOperationsParams>;
-
-export const useProjectOperations = (options?: PartialUseProjectOperationsParams) => {
+export const useProjectOperations = (params: IUseProjectOperationsParams = {}): IUseProjectOperationsResult => {
+  const { method = HTTP_METHODS.POST, projectData, onSuccess } = params;
   const fetcher = useFetcher();
   const location = useLocation();
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  const saveProject = useCallback(
-    async (data: IProjectFormData) => {
-      options?.onSuccess?.();
+  const isCreateOperation = useMemo(() => method === HTTP_METHODS.POST, [method]);
 
-      const { id, update } = toast({
-        title: `${options?.method === 'POST' ? 'Creating' : 'Updating'} project...`,
-        duration: Infinity,
-      });
+  const operationMessages = useMemo(
+    () => (isCreateOperation ? TOAST_CONTENTS.CREATE : TOAST_CONTENTS.UPDATE),
+    [isCreateOperation]
+  );
+
+  const showToast = useCallback(
+    (message: string, duration = Infinity) => {
+      return toast({ title: message, duration });
+    },
+    [toast]
+  );
+
+  const getSuccessDescription = useCallback(
+    (projectName: string, hasAiGen: boolean): string => {
+      const truncatedName = truncateString(projectName, MAX_TRUNCATE_LENGTH);
+      const aiTaskInfo = hasAiGen ? ' and its tasks' : '';
+      const action = isCreateOperation ? 'created' : 'updated';
+      return `The project ${truncatedName}${aiTaskInfo} ${hasAiGen ? 'have' : 'has'} been successfully ${action}.`;
+    },
+    [isCreateOperation]
+  );
+
+  const saveProject = useCallback(
+    async (data: IProjectFormData): Promise<void> => {
+      const { id, update } = showToast(operationMessages.LOADING);
 
       try {
         await fetcher.submit(JSON.stringify(data), {
           action: ROUTES.PROJECTS,
-          method: options?.method,
+          method,
           encType: 'application/json',
         });
 
         update({
           id,
-          title: `Project ${options?.method === 'POST' ? 'created' : 'updated'}.`,
-          description: `The project ${truncateString(data.name, 32)} ${data.ai_task_gen ? 'and its tasks' : ''} have been successfully ${options?.method === 'POST' ? 'created' : 'updated'}.`,
+          title: operationMessages.SUCCESS,
+          description: getSuccessDescription(data.name, data.ai_task_gen ?? false),
           duration: TIMING.TOAST_DURATION,
         });
+
+        onSuccess?.();
       } catch {
         update({
           id,
-          title: 'Error creating project',
-          description: 'An error occurred while creating the project.',
+          title: operationMessages.ERROR,
+          description: operationMessages.ERROR_DESC,
           duration: TIMING.TOAST_DURATION,
         });
       }
     },
-    [fetcher, options, toast]
+    [fetcher, method, operationMessages, showToast, getSuccessDescription, onSuccess]
   );
 
-  const deleteProject = useCallback(async () => {
-    if (location.pathname === ROUTES.PROJECT(options?.projectData?.id as string)) {
+  const deleteProject = useCallback(async (): Promise<void> => {
+    if (!projectData) return;
+
+    const isViewingProject = location.pathname === ROUTES.PROJECT(projectData.id as string);
+    if (isViewingProject) {
       navigate(ROUTES.INBOX);
     }
 
-    const { id, update } = toast({
-      title: 'Deleting project...',
-      duration: Infinity,
-    });
+    const { id, update } = showToast(TOAST_CONTENTS.DELETE.LOADING);
 
     try {
-      await fetcher.submit(JSON.stringify(options?.projectData), {
+      await fetcher.submit(JSON.stringify(projectData), {
         action: ROUTES.PROJECTS,
         method: HTTP_METHODS.DELETE,
         encType: 'application/json',
@@ -74,25 +91,25 @@ export const useProjectOperations = (options?: PartialUseProjectOperationsParams
 
       update({
         id,
-        title: 'Project deleted',
-        description: `The project ${truncateString(options?.projectData?.name as string, 32)} has been successfully deleted.`,
+        title: TOAST_CONTENTS.DELETE.SUCCESS,
+        description: `The project ${truncateString(projectData.name, MAX_TRUNCATE_LENGTH)} has been successfully deleted.`,
         duration: TIMING.TOAST_DURATION,
       });
+
+      onSuccess?.();
     } catch {
       update({
         id,
-        title: 'Error deleting project',
-        description: `An error occurred while deleting the project.`,
+        title: TOAST_CONTENTS.DELETE.ERROR,
+        description: TOAST_CONTENTS.DELETE.ERROR_DESC,
         duration: TIMING.TOAST_DURATION,
       });
     }
-  }, [fetcher, location.pathname, navigate, options, toast]);
+  }, [fetcher, location.pathname, navigate, projectData, showToast, onSuccess]);
 
   return {
     saveProject,
     deleteProject,
     fetcher,
-    isSubmitting: fetcher.state === 'submitting',
-    isLoading: fetcher.state === 'loading',
   };
 };

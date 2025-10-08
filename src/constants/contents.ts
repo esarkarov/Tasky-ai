@@ -20,7 +20,7 @@ const createEmptyState = (src: string, width: number, title: string, description
   description,
 });
 
-export const EMPTY_STATES: Record<TEmptyStateType, IEmptyStateContent> = {
+export const EMPTY_STATE_CONTENTS: Record<TEmptyStateType, IEmptyStateContent> = {
   today: createEmptyState(
     todayTaskEmptyState,
     226,
@@ -52,3 +52,24 @@ export const EMPTY_STATES: Record<TEmptyStateType, IEmptyStateContent> = {
     'Add tasks specific to this project. Click + to start planning.'
   ),
 };
+
+export const TOAST_CONTENTS = {
+  CREATE: {
+    LOADING: 'Creating project...',
+    SUCCESS: 'Project created.',
+    ERROR: 'Error creating project',
+    ERROR_DESC: 'An error occurred while creating the project.',
+  },
+  UPDATE: {
+    LOADING: 'Updating project...',
+    SUCCESS: 'Project updated.',
+    ERROR: 'Error updating project',
+    ERROR_DESC: 'An error occurred while updating the project.',
+  },
+  DELETE: {
+    LOADING: 'Deleting project...',
+    SUCCESS: 'Project deleted',
+    ERROR: 'Error deleting project',
+    ERROR_DESC: 'An error occurred while deleting the project.',
+  },
+} as const;
