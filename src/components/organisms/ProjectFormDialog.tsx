@@ -1,12 +1,9 @@
 import { ProjectForm } from '@/components/organisms/ProjectForm';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
-import { ROUTES } from '@/constants/routes';
-import { useToast } from '@/hooks/use-toast';
-import { truncateString } from '@/lib/utils';
+import { useProjectOperations } from '@/hooks/use-projectOperations';
 import { THttpMethod } from '@/types';
-import { IProjectBase, IProjectFormData } from '@/types/project.types';
-import { ReactNode, useCallback, useState } from 'react';
-import { useFetcher } from 'react-router';
+import { IProjectBase } from '@/types/project.types';
+import { ReactNode, useState } from 'react';
 
 interface ProjectFormDialogProps {
   defaultFormData?: IProjectBase;
@@ -16,33 +13,10 @@ interface ProjectFormDialogProps {
 
 export const ProjectFormDialog = ({ defaultFormData, children, method }: ProjectFormDialogProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const { toast } = useToast();
-  const fetcher = useFetcher();
-
-  const handleProjectCreate = useCallback(
-    async (data: IProjectFormData) => {
-      setIsOpen(false);
-
-      const { id, update } = toast({
-        title: `${method === 'POST' ? 'Creating' : 'Updating'} project...`,
-        duration: Infinity,
-      });
-
-      await fetcher.submit(JSON.stringify(data), {
-        action: ROUTES.PROJECTS,
-        method,
-        encType: 'application/json',
-      });
-
-      update({
-        id,
-        title: `Project ${method === 'POST' ? 'created' : 'updated'}.`,
-        description: `The project ${truncateString(data.name, 32)} ${data.ai_task_gen ? 'and its tasks' : ''} have been successfully ${method === 'POST' ? 'created' : 'updated'}.`,
-        duration: 5000,
-      });
-    },
-    [fetcher, method, toast]
-  );
+  const { saveProject } = useProjectOperations({
+    onSuccess: () => setIsOpen(false),
+    method: method,
+  });
 
   return (
     <Dialog
@@ -56,7 +30,7 @@ export const ProjectFormDialog = ({ defaultFormData, children, method }: Project
           mode={method === 'POST' ? 'create' : 'edit'}
           defaultFormData={defaultFormData}
           onCancel={() => setIsOpen(false)}
-          onSubmit={handleProjectCreate}
+          onSubmit={saveProject}
         />
       </DialogContent>
     </Dialog>

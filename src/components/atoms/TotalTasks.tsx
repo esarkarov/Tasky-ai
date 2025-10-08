@@ -13,7 +13,6 @@ export const TotalTasks = ({ total }: TotalTasksProps) => {
         size={16}
         aria-hidden="true"
       />
-
       <span>
         {total} {total === 1 ? 'task' : 'tasks'}
       </span>

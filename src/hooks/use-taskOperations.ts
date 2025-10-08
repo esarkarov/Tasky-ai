@@ -69,7 +69,5 @@ export const useTaskOperations = (options?: UseTaskOperationsParams) => {
     toggleTaskComplete,
     deleteTask,
     fetcher,
-    isSubmitting: fetcher.state === 'submitting',
-    isLoading: fetcher.state === 'loading',
   };
 };

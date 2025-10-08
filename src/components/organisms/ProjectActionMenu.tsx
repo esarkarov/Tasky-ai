@@ -7,60 +7,19 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { HTTP_METHODS } from '@/constants/http';
-import { ROUTES } from '@/constants/routes';
-import { TIMING } from '@/constants/timing';
-import { useToast } from '@/hooks/use-toast';
-import { truncateString } from '@/lib/utils';
+import { useProjectOperations } from '@/hooks/use-projectOperations';
 import { IProjectBase } from '@/types/project.types';
 import type { DropdownMenuContentProps } from '@radix-ui/react-dropdown-menu';
 import { Edit } from 'lucide-react';
-import { useCallback } from 'react';
-import { useFetcher, useLocation, useNavigate } from 'react-router';
 
 interface ProjectActionMenuProps extends DropdownMenuContentProps {
   defaultFormData: IProjectBase;
 }
 
 export const ProjectActionMenu = ({ children, defaultFormData, ...props }: ProjectActionMenuProps) => {
-  const fetcher = useFetcher();
-  const location = useLocation();
-  const navigate = useNavigate();
-  const { toast } = useToast();
-
-  const handleProjectDelete = useCallback(async () => {
-    if (location.pathname === ROUTES.PROJECT(defaultFormData.id ?? undefined)) {
-      navigate(ROUTES.INBOX);
-    }
-
-    const { id, update } = toast({
-      title: 'Deleting project...',
-      duration: Infinity,
-    });
-
-    try {
-      await fetcher.submit(JSON.stringify(defaultFormData), {
-        action: ROUTES.PROJECTS,
-        method: HTTP_METHODS.DELETE,
-        encType: 'application/json',
-      });
-
-      update({
-        id,
-        title: 'Project deleted',
-        description: `The project ${truncateString(defaultFormData.name, 32)} has been successfully deleted.`,
-        duration: TIMING.TOAST_DURATION,
-      });
-    } catch (err) {
-      console.log('Error deleting project: ', err);
-      update({
-        id,
-        title: 'Error deleting project',
-        description: `An error occurred while deleting the project.`,
-        duration: TIMING.TOAST_DURATION,
-      });
-    }
-  }, [defaultFormData, fetcher, location.pathname, navigate, toast]);
+  const { deleteProject } = useProjectOperations({
+    projectData: defaultFormData,
+  });
 
   return (
     <DropdownMenu>
@@ -86,7 +45,7 @@ export const ProjectActionMenu = ({ children, defaultFormData, ...props }: Proje
           <ConfirmationDialog
             itemType="project"
             selectedItem={defaultFormData}
-            onDelete={handleProjectDelete}
+            onDelete={deleteProject}
           />
         </DropdownMenuItem>
       </DropdownMenuContent>
