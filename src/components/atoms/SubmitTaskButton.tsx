@@ -1,6 +1,6 @@
+import { Button } from '@/components/ui/button';
 import { TActionMode } from '@/types';
 import { SendHorizonal } from 'lucide-react';
-import { Button } from '../ui/button';
 
 interface SubmitTaskButtonProps {
   isFormValid: boolean;

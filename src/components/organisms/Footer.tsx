@@ -1,4 +1,4 @@
-import { FooterNav } from '../molecules/FooterNav';
+import { FooterNav } from '@/components/molecules/FooterNav';
 
 export const Footer = () => {
   return (

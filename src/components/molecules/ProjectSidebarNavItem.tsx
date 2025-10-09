@@ -1,7 +1,7 @@
+import { ProjectSidebarNavLink } from '@/components/molecules/ProjectSidebarNavLink';
+import { ProjectActionMenu } from '@/components/organisms/ProjectActionMenu';
+import { SidebarMenuAction, SidebarMenuItem } from '@/components/ui/sidebar';
 import { MoreHorizontal } from 'lucide-react';
-import { ProjectActionMenu } from '../organisms/ProjectActionMenu';
-import { SidebarMenuAction, SidebarMenuItem } from '../ui/sidebar';
-import { ProjectSidebarNavLink } from './ProjectSidebarNavLink';
 
 interface ProjectSidebarNavItemProps {
   $id: string;

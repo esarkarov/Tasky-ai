@@ -1,7 +1,7 @@
+import { ProjectFormDialog } from '@/components/organisms/ProjectFormDialog';
+import { SidebarGroupAction } from '@/components/ui/sidebar';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { Plus } from 'lucide-react';
-import { ProjectFormDialog } from '../organisms/ProjectFormDialog';
-import { SidebarGroupAction } from '../ui/sidebar';
-import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
 
 export const AddProjectButton = () => {
   return (

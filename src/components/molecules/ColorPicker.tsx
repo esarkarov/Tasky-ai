@@ -1,3 +1,4 @@
+import { SelectableCommandItem } from '@/components/atoms/SelectableCommandItem';
 import { Button } from '@/components/ui/button';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandList } from '@/components/ui/command';
 import { Label } from '@/components/ui/label';
@@ -5,7 +6,6 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { PROJECT_COLORS } from '@/constants/colors';
 import { ChevronDown, Circle } from 'lucide-react';
-import { SelectableCommandItem } from '../atoms/SelectableCommandItem';
 
 interface ColorPickerProps {
   isOpen: boolean;

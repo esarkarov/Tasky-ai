@@ -1,8 +1,8 @@
+import { AddProjectButton } from '@/components/atoms/AddProjectButton';
+import { ProjectsSidebarLabel } from '@/components/molecules/ProjectsSidebarLabel';
+import { ProjectsSidebarList } from '@/components/organisms/ProjectsSidebarList';
 import { Collapsible } from '@/components/ui/collapsible';
 import { SidebarGroup } from '@/components/ui/sidebar';
-import { AddProjectButton } from '../atoms/AddProjectButton';
-import { ProjectsSidebarLabel } from '../molecules/ProjectsSidebarLabel';
-import { ProjectsSidebarList } from './ProjectsSidebarList';
 
 interface ProjectsSidebarSectionProps {
   onNavigationClick: () => void;

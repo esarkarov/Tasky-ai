@@ -1,5 +1,5 @@
+import { FooterNavLink } from '@/components/atoms/FooterNavLink';
 import { SOCIAL_LINKS } from '@/constants/links';
-import { FooterNavLink } from '../atoms/FooterNavLink';
 
 export const FooterNav = () => {
   return (

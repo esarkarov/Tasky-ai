@@ -1,7 +1,7 @@
-import { Hash } from 'lucide-react';
-import { SidebarMenuButton } from '../ui/sidebar';
-import { Link, useLocation } from 'react-router';
+import { SidebarMenuButton } from '@/components/ui/sidebar';
 import { ROUTES } from '@/constants/routes';
+import { Hash } from 'lucide-react';
+import { Link, useLocation } from 'react-router';
 
 interface ProjectSidebarNavLinkProps {
   $id: string;

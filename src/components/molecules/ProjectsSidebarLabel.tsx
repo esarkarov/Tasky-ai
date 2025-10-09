@@ -1,6 +1,6 @@
+import { CollapsibleTrigger } from '@/components/ui/collapsible';
+import { SidebarGroupLabel } from '@/components/ui/sidebar';
 import { ChevronRight } from 'lucide-react';
-import { CollapsibleTrigger } from '../ui/collapsible';
-import { SidebarGroupLabel } from '../ui/sidebar';
 
 export const ProjectsSidebarLabel = () => {
   return (

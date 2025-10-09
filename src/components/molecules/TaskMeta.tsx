@@ -1,10 +1,10 @@
+import { ProjectBadge } from '@/components/atoms/ProjectBadge';
+import { TaskDueDate } from '@/components/atoms/TaskDueDate';
 import { CardFooter } from '@/components/ui/card';
 import { ROUTES } from '@/constants/routes';
 import { IProject } from '@/types/project.types';
 import { ITask } from '@/types/task.types';
 import { useLocation } from 'react-router';
-import { TaskDueDate } from '../atoms/TaskDueDate';
-import { ProjectBadge } from '../atoms/ProjectBadge';
 
 interface TaskMetaProps {
   project: IProject;

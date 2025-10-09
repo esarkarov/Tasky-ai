@@ -1,6 +1,6 @@
+import { CancelTaskButton } from '@/components/atoms/CancelTaskButton';
+import { SubmitTaskButton } from '@/components/atoms/SubmitTaskButton';
 import { TActionMode } from '@/types';
-import { CancelTaskButton } from '../atoms/CancelTaskButton';
-import { SubmitTaskButton } from '../atoms/SubmitTaskButton';
 
 interface TaskFormActionsProps {
   mode: TActionMode;

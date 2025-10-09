@@ -1,10 +1,10 @@
+import { RemoveDueDateButton } from '@/components/atoms/RemoveDueDateButton';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { cn, formatCustomDate, getTaskDueDateColorClass } from '@/lib/utils';
 import { CalendarIcon } from 'lucide-react';
 import { SetStateAction, useState } from 'react';
-import { RemoveDueDateButton } from '../atoms/RemoveDueDateButton';
 
 interface TaskDueDatePickerProps {
   dueDate: Date | null;

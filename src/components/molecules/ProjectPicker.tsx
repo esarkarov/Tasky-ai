@@ -1,3 +1,4 @@
+import { SelectableCommandItem } from '@/components/atoms/SelectableCommandItem';
 import { Button } from '@/components/ui/button';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandList } from '@/components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -6,7 +7,6 @@ import { TProjectList } from '@/types';
 import { IProjectInfo } from '@/types/project.types';
 import { ChevronDown, Hash, Inbox } from 'lucide-react';
 import { SetStateAction, useState } from 'react';
-import { SelectableCommandItem } from '../atoms/SelectableCommandItem';
 
 interface ProjectPickerProps {
   setProjectInfo: (value: SetStateAction<IProjectInfo>) => void;
