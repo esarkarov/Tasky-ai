@@ -1,6 +1,6 @@
 import { HTTP_METHODS } from '@/constants/http';
 import { ROUTES } from '@/constants/routes';
-import { createProjectTasks } from '@/services/aiService';
+import { generateProjectTasks } from '@/services/aiService';
 import { createProject, deleteProject, updateProject } from '@/services/projectService';
 import { createTasksForProject } from '@/services/taskService';
 import { IProjectFormData } from '@/types/project.types';
@@ -30,7 +30,7 @@ export const projectAction: ActionFunction = async ({ request }) => {
       const project = await createProject(data);
 
       if (data.ai_task_gen && data.task_gen_prompt) {
-        const aiTasks = await createProjectTasks(data.task_gen_prompt);
+        const aiTasks = await generateProjectTasks(data.task_gen_prompt);
 
         if (aiTasks.length > 0) {
           await createTasksForProject(project.$id, aiTasks);
