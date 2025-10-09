@@ -5,12 +5,12 @@ import { ROUTES } from '@/constants/routes';
 import { TIMING } from '@/constants/timing';
 import { useToast } from '@/hooks/use-toast';
 import { truncateString } from '@/lib/utils';
-import { IUseTaskOperationsParams, IUseTaskOperationsResult } from '@/types/hook.types';
-import { ITaskFormData } from '@/types/task.types';
+import { UseTaskOperationsParams, UseTaskOperationsResult } from '@/types/hook.types';
+import { TaskFormData } from '@/types/task.types';
 import { useCallback } from 'react';
 import { useFetcher } from 'react-router';
 
-export const useTaskOperations = (params: IUseTaskOperationsParams = {}): IUseTaskOperationsResult => {
+export const useTaskOperations = (params: UseTaskOperationsParams = {}): UseTaskOperationsResult => {
   const { onSuccess, enableUndo = true } = params;
   const { toast } = useToast();
   const fetcher = useFetcher();
@@ -28,7 +28,7 @@ export const useTaskOperations = (params: IUseTaskOperationsParams = {}): IUseTa
   }, []);
 
   const createTask = useCallback(
-    async (formData: ITaskFormData): Promise<void> => {
+    async (formData: TaskFormData): Promise<void> => {
       if (!formData) return;
 
       const { id, update } = showToast(TASK_TOAST_CONTENTS.CREATE.LOADING);
@@ -61,7 +61,7 @@ export const useTaskOperations = (params: IUseTaskOperationsParams = {}): IUseTa
   );
 
   const updateTask = useCallback(
-    async (formData: ITaskFormData, taskId?: string): Promise<void> => {
+    async (formData: TaskFormData, taskId?: string): Promise<void> => {
       if (!taskId && !formData.id) return;
 
       const { id, update } = showToast(TASK_TOAST_CONTENTS.UPDATE.LOADING);

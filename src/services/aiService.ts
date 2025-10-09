@@ -1,9 +1,9 @@
 import { GEMINI_DEFAULT_MODEL } from '@/constants/default';
 import { genAI } from '@/lib/googleAI';
 import { generateContents } from '@/lib/utils';
-import { IAIGeneratedTask } from '@/types/task.types';
+import { AIGeneratedTask } from '@/types/task.types';
 
-export const generateProjectTasks = async (prompt: string): Promise<IAIGeneratedTask[]> => {
+export const generateProjectTasks = async (prompt: string): Promise<AIGeneratedTask[]> => {
   if (!prompt?.trim()) return [];
 
   try {
@@ -23,7 +23,7 @@ export const generateProjectTasks = async (prompt: string): Promise<IAIGenerated
       return [];
     }
 
-    const tasks = JSON.parse(responseText) as IAIGeneratedTask[];
+    const tasks = JSON.parse(responseText) as AIGeneratedTask[];
 
     return tasks;
   } catch (error) {

@@ -1,16 +1,16 @@
-import { IProject, IProjectsListResponse } from '@/types/project.types';
-import { ITaskCounts, ITasksResponse } from '@/types/task.types';
+import { Project, ProjectsListResponse } from '@/types/project.types';
+import { TaskCounts, TasksResponse } from '@/types/task.types';
 
-export interface IAppLoaderData {
-  projects: IProjectsListResponse;
-  taskCounts: ITaskCounts;
+export interface AppLoaderData {
+  projects: ProjectsListResponse;
+  taskCounts: TaskCounts;
 }
-export interface ITasksLoaderData {
-  tasks: ITasksResponse;
+export interface TasksLoaderData {
+  tasks: TasksResponse;
 }
-export interface IProjectDetailLoaderData {
-  project: IProject;
+export interface ProjectDetailLoaderData {
+  project: Project;
 }
-export interface IProjectsLoaderData {
-  projects: IProjectsListResponse;
+export interface ProjectsLoaderData {
+  projects: ProjectsListResponse;
 }

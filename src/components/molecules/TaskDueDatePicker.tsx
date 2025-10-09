@@ -8,7 +8,7 @@ import { SetStateAction, useState } from 'react';
 
 interface TaskDueDatePickerProps {
   dueDate: Date | null;
-  onDateChange: (date: SetStateAction<Date | string | null>) => void;
+  onDateChange: (date: SetStateAction<Date | null>) => void;
   onDateRemove: () => void;
 }
 

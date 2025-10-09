@@ -9,14 +9,14 @@ import { Button } from '@/components/ui/button';
 import { ROUTES } from '@/constants/routes';
 import { useProjectOperations } from '@/hooks/use-projectOperations';
 import { cn } from '@/lib/utils';
-import { IProjectsLoaderData } from '@/types/loader.types';
+import { ProjectsLoaderData } from '@/types/loader.types';
 import { FolderKanban, Plus } from 'lucide-react';
 import { useLoaderData } from 'react-router';
 
 export const ProjectsPage = () => {
   const { fetcher, searchStatus, searchProjects } = useProjectOperations();
-  const loaderData = useLoaderData<IProjectsLoaderData>();
-  const fetcherData = fetcher.data as IProjectsLoaderData;
+  const loaderData = useLoaderData<ProjectsLoaderData>();
+  const fetcherData = fetcher.data as ProjectsLoaderData;
   const { projects } = fetcherData || loaderData;
 
   return (

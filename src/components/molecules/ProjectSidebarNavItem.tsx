@@ -4,7 +4,7 @@ import { SidebarMenuAction, SidebarMenuItem } from '@/components/ui/sidebar';
 import { MoreHorizontal } from 'lucide-react';
 
 interface ProjectSidebarNavItemProps {
-  $id: string;
+  id: string;
   name: string;
   colorHex: string;
   colorName: string;
@@ -12,7 +12,7 @@ interface ProjectSidebarNavItemProps {
 }
 
 export const ProjectSidebarNavItem = ({
-  $id,
+  id,
   name,
   colorHex,
   colorName,
@@ -21,7 +21,7 @@ export const ProjectSidebarNavItem = ({
   return (
     <SidebarMenuItem>
       <ProjectSidebarNavLink
-        $id={$id}
+        id={id}
         color={colorHex}
         name={name}
         onNavigationClick={onNavigationClick}
@@ -29,7 +29,7 @@ export const ProjectSidebarNavItem = ({
 
       <ProjectActionMenu
         defaultFormData={{
-          id: $id,
+          id,
           name,
           color_name: colorName,
           color_hex: colorHex,

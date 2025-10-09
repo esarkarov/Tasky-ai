@@ -1,30 +1,28 @@
-import { IProject } from '@/types/project.types';
+import { PaginatedResponse } from '@/types/pagination.types';
+import { Project } from '@/types/project.types';
 import { Models } from 'appwrite';
 
-export interface ITask extends Models.Document {
+export interface Task extends Models.Document {
   id: string;
   content: string;
-  due_date: Date | string | null;
+  due_date: Date | null;
   completed: boolean;
-  projectId: IProject | null;
+  projectId: Project | null;
 }
-export interface ITasksResponse {
-  total: number;
-  documents: ITask[];
-}
-export interface ITaskFormData {
+export interface TaskFormData {
   id?: string;
   content: string;
-  due_date: Date | string | null;
+  due_date: Date | null;
   completed?: boolean;
   projectId: string | null;
 }
-export interface IAIGeneratedTask {
+export interface AIGeneratedTask {
   content: string;
-  due_date?: string | null;
+  due_date?: Date | null;
   completed?: boolean;
 }
-export interface ITaskCounts {
+export interface TaskCounts {
   inboxTasks: number;
   todayTasks: number;
 }
+export type TasksResponse = PaginatedResponse<Task>;

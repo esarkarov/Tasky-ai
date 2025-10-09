@@ -7,8 +7,8 @@ import { TaskCard } from '@/components/organisms/TaskCard';
 import { TaskForm } from '@/components/organisms/TaskForm';
 import { TopAppBar } from '@/components/organisms/TopAppBar';
 import { useTaskOperations } from '@/hooks/use-taskOperations.tsx';
-import { ITasksLoaderData } from '@/types/loader.types';
-import { IProject } from '@/types/project.types';
+import { TasksLoaderData } from '@/types/loader.types';
+import { Project } from '@/types/project.types';
 import { startOfToday } from 'date-fns';
 import { ClipboardCheck } from 'lucide-react';
 import { useState } from 'react';
@@ -16,7 +16,7 @@ import { useLoaderData } from 'react-router';
 
 export const TodayPage = () => {
   const { createTask } = useTaskOperations();
-  const { tasks } = useLoaderData<ITasksLoaderData>();
+  const { tasks } = useLoaderData<TasksLoaderData>();
   const [isFormOpen, setIsFormOpen] = useState<boolean>(false);
 
   return (
@@ -48,7 +48,7 @@ export const TodayPage = () => {
               content={content}
               completed={completed}
               dueDate={due_date as Date}
-              project={projectId as IProject}
+              project={projectId as Project}
             />
           ))}
 
@@ -59,7 +59,7 @@ export const TodayPage = () => {
             />
           )}
 
-          {!tasks.total && !isFormOpen && <EmptyStateMessage type="today" />}
+          {!tasks.total && !isFormOpen && <EmptyStateMessage variant="today" />}
 
           {isFormOpen && (
             <TaskForm

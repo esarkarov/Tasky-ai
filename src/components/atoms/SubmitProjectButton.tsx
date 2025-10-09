@@ -1,8 +1,8 @@
-import { TActionMode } from '@/types';
+import { CrudMode } from '@/types/common.types';
 import { Button } from '@/components/ui/button';
 
 interface SubmitProjectButtonProps {
-  mode: TActionMode;
+  mode: CrudMode;
   isFormValid: boolean;
   handleSubmit: () => void;
 }

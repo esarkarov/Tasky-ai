@@ -1,30 +1,30 @@
-import { THttpMethod, TSearchStatus } from '@/types';
-import { IProjectBase, IProjectFormData } from '@/types/project.types';
-import { ITaskFormData } from '@/types/task.types';
+import { HttpMethod, SearchStatus } from '@/types/common.types';
+import { ProjectBase, ProjectFormData } from '@/types/project.types';
+import { TaskFormData } from '@/types/task.types';
 import { useFetcher } from 'react-router';
 
-export interface IUseProjectOperationsParams {
-  method?: THttpMethod;
-  projectData?: IProjectBase;
+export interface UseProjectOperationsParams {
+  method?: HttpMethod;
+  projectData?: ProjectBase;
   onSuccess?: () => void;
 }
 
-export interface IUseProjectOperationsResult {
-  saveProject: (data: IProjectFormData) => Promise<void>;
+export interface UseProjectOperationsResult {
+  saveProject: (data: ProjectFormData) => Promise<void>;
   deleteProject: () => Promise<void>;
   searchProjects: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  searchStatus: TSearchStatus;
+  searchStatus: SearchStatus;
   fetcher: ReturnType<typeof useFetcher>;
 }
 
-export interface IUseTaskOperationsParams {
+export interface UseTaskOperationsParams {
   onSuccess?: () => void;
   enableUndo?: boolean;
 }
 
-export interface IUseTaskOperationsResult {
-  createTask: (formData: ITaskFormData) => Promise<void>;
-  updateTask: (formData: ITaskFormData, taskId?: string) => Promise<void>;
+export interface UseTaskOperationsResult {
+  createTask: (formData: TaskFormData) => Promise<void>;
+  updateTask: (formData: TaskFormData, taskId?: string) => Promise<void>;
   toggleTaskComplete: (taskId: string, completed: boolean) => Promise<void>;
   deleteTask: (taskId: string) => Promise<void>;
   fetcher: ReturnType<typeof useFetcher>;

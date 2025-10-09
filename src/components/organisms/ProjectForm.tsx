@@ -6,15 +6,15 @@ import { ProjectNameInput } from '@/components/molecules/ProjectNameInput';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { DEFAULT_PROJECT_FORM_DATA } from '@/constants/default';
-import { TActionMode } from '@/types';
-import { IProjectBase, IProjectFormData } from '@/types/project.types';
+import { CrudMode } from '@/types/common.types';
+import { ProjectBase, ProjectFormData } from '@/types/project.types';
 import { useCallback, useMemo, useState } from 'react';
 
 interface ProjectFormProps {
-  mode: TActionMode;
-  defaultFormData?: IProjectBase;
+  mode: CrudMode;
+  defaultFormData?: ProjectBase;
   onCancel?: () => void;
-  onSubmit?: (formData: IProjectFormData) => void;
+  onSubmit?: (formData: ProjectFormData) => void;
 }
 
 export const ProjectForm = ({
@@ -30,7 +30,7 @@ export const ProjectForm = ({
   const [taskGenPrompt, setTaskGenPrompt] = useState<string>('');
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  const formData = useMemo<IProjectFormData>(
+  const formData = useMemo<ProjectFormData>(
     () => ({
       ...defaultFormData,
       name: projectName,

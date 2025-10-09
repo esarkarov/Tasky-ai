@@ -1,15 +1,15 @@
 import { env } from '@/config/env';
 import { databases, Query } from '@/lib/appwrite';
 import { generateID, getUserId } from '@/lib/utils';
-import { IAIGeneratedTask, ITask, ITaskCounts, ITaskFormData, ITasksResponse } from '@/types/task.types';
+import { AIGeneratedTask, Task, TaskCounts, TaskFormData, TasksResponse } from '@/types/task.types';
 import { startOfToday, startOfTomorrow } from 'date-fns';
 
-export const getUpcomingTasks = async (): Promise<ITasksResponse> => {
+export const getUpcomingTasks = async (): Promise<TasksResponse> => {
   try {
     const userId = getUserId();
     const todayDate = startOfToday().toISOString();
 
-    const response = await databases.listDocuments<ITask>(env.appwriteDatabaseId, env.appwriteTasksCollectionId, [
+    const response = await databases.listDocuments<Task>(env.appwriteDatabaseId, env.appwriteTasksCollectionId, [
       Query.equal('completed', false),
       Query.isNotNull('due_date'),
       Query.greaterThanEqual('due_date', todayDate),
@@ -24,13 +24,13 @@ export const getUpcomingTasks = async (): Promise<ITasksResponse> => {
   }
 };
 
-export const getTodayTasks = async (): Promise<ITasksResponse> => {
+export const getTodayTasks = async (): Promise<TasksResponse> => {
   try {
     const userId = getUserId();
     const todayStart = startOfToday().toISOString();
     const tomorrowStart = startOfTomorrow().toISOString();
 
-    const response = await databases.listDocuments<ITask>(env.appwriteDatabaseId, env.appwriteTasksCollectionId, [
+    const response = await databases.listDocuments<Task>(env.appwriteDatabaseId, env.appwriteTasksCollectionId, [
       Query.equal('completed', false),
       Query.and([Query.greaterThanEqual('due_date', todayStart), Query.lessThan('due_date', tomorrowStart)]),
       Query.equal('userId', userId),
@@ -43,7 +43,7 @@ export const getTodayTasks = async (): Promise<ITasksResponse> => {
   }
 };
 
-export const getInboxTasks = async (): Promise<ITasksResponse> => {
+export const getInboxTasks = async (): Promise<TasksResponse> => {
   try {
     const userId = getUserId();
 
@@ -58,7 +58,7 @@ export const getInboxTasks = async (): Promise<ITasksResponse> => {
   }
 };
 
-export const getCompletedTasks = async (): Promise<ITasksResponse> => {
+export const getCompletedTasks = async (): Promise<TasksResponse> => {
   try {
     const userId = getUserId();
 
@@ -113,18 +113,18 @@ export const getTodayTaskCount = async (): Promise<number> => {
   }
 };
 
-export const getTaskCounts = async (): Promise<ITaskCounts> => {
+export const getTaskCounts = async (): Promise<TaskCounts> => {
   const [inboxTasks, todayTasks] = await Promise.all([getInboxTaskCount(), getTodayTaskCount()]);
 
   return { inboxTasks, todayTasks };
 };
 
-export const createTasksForProject = async (projectId: string, tasks: IAIGeneratedTask[]): Promise<ITask[]> => {
+export const createTasksForProject = async (projectId: string, tasks: AIGeneratedTask[]): Promise<Task[]> => {
   try {
     const userId = getUserId();
 
     const promises = tasks.map((task) =>
-      databases.createDocument<ITask>(env.appwriteDatabaseId, env.appwriteTasksCollectionId, generateID(), {
+      databases.createDocument<Task>(env.appwriteDatabaseId, env.appwriteTasksCollectionId, generateID(), {
         content: task.content,
         due_date: task.due_date || null,
         completed: task.completed || false,
@@ -140,9 +140,9 @@ export const createTasksForProject = async (projectId: string, tasks: IAIGenerat
   }
 };
 
-export const createTask = async (data: ITaskFormData): Promise<ITask> => {
+export const createTask = async (data: TaskFormData): Promise<Task> => {
   try {
-    const task = await databases.createDocument<ITask>(
+    const task = await databases.createDocument<Task>(
       env.appwriteDatabaseId,
       env.appwriteTasksCollectionId,
       generateID(),
@@ -162,9 +162,9 @@ export const createTask = async (data: ITaskFormData): Promise<ITask> => {
   }
 };
 
-export const updateTask = async (taskId: string, data: Omit<ITaskFormData, 'id'>): Promise<ITask> => {
+export const updateTask = async (taskId: string, data: Omit<TaskFormData, 'id'>): Promise<Task> => {
   try {
-    const task = await databases.updateDocument<ITask>(
+    const task = await databases.updateDocument<Task>(
       env.appwriteDatabaseId,
       env.appwriteTasksCollectionId,
       taskId,

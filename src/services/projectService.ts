@@ -1,12 +1,12 @@
 import { env } from '@/config/env';
 import { databases } from '@/lib/appwrite';
 import { generateID, getUserId } from '@/lib/utils';
-import { IProject, IProjectFormData, IProjectListItem, IProjectsListResponse } from '@/types/project.types';
+import { Project, ProjectFormData, ProjectListItem, ProjectsListResponse } from '@/types/project.types';
 import { Query } from 'appwrite';
 
-export const getProjectById = async (projectId: string): Promise<IProject> => {
+export const getProjectById = async (projectId: string): Promise<Project> => {
   try {
-    const project = await databases.getDocument<IProject>(
+    const project = await databases.getDocument<Project>(
       env.appwriteDatabaseId,
       env.appwriteProjectsCollectionId,
       projectId
@@ -29,11 +29,11 @@ export const getProjectById = async (projectId: string): Promise<IProject> => {
   }
 };
 
-export const getProjects = async (searchQuery: string): Promise<IProjectsListResponse> => {
+export const getProjects = async (searchQuery: string): Promise<ProjectsListResponse> => {
   try {
     const userId = getUserId();
 
-    return await databases.listDocuments<IProjectListItem>(env.appwriteDatabaseId, env.appwriteProjectsCollectionId, [
+    return await databases.listDocuments<ProjectListItem>(env.appwriteDatabaseId, env.appwriteProjectsCollectionId, [
       Query.contains('name', searchQuery),
       Query.equal('userId', userId),
       Query.orderDesc('$createdAt'),
@@ -45,7 +45,7 @@ export const getProjects = async (searchQuery: string): Promise<IProjectsListRes
   }
 };
 
-export const getRecentProjects = async (limit: number = 100): Promise<IProjectsListResponse> => {
+export const getRecentProjects = async (limit: number = 100): Promise<ProjectsListResponse> => {
   try {
     const userId = getUserId();
 
@@ -61,9 +61,9 @@ export const getRecentProjects = async (limit: number = 100): Promise<IProjectsL
   }
 };
 
-export const createProject = async (data: IProjectFormData): Promise<IProject> => {
+export const createProject = async (data: ProjectFormData): Promise<Project> => {
   try {
-    const project = await databases.createDocument<IProject>(
+    const project = await databases.createDocument<Project>(
       env.appwriteDatabaseId,
       env.appwriteProjectsCollectionId,
       generateID(),
@@ -82,9 +82,9 @@ export const createProject = async (data: IProjectFormData): Promise<IProject> =
   }
 };
 
-export const updateProject = async (projectId: string, data: Omit<IProjectFormData, 'id'>): Promise<IProject> => {
+export const updateProject = async (projectId: string, data: Omit<ProjectFormData, 'id'>): Promise<Project> => {
   try {
-    const project = await databases.updateDocument<IProject>(
+    const project = await databases.updateDocument<Project>(
       env.appwriteDatabaseId,
       env.appwriteProjectsCollectionId,
       projectId,

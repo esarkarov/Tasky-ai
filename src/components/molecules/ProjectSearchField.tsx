@@ -1,12 +1,12 @@
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
-import { TSearchStatus } from '@/types';
+import { SearchStatus } from '@/types/common.types';
 import { Loader2, Search } from 'lucide-react';
 import { ChangeEventHandler } from 'react';
 
 interface ProjectSearchFieldProps {
   onSearchProjects: ChangeEventHandler<HTMLInputElement>;
-  searchStatus: TSearchStatus;
+  searchStatus: SearchStatus;
 }
 
 export const ProjectSearchField = ({ onSearchProjects, searchStatus }: ProjectSearchFieldProps) => {

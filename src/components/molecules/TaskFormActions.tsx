@@ -1,9 +1,9 @@
 import { CancelTaskButton } from '@/components/atoms/CancelTaskButton';
 import { SubmitTaskButton } from '@/components/atoms/SubmitTaskButton';
-import { TActionMode } from '@/types';
+import { CrudMode } from '@/types/common.types';
 
 interface TaskFormActionsProps {
-  mode: TActionMode;
+  mode: CrudMode;
   isFormValid: boolean;
   onCancel: () => void;
   onSubmit: () => Promise<void>;

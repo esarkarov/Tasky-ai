@@ -1,6 +1,6 @@
 import { HTTP_METHODS } from '@/constants/http';
 import { createTask, deleteTask, updateTask } from '@/services/taskService';
-import { ITaskFormData } from '@/types/task.types';
+import { TaskFormData } from '@/types/task.types';
 import { ActionFunction } from 'react-router';
 
 export const taskAction: ActionFunction = async ({ request }) => {
@@ -8,7 +8,7 @@ export const taskAction: ActionFunction = async ({ request }) => {
 
   try {
     if (method === HTTP_METHODS.POST) {
-      const data = (await request.json()) as ITaskFormData;
+      const data = (await request.json()) as TaskFormData;
 
       if (!data.content || data.content.trim().length === 0) {
         return new Response(
@@ -39,7 +39,7 @@ export const taskAction: ActionFunction = async ({ request }) => {
     }
 
     if (method === HTTP_METHODS.PUT) {
-      const data = (await request.json()) as ITaskFormData;
+      const data = (await request.json()) as TaskFormData;
 
       if (!data.id) {
         return new Response(

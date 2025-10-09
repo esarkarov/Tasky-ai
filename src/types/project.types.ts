@@ -1,20 +1,21 @@
+import { PaginatedResponse } from '@/types/pagination.types';
+import { Task } from '@/types/task.types';
 import { Models } from 'appwrite';
-import { ITask } from '@/types/task.types';
 
-export interface IProject extends Models.Document {
+export interface Project extends Models.Document {
   userId: string;
   name: string;
   color_name: string;
   color_hex: string;
-  tasks: ITask | null;
+  tasks: Task[] | null;
 }
-export interface IProjectBase {
+export interface ProjectBase {
   id: string | null;
   name: string;
   color_name: string;
   color_hex: string;
 }
-export interface IProjectFormData {
+export interface ProjectFormData {
   id?: string | null;
   name: string;
   color_name: string;
@@ -22,18 +23,16 @@ export interface IProjectFormData {
   ai_task_gen: boolean;
   task_gen_prompt: string;
 }
-export interface IProjectInfo {
+export interface ProjectInfo {
   name: string;
   colorHex: string;
 }
-export interface IProjectListItem extends Models.Document {
+export interface ProjectListItem extends Models.Document {
   $id: string;
   name: string;
   color_name: string;
   color_hex: string;
   $createdAt: string;
 }
-export interface IProjectsListResponse {
-  total: number;
-  documents: IProjectListItem[];
-}
+
+export type ProjectsListResponse = PaginatedResponse<ProjectListItem>;

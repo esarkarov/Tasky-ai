@@ -1,14 +1,14 @@
 import { SidebarMenuBadge, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { TASK_SIDEBAR_LINKS } from '@/constants/links';
 import { getBadgeCount } from '@/lib/utils';
-import { ITaskCounts } from '@/types/task.types';
+import { TaskCounts } from '@/types/task.types';
 import { memo } from 'react';
 import { Link } from 'react-router';
 
 interface TaskSidebarNavLinkProps {
   item: (typeof TASK_SIDEBAR_LINKS)[number];
   isActive: boolean;
-  taskCounts: ITaskCounts;
+  taskCounts: TaskCounts;
   onNavigationClick: () => void;
 }
 

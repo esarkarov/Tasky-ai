@@ -9,7 +9,7 @@ import { TaskForm } from '@/components/organisms/TaskForm';
 import { TopAppBar } from '@/components/organisms/TopAppBar';
 import { Button } from '@/components/ui/button';
 import { useTaskOperations } from '@/hooks/use-taskOperations.tsx';
-import { IProjectDetailLoaderData } from '@/types/loader.types';
+import { ProjectDetailLoaderData } from '@/types/loader.types';
 import type { Models } from 'appwrite';
 import { ClipboardCheck, MoreHorizontal } from 'lucide-react';
 import { useMemo, useState } from 'react';
@@ -17,7 +17,7 @@ import { useLoaderData } from 'react-router';
 
 export const ProjectDetailPage = () => {
   const [isFormShow, setIsFormShow] = useState<boolean>(false);
-  const { project } = useLoaderData<IProjectDetailLoaderData>();
+  const { project } = useLoaderData<ProjectDetailLoaderData>();
   const { createTask } = useTaskOperations();
 
   const projectTasks = useMemo(() => {
@@ -90,7 +90,7 @@ export const ProjectDetailPage = () => {
             />
           )}
 
-          {!projectTasks.length && !isFormShow && <EmptyStateMessage type="project" />}
+          {!projectTasks.length && !isFormShow && <EmptyStateMessage variant="project" />}
 
           {isFormShow && (
             <TaskForm

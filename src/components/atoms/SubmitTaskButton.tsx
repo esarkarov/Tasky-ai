@@ -1,10 +1,10 @@
 import { Button } from '@/components/ui/button';
-import { TActionMode } from '@/types';
+import { CrudMode } from '@/types/common.types';
 import { SendHorizonal } from 'lucide-react';
 
 interface SubmitTaskButtonProps {
   isFormValid: boolean;
-  mode: TActionMode;
+  mode: CrudMode;
   onSubmit: () => Promise<void>;
 }
 

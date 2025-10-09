@@ -5,20 +5,20 @@ import { TIMING } from '@/constants/timing';
 import { MAX_TRUNCATE_LENGTH } from '@/constants/validation';
 import { useToast } from '@/hooks/use-toast';
 import { truncateString } from '@/lib/utils';
-import { TSearchStatus } from '@/types';
-import { IUseProjectOperationsParams, IUseProjectOperationsResult } from '@/types/hook.types';
-import { IProjectFormData } from '@/types/project.types';
+import { SearchStatus } from '@/types/common.types';
+import { UseProjectOperationsParams, UseProjectOperationsResult } from '@/types/hook.types';
+import { ProjectFormData } from '@/types/project.types';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { useFetcher, useLocation, useNavigate } from 'react-router';
 
-export const useProjectOperations = (params: IUseProjectOperationsParams = {}): IUseProjectOperationsResult => {
+export const useProjectOperations = (params: UseProjectOperationsParams = {}): UseProjectOperationsResult => {
   const { method = 'POST', projectData, onSuccess } = params;
 
   const { toast } = useToast();
   const { pathname } = useLocation();
   const fetcher = useFetcher();
   const navigate = useNavigate();
-  const [searchStatus, setSearchState] = useState<TSearchStatus>('idle');
+  const [searchStatus, setSearchState] = useState<SearchStatus>('idle');
   const searchTimeout = useRef<NodeJS.Timeout | null>(null);
   const isViewingProject = pathname === ROUTES.PROJECT(projectData?.id as string);
 
@@ -45,7 +45,7 @@ export const useProjectOperations = (params: IUseProjectOperationsParams = {}): 
   );
 
   const saveProject = useCallback(
-    async (formData: IProjectFormData): Promise<void> => {
+    async (formData: ProjectFormData): Promise<void> => {
       if (!formData) return;
 
       const { id, update } = showToast(operationMessages.LOADING);

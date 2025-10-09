@@ -3,7 +3,7 @@ import { ROUTES } from '@/constants/routes';
 import { generateProjectTasks } from '@/services/aiService';
 import { createProject, deleteProject, updateProject } from '@/services/projectService';
 import { createTasksForProject } from '@/services/taskService';
-import { IProjectFormData } from '@/types/project.types';
+import { ProjectFormData } from '@/types/project.types';
 import type { ActionFunction } from 'react-router';
 import { redirect } from 'react-router';
 
@@ -12,7 +12,7 @@ export const projectAction: ActionFunction = async ({ request }) => {
 
   try {
     if (method === HTTP_METHODS.POST) {
-      const data = (await request.json()) as IProjectFormData;
+      const data = (await request.json()) as ProjectFormData;
 
       if (!data.name || data.name.trim().length === 0) {
         return new Response(
@@ -41,7 +41,7 @@ export const projectAction: ActionFunction = async ({ request }) => {
     }
 
     if (method === HTTP_METHODS.PUT) {
-      const data = (await request.json()) as IProjectFormData;
+      const data = (await request.json()) as ProjectFormData;
 
       if (!data.id) {
         return new Response(

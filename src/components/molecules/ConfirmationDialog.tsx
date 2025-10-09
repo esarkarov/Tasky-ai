@@ -12,19 +12,19 @@ import {
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { truncateString } from '@/lib/utils';
-import { TItemType } from '@/types';
-import { IProjectBase } from '@/types/project.types';
-import { ITask } from '@/types/task.types';
+import { EntityType } from '@/types/common.types';
+import { ProjectBase } from '@/types/project.types';
+import { Task } from '@/types/task.types';
 import { Trash2 } from 'lucide-react';
 
 interface ConfirmationDialogProps {
-  selectedItem: ITask | IProjectBase;
-  itemType: TItemType;
+  selectedItem: Task | ProjectBase;
+  entityType: EntityType;
   onDelete: (taskId: string) => Promise<void>;
 }
 
-export const ConfirmationDialog = ({ selectedItem, onDelete, itemType }: ConfirmationDialogProps) => {
-  const isTask = itemType === 'task';
+export const ConfirmationDialog = ({ selectedItem, onDelete, entityType }: ConfirmationDialogProps) => {
+  const isTask = entityType === 'task';
   const itemLabel = 'content' in selectedItem ? selectedItem.content : selectedItem.name;
 
   return (

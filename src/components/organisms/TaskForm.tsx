@@ -7,18 +7,18 @@ import { Separator } from '@/components/ui/separator';
 import { DEFAULT_TASK_FORM_DATA } from '@/constants/default';
 import { useProjectList } from '@/contexts/ProjectContext';
 import { cn } from '@/lib/utils';
-import { TActionMode } from '@/types';
-import { IProject, IProjectInfo } from '@/types/project.types';
-import { ITaskFormData } from '@/types/task.types';
+import { CrudMode } from '@/types/common.types';
+import { Project, ProjectInfo } from '@/types/project.types';
+import { TaskFormData } from '@/types/task.types';
 import * as chrono from 'chrono-node';
 import type { ClassValue } from 'clsx';
 import { useCallback, useEffect, useState } from 'react';
 
 interface TaskFormProps {
-  mode: TActionMode;
+  mode: CrudMode;
   className?: ClassValue;
-  defaultFormData?: ITaskFormData;
-  onSubmit?: (formData: ITaskFormData, taskId?: string) => Promise<void>;
+  defaultFormData?: TaskFormData;
+  onSubmit?: (formData: TaskFormData, taskId?: string) => Promise<void>;
   onCancel: () => void;
 }
 
@@ -29,15 +29,15 @@ export const TaskForm = ({
   onCancel,
   onSubmit,
 }: TaskFormProps) => {
-  const projects = useProjectList();
+  const { documents } = useProjectList();
   const [taskContent, setTaskContent] = useState(defaultFormData.content);
   const [dueDate, setDueDate] = useState(defaultFormData.due_date);
   const [projectId, setProjectId] = useState(defaultFormData.projectId);
-  const [projectInfo, setProjectInfo] = useState<IProjectInfo>({
+  const [projectInfo, setProjectInfo] = useState<ProjectInfo>({
     name: '',
     colorHex: '',
   });
-  const [formData, setFormData] = useState<ITaskFormData>({
+  const [formData, setFormData] = useState<TaskFormData>({
     content: '',
     due_date: null,
     projectId: null,
@@ -45,7 +45,7 @@ export const TaskForm = ({
 
   useEffect(() => {
     if (projectId) {
-      const project = projects?.documents.find(({ $id }) => projectId === $id) as IProject;
+      const project = documents.find(({ $id }) => projectId === $id) as Project;
       if (project) {
         setProjectInfo({
           name: project.name,
@@ -53,7 +53,7 @@ export const TaskForm = ({
         });
       }
     }
-  }, [projectId, projects?.documents]);
+  }, [projectId, documents]);
 
   useEffect(() => {
     setFormData((prevFormData) => ({
@@ -124,7 +124,7 @@ export const TaskForm = ({
           setProjectInfo={setProjectInfo}
           setProjectId={setProjectId}
           projectInfo={projectInfo}
-          projects={projects}
+          projects={documents}
         />
         <TaskFormActions
           isFormValid={isFormValid}

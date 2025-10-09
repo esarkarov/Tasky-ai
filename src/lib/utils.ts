@@ -1,7 +1,7 @@
 import { env } from '@/config/env';
 import { ROUTES } from '@/constants/routes';
 import { WEEKDAYS } from '@/constants/weekdays';
-import { ITaskCounts } from '@/types/task.types';
+import { TaskCounts } from '@/types/task.types';
 import { clsx, type ClassValue } from 'clsx';
 import { format, formatRelative, isBefore, isSameYear, isToday, isTomorrow, startOfToday } from 'date-fns';
 import { redirect } from 'react-router';
@@ -45,7 +45,7 @@ export function getTaskDueDateColorClass(dueDate: Date | null, completed?: boole
   }
 }
 
-export const getBadgeCount = (href: string, taskCounts: ITaskCounts): number | undefined => {
+export const getBadgeCount = (href: string, taskCounts: TaskCounts): number | undefined => {
   switch (href) {
     case ROUTES.INBOX:
       return taskCounts?.inboxTasks;

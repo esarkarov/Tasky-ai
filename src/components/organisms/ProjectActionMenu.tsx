@@ -8,12 +8,12 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useProjectOperations } from '@/hooks/use-projectOperations';
-import { IProjectBase } from '@/types/project.types';
+import { ProjectBase } from '@/types/project.types';
 import type { DropdownMenuContentProps } from '@radix-ui/react-dropdown-menu';
 import { Edit } from 'lucide-react';
 
 interface ProjectActionMenuProps extends DropdownMenuContentProps {
-  defaultFormData: IProjectBase;
+  defaultFormData: ProjectBase;
 }
 
 export const ProjectActionMenu = ({ children, defaultFormData, ...props }: ProjectActionMenuProps) => {
@@ -43,7 +43,7 @@ export const ProjectActionMenu = ({ children, defaultFormData, ...props }: Proje
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
           <ConfirmationDialog
-            itemType="project"
+            entityType="project"
             selectedItem={defaultFormData}
             onDelete={deleteProject}
           />

@@ -1,15 +1,15 @@
-import { IProjectBase } from '@/types/project.types';
-import { ITaskFormData } from '@/types/task.types';
+import { ProjectBase } from '@/types/project.types';
+import { TaskFormData } from '@/types/task.types';
 
 export const GEMINI_DEFAULT_MODEL = 'gemini-2.5-flash';
 
-export const DEFAULT_TASK_FORM_DATA: ITaskFormData = {
+export const DEFAULT_TASK_FORM_DATA: TaskFormData = {
   content: '',
   due_date: null,
   projectId: null,
 } as const;
 
-export const DEFAULT_PROJECT_FORM_DATA: IProjectBase = {
+export const DEFAULT_PROJECT_FORM_DATA: ProjectBase = {
   id: null,
   name: 'Untitled',
   color_name: 'Slate',

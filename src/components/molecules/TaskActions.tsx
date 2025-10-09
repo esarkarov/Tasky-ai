@@ -1,10 +1,10 @@
 import { EditTaskButton } from '@/components/atoms/EditTaskButton';
 import { ConfirmationDialog } from '@/components/molecules/ConfirmationDialog';
 import { useTaskOperations } from '@/hooks/use-taskOperations.tsx';
-import { ITask } from '@/types/task.types';
+import { Task } from '@/types/task.types';
 
 interface TaskActionsProps {
-  task: ITask;
+  task: Task;
   onEdit: () => void;
 }
 
@@ -19,7 +19,7 @@ export const TaskActions = ({ task, onEdit }: TaskActionsProps) => {
       {!task.completed && <EditTaskButton onEdit={onEdit} />}
       <ConfirmationDialog
         selectedItem={task}
-        itemType="task"
+        entityType="task"
         onDelete={deleteTask}
       />
     </div>

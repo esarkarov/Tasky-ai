@@ -7,13 +7,13 @@ import { TaskCard } from '@/components/organisms/TaskCard';
 import { TaskForm } from '@/components/organisms/TaskForm';
 import { TopAppBar } from '@/components/organisms/TopAppBar';
 import { useTaskOperations } from '@/hooks/use-taskOperations.tsx';
-import { ITasksLoaderData } from '@/types/loader.types';
+import { TasksLoaderData } from '@/types/loader.types';
 import { ClipboardCheck } from 'lucide-react';
 import { useState } from 'react';
 import { useLoaderData } from 'react-router';
 
 export const InboxPage = () => {
-  const { tasks } = useLoaderData<ITasksLoaderData>();
+  const { tasks } = useLoaderData<TasksLoaderData>();
   const { createTask } = useTaskOperations();
   const [isFormOpen, setIsFormOpen] = useState<boolean>(false);
 
@@ -52,7 +52,7 @@ export const InboxPage = () => {
 
           {!isFormOpen && <AddTaskButton onClick={() => setIsFormOpen(true)} />}
 
-          {!isFormOpen && !tasks.documents && <EmptyStateMessage type="inbox" />}
+          {!isFormOpen && !tasks.documents && <EmptyStateMessage variant="inbox" />}
 
           {isFormOpen && (
             <TaskForm

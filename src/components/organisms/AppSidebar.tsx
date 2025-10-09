@@ -4,12 +4,12 @@ import { ProjectsSidebarSection } from '@/components/organisms/ProjectsSidebarSe
 import { TaskSidebarNavGroup } from '@/components/organisms/TaskSidebarNavGroup';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, useSidebar } from '@/components/ui/sidebar';
 import { ROUTES } from '@/constants/routes';
-import { IAppLoaderData } from '@/types/loader.types';
+import { AppLoaderData } from '@/types/loader.types';
 import { Link, useLoaderData, useLocation } from 'react-router';
 
 export const AppSidebar = () => {
   const { pathname } = useLocation();
-  const { taskCounts } = useLoaderData<IAppLoaderData>();
+  const { taskCounts } = useLoaderData<AppLoaderData>();
   const { isMobile, setOpenMobile } = useSidebar();
 
   const handleNavigationClick = () => {

@@ -8,12 +8,12 @@ import {
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { TASK_SIDEBAR_LINKS } from '@/constants/links';
-import { ITaskCounts } from '@/types/task.types';
+import { TaskCounts } from '@/types/task.types';
 import { CirclePlus } from 'lucide-react';
 
 interface TaskSidebarNavGroupProps {
   currentPath: string;
-  taskCounts: ITaskCounts;
+  taskCounts: TaskCounts;
   onNavigationClick: () => void;
 }
 

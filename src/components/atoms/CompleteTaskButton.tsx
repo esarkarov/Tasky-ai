@@ -1,11 +1,11 @@
 import { Button } from '@/components/ui/button';
 import { useTaskOperations } from '@/hooks/use-taskOperations.tsx';
 import { cn } from '@/lib/utils';
-import { ITask } from '@/types/task.types';
+import { Task } from '@/types/task.types';
 import { Check } from 'lucide-react';
 
 interface CompleteTaskButtonProps {
-  task: ITask;
+  task: Task;
 }
 
 export const CompleteTaskButton = ({ task }: CompleteTaskButtonProps) => {

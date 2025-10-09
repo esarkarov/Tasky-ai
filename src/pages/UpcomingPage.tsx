@@ -4,13 +4,13 @@ import { TotalCounter } from '@/components/atoms/TotalCounter';
 import { EmptyStateMessage } from '@/components/organisms/EmptyStateMessage';
 import { TaskCard } from '@/components/organisms/TaskCard';
 import { TopAppBar } from '@/components/organisms/TopAppBar';
-import { ITasksLoaderData } from '@/types/loader.types';
-import { IProject } from '@/types/project.types';
+import { TasksLoaderData } from '@/types/loader.types';
+import { Project } from '@/types/project.types';
 import { ClipboardCheck } from 'lucide-react';
 import { useLoaderData } from 'react-router';
 
 export const UpcomingPage = () => {
-  const { tasks } = useLoaderData<ITasksLoaderData>();
+  const { tasks } = useLoaderData<TasksLoaderData>();
 
   return (
     <>
@@ -41,11 +41,11 @@ export const UpcomingPage = () => {
               content={content}
               completed={completed}
               dueDate={due_date as Date}
-              project={projectId as IProject}
+              project={projectId as Project}
             />
           ))}
 
-          {!tasks.total && <EmptyStateMessage type="upcoming" />}
+          {!tasks.total && <EmptyStateMessage variant="upcoming" />}
         </PageList>
       </Page>
     </>

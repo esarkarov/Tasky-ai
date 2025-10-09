@@ -1,13 +1,13 @@
 import { ProjectActionMenu } from '@/components/organisms/ProjectActionMenu';
 import { Button } from '@/components/ui/button';
 import { ROUTES } from '@/constants/routes';
-import { IProjectListItem } from '@/types/project.types';
+import { ProjectListItem } from '@/types/project.types';
 import { Hash, MoreHorizontal } from 'lucide-react';
 import { memo } from 'react';
 import { Link } from 'react-router';
 
 interface ProjectCardProps {
-  project: IProjectListItem;
+  project: ProjectListItem;
 }
 
 export const ProjectCard = memo(({ project }: ProjectCardProps) => {
@@ -35,7 +35,10 @@ export const ProjectCard = memo(({ project }: ProjectCardProps) => {
           size="icon"
           className="relative z-20 ms-auto shrink-0 opacity-0 group-hover/card:opacity-100 max-md:opacity-100"
           aria-label={`More actions for project ${project.name}`}>
-          <MoreHorizontal aria-hidden="true" />
+          <MoreHorizontal
+            aria-hidden="true"
+            focusable="false"
+          />
         </Button>
       </ProjectActionMenu>
       <Link

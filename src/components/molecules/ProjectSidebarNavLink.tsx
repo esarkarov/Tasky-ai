@@ -4,15 +4,15 @@ import { Hash } from 'lucide-react';
 import { Link, useLocation } from 'react-router';
 
 interface ProjectSidebarNavLinkProps {
-  $id: string;
+  id: string;
   name: string;
   color: string;
   onNavigationClick: () => void;
 }
 
-export const ProjectSidebarNavLink = ({ onNavigationClick, $id, color, name }: ProjectSidebarNavLinkProps) => {
+export const ProjectSidebarNavLink = ({ onNavigationClick, id, color, name }: ProjectSidebarNavLinkProps) => {
   const { pathname } = useLocation();
-  const isActive = pathname === ROUTES.PROJECT($id);
+  const isActive = pathname === ROUTES.PROJECT(id);
 
   return (
     <SidebarMenuButton
@@ -20,7 +20,7 @@ export const ProjectSidebarNavLink = ({ onNavigationClick, $id, color, name }: P
       isActive={isActive}
       onClick={onNavigationClick}>
       <Link
-        to={ROUTES.PROJECT($id)}
+        to={ROUTES.PROJECT(id)}
         aria-label={`Open project ${name}`}
         aria-current={isActive ? 'page' : undefined}>
         <Hash

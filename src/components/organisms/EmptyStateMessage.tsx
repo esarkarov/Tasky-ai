@@ -1,13 +1,13 @@
 import { EMPTY_STATE_CONTENTS } from '@/constants/contents';
-import { TEmptyStateType } from '@/types';
+import { EmptyStateVariant } from '@/types/common.types';
 import { memo } from 'react';
 
 interface EmptyStateMessageProps {
-  type: TEmptyStateType;
+  variant: EmptyStateVariant;
 }
 
-export const EmptyStateMessage = memo(({ type }: EmptyStateMessageProps) => {
-  const { img, title, description } = EMPTY_STATE_CONTENTS[type];
+export const EmptyStateMessage = memo(({ variant }: EmptyStateMessageProps) => {
+  const { img, title, description } = EMPTY_STATE_CONTENTS[variant];
 
   return (
     <section
@@ -20,7 +20,7 @@ export const EmptyStateMessage = memo(({ type }: EmptyStateMessageProps) => {
             src={img.src}
             width={img.width}
             height={img.height}
-            alt={`${type} empty image`}
+            alt={`${variant} empty image`}
             aria-hidden="true"
           />
           <figcaption className="sr-only">{title}</figcaption>

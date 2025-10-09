@@ -1,14 +1,14 @@
 import { ProjectForm } from '@/components/organisms/ProjectForm';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { useProjectOperations } from '@/hooks/use-projectOperations';
-import { THttpMethod } from '@/types';
-import { IProjectBase } from '@/types/project.types';
+import { HttpMethod } from '@/types/common.types';
+import { ProjectBase } from '@/types/project.types';
 import { ReactNode, useState } from 'react';
 
 interface ProjectFormDialogProps {
-  defaultFormData?: IProjectBase;
+  defaultFormData?: ProjectBase;
   children: ReactNode;
-  method: THttpMethod;
+  method: HttpMethod;
 }
 
 export const ProjectFormDialog = ({ defaultFormData, children, method }: ProjectFormDialogProps) => {
@@ -27,7 +27,7 @@ export const ProjectFormDialog = ({ defaultFormData, children, method }: Project
         className="p-0 border-0 !rounded-xl"
         aria-label={method === 'POST' ? 'Create project form' : 'Edit project form'}>
         <ProjectForm
-          mode={method === 'POST' ? 'create' : 'edit'}
+          mode={method === 'POST' ? 'create' : 'update'}
           defaultFormData={defaultFormData}
           onCancel={() => setIsOpen(false)}
           onSubmit={saveProject}

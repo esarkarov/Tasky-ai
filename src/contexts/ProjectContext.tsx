@@ -1,22 +1,22 @@
-import { TProjectList } from '@/types';
+import { ProjectsListResponse } from '@/types/project.types';
 import { createContext, ReactNode, useContext } from 'react';
 
-interface IProjectContext {
-  projects: TProjectList;
+interface ProjectContextValue {
+  projects: ProjectsListResponse;
 }
 
 interface ProjectProviderProps {
-  projects: TProjectList;
+  projects: ProjectsListResponse;
   children: ReactNode;
 }
 
-const ProjectContext = createContext<IProjectContext>({ projects: null });
+const ProjectContext = createContext<ProjectContextValue>({ projects: { total: 0, documents: [] } });
 
 export const ProjectProvider = ({ projects, children }: ProjectProviderProps) => {
   return <ProjectContext.Provider value={{ projects }}>{children}</ProjectContext.Provider>;
 };
 
-export const useProjects = (): IProjectContext => {
+export const useProjects = (): ProjectContextValue => {
   const context = useContext(ProjectContext);
 
   if (!context) {
@@ -26,7 +26,7 @@ export const useProjects = (): IProjectContext => {
   return context;
 };
 
-export const useProjectList = (): TProjectList => {
+export const useProjectList = (): ProjectsListResponse => {
   const { projects } = useProjects();
 
   return projects;
