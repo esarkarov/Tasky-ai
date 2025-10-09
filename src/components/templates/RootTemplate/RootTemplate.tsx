@@ -5,8 +5,8 @@ import { Outlet, useNavigation } from 'react-router';
 import { memo } from 'react';
 
 export const RootTemplate = memo(() => {
-  const navigation = useNavigation();
-  const isLoading = navigation.state === 'loading' && !navigation.formData;
+  const { state, formData } = useNavigation();
+  const isLoading = state === 'loading' && !formData;
 
   return (
     <div className="relative isolate flex min-h-[100dvh] flex-col overflow-hidden">

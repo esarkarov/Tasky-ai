@@ -7,7 +7,7 @@ import { publicRoutes } from '@/router/routes/publicRoutes';
 import { createElement } from 'react';
 import { createBrowserRouter } from 'react-router';
 
-const router = createBrowserRouter([
+export const router = createBrowserRouter([
   {
     path: ROUTES.HOME,
     errorElement: createElement(ErrorPage),
@@ -35,5 +35,3 @@ const router = createBrowserRouter([
     }),
   },
 ]);
-
-export default router;

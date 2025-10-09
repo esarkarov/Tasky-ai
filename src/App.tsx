@@ -1,7 +1,7 @@
 import { Toaster } from '@/components/ui/toaster';
 import { env } from '@/config/env';
 import { ROUTES } from '@/constants/routes';
-import router from '@/router';
+import { router } from '@/router';
 import { ClerkProvider } from '@clerk/clerk-react';
 import { dark } from '@clerk/themes';
 import { RouterProvider } from 'react-router';

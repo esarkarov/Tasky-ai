@@ -1,8 +1,9 @@
 import { createElement } from 'react';
 
 export const RootTemplate = async () =>
-  createElement((await import('@/components/templates/RootTemplate')).RootTemplate);
-export const AppTemplate = async () => createElement((await import('@/components/templates/AppTemplate')).AppTemplate);
+  createElement((await import('@/components/templates/RootTemplate/RootTemplate')).RootTemplate);
+export const AppTemplate = async () =>
+  createElement((await import('@/components/templates/AppTemplate/AppTemplate')).AppTemplate);
 
 export const HomePage = async () => createElement((await import('@/pages/HomePage')).HomePage);
 export const ErrorPage = async () => createElement((await import('@/pages/ErrorPage')).ErrorPage);
