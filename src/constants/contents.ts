@@ -53,23 +53,53 @@ export const EMPTY_STATE_CONTENTS: Record<TEmptyStateType, IEmptyStateContent> =
   ),
 };
 
-export const TOAST_CONTENTS = {
+export const PROJECT_TOAST_CONTENTS = {
   CREATE: {
     LOADING: 'Creating project...',
-    SUCCESS: 'Project created.',
-    ERROR: 'Error creating project',
-    ERROR_DESC: 'An error occurred while creating the project.',
+    SUCCESS: 'Project created!',
+    ERROR: 'Error creating project!',
+    ERROR_DESC: 'An error occurred while creating the project!',
   },
   UPDATE: {
     LOADING: 'Updating project...',
-    SUCCESS: 'Project updated.',
-    ERROR: 'Error updating project',
-    ERROR_DESC: 'An error occurred while updating the project.',
+    SUCCESS: 'Project updated!',
+    ERROR: 'Error updating project!',
+    ERROR_DESC: 'An error occurred while updating the project!',
   },
   DELETE: {
     LOADING: 'Deleting project...',
-    SUCCESS: 'Project deleted',
-    ERROR: 'Error deleting project',
-    ERROR_DESC: 'An error occurred while deleting the project.',
+    SUCCESS: 'Project deleted!',
+    ERROR: 'Error deleting project!',
+    ERROR_DESC: 'An error occurred while deleting the project!',
+  },
+} as const;
+
+export const TASK_TOAST_CONTENTS = {
+  CREATE: {
+    LOADING: 'Creating task...',
+    SUCCESS: 'Task created!',
+    SUCCESS_DESC: 'The task has been successfully created!',
+    ERROR: 'Error creating task!',
+    ERROR_DESC: 'An error occurred while creating the task!',
+  },
+  UPDATE: {
+    LOADING: 'Updating task...',
+    SUCCESS: 'Task updated!',
+    SUCCESS_DESC: 'The task has been successfully updated!',
+    ERROR: 'Error updating task!',
+    ERROR_DESC: 'An error occurred while updating the task!',
+  },
+  COMPLETE: {
+    SUCCESS: 'Task completed!',
+    UNCOMPLETE: 'Task marked as incomplete!',
+    ERROR: 'Error updating task status!',
+    ERROR_DESC: 'An error occurred while updating the task status!',
+  },
+  DELETE: {
+    LOADING: 'Deleting task...',
+    SUCCESS: 'Task deleted!',
+    SUCCESS_DESC: 'The task has been successfully deleted!',
+    ERROR: 'Error deleting task!',
+    ERROR_DESC: 'An error occurred while deleting the task!',
   },
 } as const;

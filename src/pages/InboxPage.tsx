@@ -1,22 +1,20 @@
 import { Head } from '@/components/atoms/Head';
 import { Page, PageHeader, PageList, PageTitle } from '@/components/atoms/Page';
 import { TaskAddButton } from '@/components/atoms/TaskAddButton';
-import { TaskCardSkeleton } from '@/components/atoms/TaskCardSkeleton';
 import { TotalTasks } from '@/components/atoms/TotalTasks';
 import { TaskCard } from '@/components/organisms/TaskCard';
 import { TaskEmptyState } from '@/components/organisms/TaskEmptyState';
 import { TaskForm } from '@/components/organisms/TaskForm';
 import { TopAppBar } from '@/components/organisms/TopAppBar';
-import { useTaskOperations } from '@/hooks/use-taskOperations';
+import { useTaskOperations } from '@/hooks/use-taskOperations.tsx';
 import { ITasksLoaderData } from '@/types/loader.types';
 import { useState } from 'react';
-import { useFetcher, useLoaderData } from 'react-router';
+import { useLoaderData } from 'react-router';
 
 export const InboxPage = () => {
-  const fetcher = useFetcher();
   const { tasks } = useLoaderData<ITasksLoaderData>();
-  const [isFormOpen, setIsFormOpen] = useState<boolean>(false);
   const { createTask } = useTaskOperations();
+  const [isFormOpen, setIsFormOpen] = useState<boolean>(false);
 
   return (
     <>
@@ -44,8 +42,6 @@ export const InboxPage = () => {
               project={project}
             />
           ))}
-
-          {fetcher.state !== 'idle' && <TaskCardSkeleton />}
 
           {!isFormOpen && <TaskAddButton onClick={() => setIsFormOpen(true)} />}
 

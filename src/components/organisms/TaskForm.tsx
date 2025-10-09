@@ -79,13 +79,14 @@ export const TaskForm = ({
     if (onSubmit) {
       await onSubmit(formData, defaultFormData.id);
     }
-    setFormData(DEFAULT_TASK_FORM_DATA);
+    setDueDate(null);
+    setTaskContent('');
   }, [onSubmit, defaultFormData.id, formData]);
 
   useEffect(() => {
-    const listener = (e: KeyboardEvent) => {
-      if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
-        e.preventDefault();
+    const listener = (event: KeyboardEvent) => {
+      if (event.key === 'Enter' && (event.metaKey || event.ctrlKey)) {
+        event.preventDefault();
         handleSubmit();
       }
     };

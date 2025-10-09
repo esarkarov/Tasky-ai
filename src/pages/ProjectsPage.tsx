@@ -6,39 +6,17 @@ import { ProjectFormDialog } from '@/components/organisms/ProjectFormDialog';
 import { TopAppBar } from '@/components/organisms/TopAppBar';
 import { Button } from '@/components/ui/button';
 import { ROUTES } from '@/constants/routes';
-import { TIMING } from '@/constants/timing';
+import { useProjectOperations } from '@/hooks/use-projectOperations';
 import { cn } from '@/lib/utils';
-import { TSearchStatus } from '@/types';
 import { IProjectsLoaderData } from '@/types/loader.types';
 import { Plus } from 'lucide-react';
-import { useCallback, useRef, useState } from 'react';
-import { useFetcher, useLoaderData } from 'react-router';
+import { useLoaderData } from 'react-router';
 
 export const ProjectsPage = () => {
-  const fetcher = useFetcher();
-  const fetcherData = fetcher.data as IProjectsLoaderData;
+  const { fetcher, searchStatus, searchProjects } = useProjectOperations();
   const loaderData = useLoaderData<IProjectsLoaderData>();
+  const fetcherData = fetcher.data as IProjectsLoaderData;
   const { projects } = fetcherData || loaderData;
-  const searchTimeout = useRef<NodeJS.Timeout | null>(null);
-  const [searchingState, setSearchingState] = useState<TSearchStatus>('idle');
-
-  const handleSearchChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      if (searchTimeout.current) {
-        clearTimeout(searchTimeout.current);
-      }
-      const submitTarget = e.currentTarget.form;
-
-      searchTimeout.current = setTimeout(async () => {
-        setSearchingState('searching');
-        await fetcher.submit(submitTarget);
-        setSearchingState('idle');
-      }, TIMING.DELAY_DURATION);
-
-      setSearchingState('loading');
-    },
-    [fetcher]
-  );
 
   return (
     <>
@@ -70,8 +48,8 @@ export const ProjectsPage = () => {
             action={ROUTES.PROJECTS}
             role="search">
             <ProjectSearchField
-              handleChange={handleSearchChange}
-              searchStatus={searchingState}
+              onSearchProjects={searchProjects}
+              searchStatus={searchStatus}
             />
           </fetcher.Form>
         </PageHeader>
@@ -85,7 +63,7 @@ export const ProjectsPage = () => {
             </div>
           </div>
 
-          <div className={cn(searchingState === 'searching' && 'opacity-25')}>
+          <div className={cn(searchStatus === 'searching' && 'opacity-25')}>
             {projects.documents.map((project) => (
               <ProjectCard
                 key={project.$id}

@@ -1,7 +1,5 @@
 import { Button } from '@/components/ui/button';
-import { ToastAction } from '@/components/ui/toast';
-import { useTaskOperations } from '@/hooks/use-taskOperations';
-import { useToast } from '@/hooks/use-toast';
+import { useTaskOperations } from '@/hooks/use-taskOperations.tsx';
 import { cn } from '@/lib/utils';
 import { ITask } from '@/types/task.types';
 import { Check } from 'lucide-react';
@@ -11,26 +9,9 @@ interface TaskCompletionButtonProps {
 }
 
 export const TaskCompletionButton = ({ task }: TaskCompletionButtonProps) => {
-  const { toggleTaskComplete } = useTaskOperations();
-  const { toast } = useToast();
-
-  const handleClick = async () => {
-    const newCompletedState = !task.completed;
-    await toggleTaskComplete(task.id, newCompletedState);
-
-    if (newCompletedState) {
-      toast({
-        title: '1 task completed',
-        action: (
-          <ToastAction
-            altText="Undo task completion"
-            onClick={() => toggleTaskComplete(task.id, false)}>
-            Undo
-          </ToastAction>
-        ),
-      });
-    }
-  };
+  const { toggleTaskComplete } = useTaskOperations({
+    enableUndo: true,
+  });
 
   return (
     <Button
@@ -41,7 +22,9 @@ export const TaskCompletionButton = ({ task }: TaskCompletionButtonProps) => {
       role="checkbox"
       aria-checked={task.completed}
       aria-label={`Mark task as ${task.completed ? 'incomplete' : 'complete'}`}
-      onClick={handleClick}>
+      onClick={async () => {
+        await toggleTaskComplete(task.id, !task.completed);
+      }}>
       <Check
         strokeWidth={4}
         className={cn(

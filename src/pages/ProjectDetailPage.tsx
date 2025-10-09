@@ -1,7 +1,6 @@
 import { Head } from '@/components/atoms/Head';
 import { Page, PageHeader, PageList, PageTitle } from '@/components/atoms/Page';
 import { TaskAddButton } from '@/components/atoms/TaskAddButton';
-import { TaskCardSkeleton } from '@/components/atoms/TaskCardSkeleton';
 import { TotalTasks } from '@/components/atoms/TotalTasks';
 import { ProjectActionMenu } from '@/components/organisms/ProjectActionMenu';
 import { TaskCard } from '@/components/organisms/TaskCard';
@@ -9,15 +8,14 @@ import { TaskEmptyState } from '@/components/organisms/TaskEmptyState';
 import { TaskForm } from '@/components/organisms/TaskForm';
 import { TopAppBar } from '@/components/organisms/TopAppBar';
 import { Button } from '@/components/ui/button';
-import { useTaskOperations } from '@/hooks/use-taskOperations';
+import { useTaskOperations } from '@/hooks/use-taskOperations.tsx';
 import { IProjectDetailLoaderData } from '@/types/loader.types';
 import type { Models } from 'appwrite';
 import { MoreHorizontal } from 'lucide-react';
 import { useMemo, useState } from 'react';
-import { useFetcher, useLoaderData } from 'react-router';
+import { useLoaderData } from 'react-router';
 
 export const ProjectDetailPage = () => {
-  const fetcher = useFetcher();
   const [isFormShow, setIsFormShow] = useState<boolean>(false);
   const { project } = useLoaderData<IProjectDetailLoaderData>();
   const { createTask } = useTaskOperations();
@@ -78,8 +76,6 @@ export const ProjectDetailPage = () => {
               project={project}
             />
           ))}
-
-          {fetcher.state !== 'idle' && <TaskCardSkeleton />}
 
           {!isFormShow && (
             <TaskAddButton

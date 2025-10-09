@@ -5,11 +5,11 @@ import { Loader2, Search } from 'lucide-react';
 import { ChangeEventHandler } from 'react';
 
 interface ProjectSearchFieldProps {
-  handleChange: ChangeEventHandler<HTMLInputElement>;
+  onSearchProjects: ChangeEventHandler<HTMLInputElement>;
   searchStatus: TSearchStatus;
 }
 
-export const ProjectSearchField = ({ handleChange, searchStatus }: ProjectSearchFieldProps) => {
+export const ProjectSearchField = ({ onSearchProjects, searchStatus }: ProjectSearchFieldProps) => {
   const isLoading = searchStatus !== 'idle';
 
   return (
@@ -32,7 +32,7 @@ export const ProjectSearchField = ({ handleChange, searchStatus }: ProjectSearch
         name="q"
         placeholder="Search projects"
         className="pl-8 pr-8"
-        onChange={handleChange}
+        onChange={onSearchProjects}
         aria-describedby="search-status"
       />
 

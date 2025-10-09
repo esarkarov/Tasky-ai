@@ -15,9 +15,7 @@ export const TopAppBar = ({ title, taskCount }: TopAppBarProps) => {
   useEffect(() => {
     const listener = () => setShowTitle(window.scrollY > TIMING.SCROLL_THRESHOLD);
 
-    listener();
     window.addEventListener('scroll', listener);
-
     return () => window.removeEventListener('scroll', listener);
   }, []);
 

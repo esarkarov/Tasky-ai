@@ -1,6 +1,6 @@
 import { TaskDisplay } from '@/components/organisms/TaskDisplay';
 import { TaskForm } from '@/components/organisms/TaskForm';
-import { useTaskOperations } from '@/hooks/use-taskOperations';
+import { useTaskOperations } from '@/hooks/use-taskOperations.tsx';
 import { IProject } from '@/types/project.types';
 import { ITask } from '@/types/task.types';
 import { memo, useState } from 'react';
