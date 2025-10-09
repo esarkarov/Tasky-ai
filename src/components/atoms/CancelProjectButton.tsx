@@ -1,10 +1,10 @@
 import { Button } from '@/components/ui/button';
 
-interface ProjectCancelButtonProps {
+interface CancelProjectButtonProps {
   onCancel: () => void;
 }
 
-export const ProjectCancelButton = ({ onCancel }: ProjectCancelButtonProps) => {
+export const CancelProjectButton = ({ onCancel }: CancelProjectButtonProps) => {
   return (
     <Button
       type="button"

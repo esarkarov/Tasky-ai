@@ -4,11 +4,11 @@ import { cn } from '@/lib/utils';
 import { ITask } from '@/types/task.types';
 import { Check } from 'lucide-react';
 
-interface TaskCompletionButtonProps {
+interface CompleteTaskButtonProps {
   task: ITask;
 }
 
-export const TaskCompletionButton = ({ task }: TaskCompletionButtonProps) => {
+export const CompleteTaskButton = ({ task }: CompleteTaskButtonProps) => {
   const { toggleTaskComplete } = useTaskOperations({
     enableUndo: true,
   });

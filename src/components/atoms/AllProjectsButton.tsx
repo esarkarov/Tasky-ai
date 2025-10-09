@@ -8,8 +8,8 @@ interface AllProjectsButtonProps {
 }
 
 export const AllProjectsButton = ({ onNavigationClick }: AllProjectsButtonProps) => {
-  const location = useLocation();
-  const isActive = location.pathname === ROUTES.PROJECTS;
+  const { pathname } = useLocation();
+  const isActive = pathname === ROUTES.PROJECTS;
 
   return (
     <SidebarMenuButton

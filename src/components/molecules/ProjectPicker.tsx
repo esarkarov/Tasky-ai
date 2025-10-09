@@ -1,20 +1,21 @@
 import { Button } from '@/components/ui/button';
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandList } from '@/components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { TProjectList } from '@/types';
 import { IProjectInfo } from '@/types/project.types';
-import { Check, ChevronDown, Hash, Inbox } from 'lucide-react';
+import { ChevronDown, Hash, Inbox } from 'lucide-react';
 import { SetStateAction, useState } from 'react';
+import { SelectableCommandItem } from '../atoms/SelectableCommandItem';
 
-interface ProjectSelectorProps {
+interface ProjectPickerProps {
   setProjectInfo: (value: SetStateAction<IProjectInfo>) => void;
   setProjectId: (value: string | null) => void;
   projectInfo: IProjectInfo;
   projects: TProjectList;
 }
 
-export const ProjectSelector = ({ projectInfo, projects, setProjectId, setProjectInfo }: ProjectSelectorProps) => {
+export const ProjectPicker = ({ projectInfo, projects, setProjectId, setProjectInfo }: ProjectPickerProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   return (
@@ -74,23 +75,20 @@ export const ProjectSelector = ({ projectInfo, projects, setProjectId, setProjec
                   };
 
                   return (
-                    <CommandItem
+                    <SelectableCommandItem
                       key={$id}
-                      role="option"
-                      aria-selected={isSelected}
-                      onSelect={handleProjectSelect}>
-                      <Hash
-                        color={color_hex}
-                        aria-hidden="true"
-                      />{' '}
-                      {name}
-                      {isSelected && (
-                        <Check
-                          className="ms-auto"
+                      id={$id}
+                      value={`${name}=${color_hex}`}
+                      isSelected={isSelected}
+                      onSelect={handleProjectSelect}
+                      icon={
+                        <Hash
+                          color={color_hex}
                           aria-hidden="true"
                         />
-                      )}
-                    </CommandItem>
+                      }
+                      label={name}
+                    />
                   );
                 })}
               </CommandGroup>

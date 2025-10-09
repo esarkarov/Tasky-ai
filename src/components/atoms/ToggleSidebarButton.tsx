@@ -1,8 +1,8 @@
-import { Keyboard } from '@/components/atoms/Keyboard/Keyboard';
+import { KeyboardShortcut } from '@/components/atoms/KeyboardShortcut/KeyboardShortcut';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
-export const SidebarToggleButton = () => {
+export const ToggleSidebarButton = () => {
   return (
     <Tooltip>
       <TooltipTrigger asChild>
@@ -12,7 +12,7 @@ export const SidebarToggleButton = () => {
         className="flex items-center gap-2"
         role="tooltip">
         <p>Toggle sidebar</p>
-        <Keyboard kbdList={['Ctrl', 'B']} />
+        <KeyboardShortcut kbdList={['Ctrl', 'B']} />
       </TooltipContent>
     </Tooltip>
   );

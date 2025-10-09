@@ -6,7 +6,7 @@ interface TaskEditButtonProps {
   onEdit: () => void;
 }
 
-export const TaskEditButton = ({ onEdit }: TaskEditButtonProps) => {
+export const EditTaskButton = ({ onEdit }: TaskEditButtonProps) => {
   return (
     <Tooltip>
       <TooltipTrigger asChild>

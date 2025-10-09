@@ -15,12 +15,12 @@ export const useProjectOperations = (params: IUseProjectOperationsParams = {}): 
   const { method = 'POST', projectData, onSuccess } = params;
 
   const { toast } = useToast();
+  const { pathname } = useLocation();
   const fetcher = useFetcher();
-  const location = useLocation();
   const navigate = useNavigate();
   const [searchStatus, setSearchState] = useState<TSearchStatus>('idle');
   const searchTimeout = useRef<NodeJS.Timeout | null>(null);
-  const isViewingProject = location.pathname === ROUTES.PROJECT(projectData?.id as string);
+  const isViewingProject = pathname === ROUTES.PROJECT(projectData?.id as string);
 
   const operationMessages = useMemo(
     () => (method === 'POST' ? PROJECT_TOAST_CONTENTS.CREATE : PROJECT_TOAST_CONTENTS.UPDATE),

@@ -2,11 +2,11 @@ import { EMPTY_STATE_CONTENTS } from '@/constants/contents';
 import { TEmptyStateType } from '@/types';
 import { memo } from 'react';
 
-interface TaskEmptyStateProps {
+interface EmptyStateMessageProps {
   type: TEmptyStateType;
 }
 
-export const TaskEmptyState = memo(({ type }: TaskEmptyStateProps) => {
+export const EmptyStateMessage = memo(({ type }: EmptyStateMessageProps) => {
   const { img, title, description } = EMPTY_STATE_CONTENTS[type];
 
   return (
@@ -20,7 +20,7 @@ export const TaskEmptyState = memo(({ type }: TaskEmptyStateProps) => {
             src={img.src}
             width={img.width}
             height={img.height}
-            alt=""
+            alt={`${type} empty image`}
             aria-hidden="true"
           />
           <figcaption className="sr-only">{title}</figcaption>
@@ -33,3 +33,5 @@ export const TaskEmptyState = memo(({ type }: TaskEmptyStateProps) => {
     </section>
   );
 });
+
+EmptyStateMessage.displayName = 'EmptyStateMessage';

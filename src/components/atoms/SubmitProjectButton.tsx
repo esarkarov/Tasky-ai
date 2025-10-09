@@ -1,13 +1,13 @@
 import { TActionMode } from '@/types';
 import { Button } from '@/components/ui/button';
 
-interface ProjectSubmitButtonProps {
+interface SubmitProjectButtonProps {
   mode: TActionMode;
   isFormValid: boolean;
   handleSubmit: () => void;
 }
 
-export const ProjectSubmitButton = ({ mode, isFormValid, handleSubmit }: ProjectSubmitButtonProps) => {
+export const SubmitProjectButton = ({ mode, isFormValid, handleSubmit }: SubmitProjectButtonProps) => {
   return (
     <Button
       type="submit"

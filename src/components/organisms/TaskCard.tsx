@@ -1,4 +1,4 @@
-import { TaskDisplay } from '@/components/organisms/TaskDisplay';
+import { TaskItem } from '@/components/organisms/TaskItem';
 import { TaskForm } from '@/components/organisms/TaskForm';
 import { useTaskOperations } from '@/hooks/use-taskOperations.tsx';
 import { IProject } from '@/types/project.types';
@@ -37,7 +37,7 @@ export const TaskCard = memo(({ id, content, completed, dueDate, project }: Task
       aria-label={`Task: ${task.content}`}
       aria-checked={task.completed}>
       {!isEditing ? (
-        <TaskDisplay
+        <TaskItem
           task={task}
           project={project}
           onEdit={() => setIsEditing(true)}

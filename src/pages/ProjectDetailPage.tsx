@@ -1,17 +1,17 @@
+import { AddTaskButton } from '@/components/atoms/AddTaskButton';
 import { Head } from '@/components/atoms/Head';
 import { Page, PageHeader, PageList, PageTitle } from '@/components/atoms/Page';
-import { TaskAddButton } from '@/components/atoms/TaskAddButton';
-import { TotalTasks } from '@/components/atoms/TotalTasks';
+import { TotalCounter } from '@/components/atoms/TotalCounter';
+import { EmptyStateMessage } from '@/components/organisms/EmptyStateMessage';
 import { ProjectActionMenu } from '@/components/organisms/ProjectActionMenu';
 import { TaskCard } from '@/components/organisms/TaskCard';
-import { TaskEmptyState } from '@/components/organisms/TaskEmptyState';
 import { TaskForm } from '@/components/organisms/TaskForm';
 import { TopAppBar } from '@/components/organisms/TopAppBar';
 import { Button } from '@/components/ui/button';
 import { useTaskOperations } from '@/hooks/use-taskOperations.tsx';
 import { IProjectDetailLoaderData } from '@/types/loader.types';
 import type { Models } from 'appwrite';
-import { MoreHorizontal } from 'lucide-react';
+import { ClipboardCheck, MoreHorizontal } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { useLoaderData } from 'react-router';
 
@@ -62,7 +62,13 @@ export const ProjectDetailPage = () => {
               </Button>
             </ProjectActionMenu>
           </div>
-          {projectTasks.length > 0 && <TotalTasks total={projectTasks.length} />}
+          {projectTasks.length > 0 && (
+            <TotalCounter
+              total={projectTasks.length}
+              label="task"
+              icon={ClipboardCheck}
+            />
+          )}
         </PageHeader>
 
         <PageList aria-label={`Tasks for project ${project.name}`}>
@@ -78,13 +84,13 @@ export const ProjectDetailPage = () => {
           ))}
 
           {!isFormShow && (
-            <TaskAddButton
+            <AddTaskButton
               onClick={() => setIsFormShow(true)}
               aria-label="Add new task to this project"
             />
           )}
 
-          {!projectTasks.length && !isFormShow && <TaskEmptyState type="project" />}
+          {!projectTasks.length && !isFormShow && <EmptyStateMessage type="project" />}
 
           {isFormShow && (
             <TaskForm

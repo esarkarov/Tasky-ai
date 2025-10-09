@@ -1,12 +1,12 @@
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
-import { Keyboard } from './Keyboard';
+import { KeyboardShortcut } from './KeyboardShortcut';
 
 describe('Keyboard Component', () => {
   it('renders keyboard shortcuts as kbd elements', () => {
     const kbdList = ['Ctrl', 'Shift', 'P'];
 
-    render(<Keyboard kbdList={kbdList} />);
+    render(<KeyboardShortcut kbdList={kbdList} />);
 
     expect(screen.getByText('Ctrl')).toBeInTheDocument();
     expect(screen.getByText('Shift')).toBeInTheDocument();
@@ -21,7 +21,7 @@ describe('Keyboard Component', () => {
   it('renders single key shortcut', () => {
     const kbdList = ['Escape'];
 
-    render(<Keyboard kbdList={kbdList} />);
+    render(<KeyboardShortcut kbdList={kbdList} />);
 
     const escapeKey = screen.getByText('Escape');
     expect(escapeKey).toBeInTheDocument();
@@ -31,7 +31,7 @@ describe('Keyboard Component', () => {
   it('includes screen reader text for accessibility', () => {
     const kbdList = ['Ctrl', 'C'];
 
-    render(<Keyboard kbdList={kbdList} />);
+    render(<KeyboardShortcut kbdList={kbdList} />);
 
     const srText = screen.getByText('Keyboard shortcut:');
     expect(srText).toBeInTheDocument();
@@ -41,7 +41,7 @@ describe('Keyboard Component', () => {
   it('handles empty array', () => {
     const kbdList: string[] = [];
 
-    render(<Keyboard kbdList={kbdList} />);
+    render(<KeyboardShortcut kbdList={kbdList} />);
 
     const containerDiv = screen.getByText('Keyboard shortcut:').parentElement;
     expect(containerDiv).toBeInTheDocument();

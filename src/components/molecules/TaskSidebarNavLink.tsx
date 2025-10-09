@@ -1,18 +1,18 @@
 import { SidebarMenuBadge, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
-import { SIDEBAR_LINKS } from '@/constants/links';
+import { TASK_SIDEBAR_LINKS } from '@/constants/links';
 import { getBadgeCount } from '@/lib/utils';
 import { ITaskCounts } from '@/types/task.types';
 import { memo } from 'react';
 import { Link } from 'react-router';
 
-interface SideNavItemProps {
-  item: (typeof SIDEBAR_LINKS)[number];
+interface TaskSidebarNavLinkProps {
+  item: (typeof TASK_SIDEBAR_LINKS)[number];
   isActive: boolean;
   taskCounts: ITaskCounts;
   onNavigationClick: () => void;
 }
 
-export const SideNavItem = memo(({ item, isActive, taskCounts, onNavigationClick }: SideNavItemProps) => {
+export const TaskSidebarNavLink = memo(({ item, isActive, taskCounts, onNavigationClick }: TaskSidebarNavLinkProps) => {
   const { href, label } = item;
   const badgeCount = getBadgeCount(href, taskCounts);
   const showBadge = Boolean(badgeCount && badgeCount > 0);
@@ -37,4 +37,4 @@ export const SideNavItem = memo(({ item, isActive, taskCounts, onNavigationClick
   );
 });
 
-SideNavItem.displayName = 'SideNavItem';
+TaskSidebarNavLink.displayName = 'SideNavItem';

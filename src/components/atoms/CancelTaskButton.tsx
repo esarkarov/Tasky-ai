@@ -1,11 +1,11 @@
 import { X } from 'lucide-react';
 import { Button } from '../ui/button';
 
-interface TaskCancelButtonProps {
+interface CancelTaskButtonProps {
   onCancel: () => void;
 }
 
-export function TaskCancelButton({ onCancel }: TaskCancelButtonProps) {
+export const CancelTaskButton = ({ onCancel }: CancelTaskButtonProps) => {
   return (
     <Button
       type="button"
@@ -19,4 +19,4 @@ export function TaskCancelButton({ onCancel }: TaskCancelButtonProps) {
       />
     </Button>
   );
-}
+};

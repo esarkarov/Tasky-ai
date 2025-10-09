@@ -1,13 +1,13 @@
 import { Separator } from '@/components/ui/separator';
 import { SOCIAL_LINKS } from '@/constants/links';
 
-interface FooterLinkProps {
+interface FooterNavLinkProps {
   href: string;
   index: number;
   label: string;
 }
 
-export const FooterLink = ({ href, index, label }: FooterLinkProps) => {
+export const FooterNavLink = ({ href, index, label }: FooterNavLinkProps) => {
   const isLast = index === SOCIAL_LINKS.length - 1;
 
   return (

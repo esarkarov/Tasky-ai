@@ -1,13 +1,14 @@
+import { AddTaskButton } from '@/components/atoms/AddTaskButton';
 import { Head } from '@/components/atoms/Head';
 import { Page, PageHeader, PageList, PageTitle } from '@/components/atoms/Page';
-import { TaskAddButton } from '@/components/atoms/TaskAddButton';
-import { TotalTasks } from '@/components/atoms/TotalTasks';
+import { TotalCounter } from '@/components/atoms/TotalCounter';
+import { EmptyStateMessage } from '@/components/organisms/EmptyStateMessage';
 import { TaskCard } from '@/components/organisms/TaskCard';
-import { TaskEmptyState } from '@/components/organisms/TaskEmptyState';
 import { TaskForm } from '@/components/organisms/TaskForm';
 import { TopAppBar } from '@/components/organisms/TopAppBar';
 import { useTaskOperations } from '@/hooks/use-taskOperations.tsx';
 import { ITasksLoaderData } from '@/types/loader.types';
+import { ClipboardCheck } from 'lucide-react';
 import { useState } from 'react';
 import { useLoaderData } from 'react-router';
 
@@ -28,7 +29,13 @@ export const InboxPage = () => {
       <Page aria-labelledby="inbox-page-title">
         <PageHeader>
           <PageTitle>Inbox</PageTitle>
-          {tasks.total > 0 && <TotalTasks total={tasks.total} />}
+          {tasks.total > 0 && (
+            <TotalCounter
+              total={tasks.total}
+              label="task"
+              icon={ClipboardCheck}
+            />
+          )}
         </PageHeader>
 
         <PageList aria-label="Inbox tasks">
@@ -43,9 +50,9 @@ export const InboxPage = () => {
             />
           ))}
 
-          {!isFormOpen && <TaskAddButton onClick={() => setIsFormOpen(true)} />}
+          {!isFormOpen && <AddTaskButton onClick={() => setIsFormOpen(true)} />}
 
-          {!isFormOpen && !tasks.documents && <TaskEmptyState type="inbox" />}
+          {!isFormOpen && !tasks.documents && <EmptyStateMessage type="inbox" />}
 
           {isFormOpen && (
             <TaskForm

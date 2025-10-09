@@ -1,11 +1,11 @@
 import { IProject } from '@/types/project.types';
 import { Hash, Inbox } from 'lucide-react';
 
-interface ProjectMetaProps {
+interface ProjectBadgeProps {
   project: IProject | null;
 }
 
-export const ProjectMeta = ({ project }: ProjectMetaProps) => {
+export const ProjectBadge = ({ project }: ProjectBadgeProps) => {
   return (
     <div
       className="grid grid-cols-[minmax(0,180px),max-content] items-center gap-1 text-xs text-muted-foreground ms-auto"

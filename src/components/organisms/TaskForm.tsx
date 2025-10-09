@@ -1,5 +1,5 @@
-import { DueDateSelector } from '@/components/molecules/DueDateSelector';
-import { ProjectSelector } from '@/components/molecules/ProjectSelector';
+import { TaskDueDatePicker } from '@/components/molecules/TaskDueDatePicker';
+import { ProjectPicker } from '@/components/molecules/ProjectPicker';
 import { TaskContentInput } from '@/components/molecules/TaskContentInput';
 import { TaskFormActions } from '@/components/molecules/TaskFormActions';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
@@ -112,7 +112,7 @@ export const TaskForm = ({
           value={taskContent}
           onChange={setTaskContent}
         />
-        <DueDateSelector
+        <TaskDueDatePicker
           dueDate={dueDate as Date}
           onDateChange={setDueDate}
           onDateRemove={() => setDueDate(null)}
@@ -120,7 +120,7 @@ export const TaskForm = ({
       </CardContent>
       <Separator />
       <CardFooter className="grid grid-cols-[minmax(0,1fr),max-content] gap-2 p-2">
-        <ProjectSelector
+        <ProjectPicker
           setProjectInfo={setProjectInfo}
           setProjectId={setProjectId}
           projectInfo={projectInfo}

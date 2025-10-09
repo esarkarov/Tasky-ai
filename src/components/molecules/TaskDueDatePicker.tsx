@@ -6,13 +6,13 @@ import { CalendarIcon } from 'lucide-react';
 import { SetStateAction, useState } from 'react';
 import { RemoveDueDateButton } from '../atoms/RemoveDueDateButton';
 
-interface DueDateSelectorProps {
+interface TaskDueDatePickerProps {
   dueDate: Date | null;
   onDateChange: (date: SetStateAction<Date | string | null>) => void;
   onDateRemove: () => void;
 }
 
-export const DueDateSelector = ({ dueDate, onDateChange, onDateRemove }: DueDateSelectorProps) => {
+export const TaskDueDatePicker = ({ dueDate, onDateChange, onDateRemove }: TaskDueDatePickerProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const handleDateSelect = (selectedDate: Date | undefined) => {

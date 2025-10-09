@@ -1,5 +1,6 @@
 import { Head } from '@/components/atoms/Head';
 import { Page, PageHeader, PageList, PageTitle } from '@/components/atoms/Page';
+import { TotalCounter } from '@/components/atoms/TotalCounter';
 import { ProjectSearchField } from '@/components/molecules/ProjectSearchField';
 import { ProjectCard } from '@/components/organisms/ProjectCard';
 import { ProjectFormDialog } from '@/components/organisms/ProjectFormDialog';
@@ -9,7 +10,7 @@ import { ROUTES } from '@/constants/routes';
 import { useProjectOperations } from '@/hooks/use-projectOperations';
 import { cn } from '@/lib/utils';
 import { IProjectsLoaderData } from '@/types/loader.types';
-import { Plus } from 'lucide-react';
+import { FolderKanban, Plus } from 'lucide-react';
 import { useLoaderData } from 'react-router';
 
 export const ProjectsPage = () => {
@@ -55,12 +56,12 @@ export const ProjectsPage = () => {
         </PageHeader>
 
         <PageList aria-label="Project list">
-          <div className="h-8 flex items-center border-b">
-            <div
-              className="text-sm"
-              aria-live="polite">
-              {projects.total} projects
-            </div>
+          <div className="h-8 flex items-center border-b mb-1">
+            <TotalCounter
+              total={projects.total}
+              label="project"
+              icon={FolderKanban}
+            />
           </div>
 
           <div className={cn(searchStatus === 'searching' && 'opacity-25')}>

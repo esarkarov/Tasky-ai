@@ -1,12 +1,13 @@
 import { Button } from '@/components/ui/button';
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandList } from '@/components/ui/command';
 import { Label } from '@/components/ui/label';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { PROJECT_COLORS } from '@/constants/colors';
-import { Check, ChevronDown, Circle } from 'lucide-react';
+import { ChevronDown, Circle } from 'lucide-react';
+import { SelectableCommandItem } from '../atoms/SelectableCommandItem';
 
-interface ColorDropdownProps {
+interface ColorPickerProps {
   isOpen: boolean;
   colorHex: string;
   colorName: string;
@@ -14,7 +15,7 @@ interface ColorDropdownProps {
   handleSelect: (value: string) => void;
 }
 
-export const ColorSelector = ({ isOpen, setIsOpen, colorName, colorHex, handleSelect }: ColorDropdownProps) => {
+export const ColorPicker = ({ isOpen, setIsOpen, colorName, colorHex, handleSelect }: ColorPickerProps) => {
   return (
     <div>
       <Label htmlFor="color">Color</Label>
@@ -57,26 +58,26 @@ export const ColorSelector = ({ isOpen, setIsOpen, colorName, colorHex, handleSe
               <ScrollArea>
                 <CommandEmpty>No color found.</CommandEmpty>
                 <CommandGroup>
-                  {PROJECT_COLORS.map(({ name, hex }) => (
-                    <CommandItem
-                      key={name}
-                      value={`${name}=${hex}`}
-                      role="option"
-                      aria-selected={colorName === name}
-                      onSelect={handleSelect}>
-                      <Circle
-                        fill={hex}
-                        aria-hidden="true"
-                      />{' '}
-                      {name}
-                      {colorName === name && (
-                        <Check
-                          className="ms-auto"
-                          aria-hidden="true"
-                        />
-                      )}
-                    </CommandItem>
-                  ))}
+                  {PROJECT_COLORS.map(({ name, hex }) => {
+                    const isSelected = colorName === name;
+
+                    return (
+                      <SelectableCommandItem
+                        key={name}
+                        id={name}
+                        value={`${name}=${hex}`}
+                        isSelected={isSelected}
+                        onSelect={handleSelect}
+                        icon={
+                          <Circle
+                            fill={hex}
+                            aria-hidden="true"
+                          />
+                        }
+                        label={name}
+                      />
+                    );
+                  })}
                 </CommandGroup>
               </ScrollArea>
             </CommandList>

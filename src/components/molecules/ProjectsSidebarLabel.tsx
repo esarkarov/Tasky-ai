@@ -2,7 +2,7 @@ import { ChevronRight } from 'lucide-react';
 import { CollapsibleTrigger } from '../ui/collapsible';
 import { SidebarGroupLabel } from '../ui/sidebar';
 
-export const ProjectsGroupLabel = () => {
+export const ProjectsSidebarLabel = () => {
   return (
     <SidebarGroupLabel
       asChild

@@ -1,4 +1,4 @@
-import { SideNavItem } from '@/components/molecules/SideNavItem';
+import { TaskSidebarNavLink } from '@/components/molecules/TaskSidebarNavLink';
 import { TaskFormDialog } from '@/components/organisms/TaskFormDialog';
 import {
   SidebarGroup,
@@ -7,17 +7,17 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { SIDEBAR_LINKS } from '@/constants/links';
+import { TASK_SIDEBAR_LINKS } from '@/constants/links';
 import { ITaskCounts } from '@/types/task.types';
 import { CirclePlus } from 'lucide-react';
 
-interface SideNavMenuProps {
+interface TaskSidebarNavGroupProps {
   currentPath: string;
   taskCounts: ITaskCounts;
   onNavigationClick: () => void;
 }
 
-export const SidebarNavGroup = ({ currentPath, taskCounts, onNavigationClick }: SideNavMenuProps) => (
+export const TaskSidebarNavGroup = ({ currentPath, taskCounts, onNavigationClick }: TaskSidebarNavGroupProps) => (
   <SidebarGroup
     role="navigation"
     aria-label="Primary navigation">
@@ -33,8 +33,8 @@ export const SidebarNavGroup = ({ currentPath, taskCounts, onNavigationClick }: 
             </SidebarMenuButton>
           </TaskFormDialog>
         </SidebarMenuItem>
-        {SIDEBAR_LINKS.map((item, index) => (
-          <SideNavItem
+        {TASK_SIDEBAR_LINKS.map((item, index) => (
+          <TaskSidebarNavLink
             key={index}
             item={item}
             isActive={currentPath === item.href}

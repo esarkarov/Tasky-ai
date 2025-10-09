@@ -1,5 +1,4 @@
-import { SOCIAL_LINKS } from '@/constants/links';
-import { FooterLink } from '../atoms/FooterLink';
+import { FooterNav } from '../molecules/FooterNav';
 
 export const Footer = () => {
   return (
@@ -12,18 +11,7 @@ export const Footer = () => {
           aria-label="Copyright notice">
           &copy; All rights reserved.
         </p>
-        <nav aria-label="Social media links">
-          <ul className="flex flex-wrap items-center">
-            {SOCIAL_LINKS.map(({ href, label }, index) => (
-              <FooterLink
-                key={href}
-                href={href}
-                label={label}
-                index={index}
-              />
-            ))}
-          </ul>
-        </nav>
+        <FooterNav />
       </div>
     </footer>
   );

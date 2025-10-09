@@ -9,11 +9,11 @@ import { useLocation } from 'react-router';
 
 export const TaskFormDialog: React.FC<PropsWithChildren> = ({ children }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const { pathname } = useLocation();
   const { createTask } = useTaskOperations({
     onSuccess: () => setIsOpen(false),
   });
-  const location = useLocation();
-  const isToday = location.pathname === ROUTES.TODAY;
+  const isToday = pathname === ROUTES.TODAY;
 
   useEffect(() => {
     const listener = (event: KeyboardEvent) => {

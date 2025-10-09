@@ -1,6 +1,6 @@
 import { TActionMode } from '@/types';
-import { TaskCancelButton } from '../atoms/TaskCancelButton';
-import { TaskSubmitButton } from '../atoms/TaskSubmitButton';
+import { CancelTaskButton } from '../atoms/CancelTaskButton';
+import { SubmitTaskButton } from '../atoms/SubmitTaskButton';
 
 interface TaskFormActionsProps {
   mode: TActionMode;
@@ -14,8 +14,8 @@ export const TaskFormActions = ({ mode, isFormValid, onCancel, onSubmit }: TaskF
     className="flex items-center gap-2"
     role="group"
     aria-label="Task form actions">
-    <TaskCancelButton onCancel={onCancel} />
-    <TaskSubmitButton
+    <CancelTaskButton onCancel={onCancel} />
+    <SubmitTaskButton
       mode={mode}
       isFormValid={isFormValid}
       onSubmit={onSubmit}

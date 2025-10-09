@@ -6,7 +6,7 @@ interface DueDateProps {
   date: string | Date | null;
 }
 
-export const DueDate = ({ completed, date }: DueDateProps) => {
+export const TaskDueDate = ({ completed, date }: DueDateProps) => {
   if (!date) return null;
   const formattedDate = formatCustomDate(date);
   const dateTime = new Date(date).toISOString();

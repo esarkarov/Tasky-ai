@@ -3,7 +3,7 @@ import { ProjectFormDialog } from '../organisms/ProjectFormDialog';
 import { SidebarGroupAction } from '../ui/sidebar';
 import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
 
-export const ProjectAddButton = () => {
+export const AddProjectButton = () => {
   return (
     <Tooltip>
       <ProjectFormDialog method="POST">

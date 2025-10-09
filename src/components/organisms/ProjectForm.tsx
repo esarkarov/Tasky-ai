@@ -1,7 +1,7 @@
-import { ProjectCancelButton } from '@/components/atoms/ProjectCancelButton';
-import { ProjectSubmitButton } from '@/components/atoms/ProjectSubmitButton';
+import { CancelProjectButton } from '@/components/atoms/CancelProjectButton';
+import { SubmitProjectButton } from '@/components/atoms/SubmitProjectButton';
 import { AITaskGenerator } from '@/components/molecules/AITaskGenerator';
-import { ColorSelector } from '@/components/molecules/ColorSelector';
+import { ColorPicker } from '@/components/molecules/ColorPicker';
 import { ProjectNameInput } from '@/components/molecules/ProjectNameInput';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
@@ -85,7 +85,7 @@ export const ProjectForm = ({
           onChange={setProjectName}
           onKeyDown={handleKeySubmit}
         />
-        <ColorSelector
+        <ColorPicker
           setIsOpen={setIsOpen}
           handleSelect={handleColorSelect}
           colorHex={colorHex}
@@ -104,8 +104,8 @@ export const ProjectForm = ({
       </CardContent>
       <Separator />
       <CardFooter className="flex justify-end gap-3 p-4">
-        <ProjectCancelButton onCancel={onCancel} />
-        <ProjectSubmitButton
+        <CancelProjectButton onCancel={onCancel} />
+        <SubmitProjectButton
           mode={mode}
           handleSubmit={handleSubmit}
           isFormValid={isFormValid}

@@ -1,15 +1,16 @@
+import { AddTaskButton } from '@/components/atoms/AddTaskButton';
 import { Head } from '@/components/atoms/Head';
 import { Page, PageHeader, PageList, PageTitle } from '@/components/atoms/Page';
-import { TaskAddButton } from '@/components/atoms/TaskAddButton';
-import { TotalTasks } from '@/components/atoms/TotalTasks';
+import { TotalCounter } from '@/components/atoms/TotalCounter';
+import { EmptyStateMessage } from '@/components/organisms/EmptyStateMessage';
 import { TaskCard } from '@/components/organisms/TaskCard';
-import { TaskEmptyState } from '@/components/organisms/TaskEmptyState';
 import { TaskForm } from '@/components/organisms/TaskForm';
 import { TopAppBar } from '@/components/organisms/TopAppBar';
 import { useTaskOperations } from '@/hooks/use-taskOperations.tsx';
 import { ITasksLoaderData } from '@/types/loader.types';
 import { IProject } from '@/types/project.types';
 import { startOfToday } from 'date-fns';
+import { ClipboardCheck } from 'lucide-react';
 import { useState } from 'react';
 import { useLoaderData } from 'react-router';
 
@@ -30,7 +31,13 @@ export const TodayPage = () => {
       <Page aria-labelledby="today-page-title">
         <PageHeader>
           <PageTitle>Today</PageTitle>
-          {tasks.total > 0 && <TotalTasks total={tasks.total} />}
+          {tasks.total > 0 && (
+            <TotalCounter
+              total={tasks.total}
+              label="task"
+              icon={ClipboardCheck}
+            />
+          )}
         </PageHeader>
 
         <PageList aria-label="Today's tasks">
@@ -46,13 +53,13 @@ export const TodayPage = () => {
           ))}
 
           {!isFormOpen && (
-            <TaskAddButton
+            <AddTaskButton
               onClick={() => setIsFormOpen(true)}
               aria-label="Add new task for today"
             />
           )}
 
-          {!tasks.total && !isFormOpen && <TaskEmptyState type="today" />}
+          {!tasks.total && !isFormOpen && <EmptyStateMessage type="today" />}
 
           {isFormOpen && (
             <TaskForm

@@ -2,13 +2,13 @@ import { TActionMode } from '@/types';
 import { SendHorizonal } from 'lucide-react';
 import { Button } from '../ui/button';
 
-interface TaskSubmitButtonProps {
+interface SubmitTaskButtonProps {
   isFormValid: boolean;
   mode: TActionMode;
   onSubmit: () => Promise<void>;
 }
 
-export function TaskSubmitButton({ mode, isFormValid, onSubmit }: TaskSubmitButtonProps) {
+export const SubmitTaskButton = ({ mode, isFormValid, onSubmit }: SubmitTaskButtonProps) => {
   return (
     <Button
       type="submit"
@@ -22,4 +22,4 @@ export function TaskSubmitButton({ mode, isFormValid, onSubmit }: TaskSubmitButt
       />
     </Button>
   );
-}
+};

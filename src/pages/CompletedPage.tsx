@@ -1,11 +1,12 @@
 import { Head } from '@/components/atoms/Head';
 import { Page, PageHeader, PageList, PageTitle } from '@/components/atoms/Page';
-import { TaskEmptyState } from '@/components/organisms/TaskEmptyState';
-import { TotalTasks } from '@/components/atoms/TotalTasks';
+import { TotalCounter } from '@/components/atoms/TotalCounter';
+import { EmptyStateMessage } from '@/components/organisms/EmptyStateMessage';
 import { TaskCard } from '@/components/organisms/TaskCard';
 import { TopAppBar } from '@/components/organisms/TopAppBar';
 import { ITasksLoaderData } from '@/types/loader.types';
 import { IProject } from '@/types/project.types';
+import { ClipboardCheck } from 'lucide-react';
 import { useLoaderData } from 'react-router';
 
 export const CompletedPage = () => {
@@ -23,7 +24,13 @@ export const CompletedPage = () => {
       <Page aria-labelledby="completed-page-title">
         <PageHeader>
           <PageTitle>Completed</PageTitle>
-          {tasks.total > 0 && <TotalTasks total={tasks.total} />}
+          {tasks.total > 0 && (
+            <TotalCounter
+              total={tasks.total}
+              label="task"
+              icon={ClipboardCheck}
+            />
+          )}
         </PageHeader>
 
         <PageList aria-label="Completed tasks">
@@ -38,7 +45,7 @@ export const CompletedPage = () => {
             />
           ))}
 
-          {!tasks.total && <TaskEmptyState type="completed" />}
+          {!tasks.total && <EmptyStateMessage type="completed" />}
         </PageList>
       </Page>
     </>

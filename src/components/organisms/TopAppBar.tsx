@@ -1,5 +1,5 @@
 import { AppBarTitle } from '@/components/atoms/AppBarTitle';
-import { SidebarToggleButton } from '@/components/atoms/SidebarToggleButton';
+import { ToggleSidebarButton } from '@/components/atoms/ToggleSidebarButton';
 import { TIMING } from '@/constants/timing';
 import { cn } from '@/lib/utils';
 import { useEffect, useState } from 'react';
@@ -27,7 +27,7 @@ export const TopAppBar = ({ title, taskCount }: TopAppBarProps) => {
       )}
       role="banner"
       aria-label="Application top bar">
-      <SidebarToggleButton />
+      <ToggleSidebarButton />
       <AppBarTitle
         title={title}
         showTitle={showTitle}

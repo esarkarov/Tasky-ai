@@ -1,8 +1,8 @@
-interface KeyboardProps {
+interface KeyboardShortcutProps {
   kbdList: string[];
 }
 
-export const Keyboard = ({ kbdList }: KeyboardProps) => {
+export const KeyboardShortcut = ({ kbdList }: KeyboardShortcutProps) => {
   return (
     <div className="inline-flex items-center space-x-1 text-xs font-mono">
       <span className="sr-only">Keyboard shortcut: </span>

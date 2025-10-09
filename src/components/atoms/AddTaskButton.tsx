@@ -1,9 +1,9 @@
 import { Button } from '@/components/ui/button';
 import { CirclePlus } from 'lucide-react';
 
-type TaskAddButtonProps = Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'className'>;
+type AddTaskButtonProps = Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'className'>;
 
-export const TaskAddButton = (props: TaskAddButtonProps) => {
+export const AddTaskButton = (props: AddTaskButtonProps) => {
   return (
     <Button
       variant="link"
