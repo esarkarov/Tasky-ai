@@ -5,9 +5,6 @@ import { MemoryRouter } from 'react-router';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { AppTemplate } from './AppTemplate';
 
-const mockUseNavigation = vi.fn();
-const mockUseLoaderData = vi.fn();
-
 vi.mock('@/components/organisms/AppSidebar', () => ({
   AppSidebar: () => <aside data-testid="app-sidebar">Sidebar</aside>,
 }));
@@ -34,6 +31,8 @@ vi.mock('@/lib/utils', () => ({
   cn: (...args: unknown[]) => args.filter(Boolean).join(' '),
 }));
 
+const mockUseNavigation = vi.fn();
+const mockUseLoaderData = vi.fn();
 vi.mock('react-router', async () => {
   const actual = await vi.importActual('react-router');
   return {
@@ -80,7 +79,7 @@ describe('AppTemplate', () => {
     mockUseLoaderData.mockReturnValue({ projects: mockProjects });
   });
 
-  describe('Rendering', () => {
+  describe('Basic Rendering', () => {
     it('should render all main layout components', () => {
       render(
         <MemoryRouter>

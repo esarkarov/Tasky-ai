@@ -51,8 +51,8 @@
   body {
     @apply bg-background text-foreground;
 
-    scrollbar-width: thin; /* Firefox */
-    scrollbar-color: var(--secondary) var(--background); /* Firefox */
+    scrollbar-width: thin;
+    scrollbar-color: var(--secondary) var(--background);
   }
 
   ::-webkit-scrollbar {

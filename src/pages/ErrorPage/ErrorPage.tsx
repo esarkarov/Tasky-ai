@@ -23,7 +23,7 @@ export const ErrorPage = () => {
         <h1
           id="error-page-title"
           className="text-2xl font-semibold text-center sm:text-4xl">
-          {isNotFound ? 'Hmmm, that page doesn’t exist.' : 'Something went wrong.'}
+          {isNotFound ? "Hmmm, that page doesn't exist." : 'Something went wrong.'}
         </h1>
 
         <p
@@ -31,7 +31,7 @@ export const ErrorPage = () => {
           aria-live="polite">
           {isNotFound
             ? 'You can get back on track and manage your tasks with ease.'
-            : 'We’re working on fixing this issue. Please try again later.'}
+            : "We're working on fixing this issue. Please try again later."}
         </p>
 
         <div

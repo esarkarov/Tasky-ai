@@ -5,18 +5,19 @@ export const RootTemplate = async () =>
 export const AppTemplate = async () =>
   createElement((await import('@/components/templates/AppTemplate/AppTemplate')).AppTemplate);
 
-export const HomePage = async () => createElement((await import('@/pages/HomePage')).HomePage);
-export const ErrorPage = async () => createElement((await import('@/pages/ErrorPage')).ErrorPage);
-export const LoginPage = async () => createElement((await import('@/pages/LoginPage')).LoginPage);
-export const RegisterPage = async () => createElement((await import('@/pages/RegisterPage')).RegisterPage);
-export const AuthSyncPage = async () => createElement((await import('@/pages/AuthSyncPage')).AuthSyncPage);
-export const InboxPage = async () => createElement((await import('@/pages/InboxPage')).InboxPage);
-export const TodayPage = async () => createElement((await import('@/pages/TodayPage')).TodayPage);
-export const UpcomingPage = async () => createElement((await import('@/pages/UpcomingPage')).UpcomingPage);
-export const CompletedPage = async () => createElement((await import('@/pages/CompletedPage')).CompletedPage);
-export const ProjectsPage = async () => createElement((await import('@/pages/ProjectsPage')).ProjectsPage);
+export const HomePage = async () => createElement((await import('@/pages/HomePage/HomePage')).HomePage);
+export const ErrorPage = async () => createElement((await import('@/pages/ErrorPage/ErrorPage')).ErrorPage);
+export const LoginPage = async () => createElement((await import('@/pages/LoginPage/LoginPage')).LoginPage);
+export const RegisterPage = async () => createElement((await import('@/pages/RegisterPage/RegisterPage')).RegisterPage);
+export const AuthSyncPage = async () => createElement((await import('@/pages/AuthSyncPage/AuthSyncPage')).AuthSyncPage);
+export const InboxPage = async () => createElement((await import('@/pages/InboxPage/InboxPage')).InboxPage);
+export const TodayPage = async () => createElement((await import('@/pages/TodayPage/TodayPage')).TodayPage);
+export const UpcomingPage = async () => createElement((await import('@/pages/UpcomingPage/UpcomingPage')).UpcomingPage);
+export const CompletedPage = async () =>
+  createElement((await import('@/pages/CompletedPage/CompletedPage')).CompletedPage);
+export const ProjectsPage = async () => createElement((await import('@/pages/ProjectsPage/ProjectsPage')).ProjectsPage);
 export const ProjectDetailPage = async () =>
-  createElement((await import('@/pages/ProjectDetailPage')).ProjectDetailPage);
+  createElement((await import('@/pages/ProjectDetailPage/ProjectDetailPage')).ProjectDetailPage);
 
 export const taskAction = async () => (await import('@/router/actions/taskAction')).taskAction;
 export const projectAction = async () => (await import('@/router/actions/projectAction')).projectAction;

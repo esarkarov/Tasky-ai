@@ -17,7 +17,9 @@ export const ProjectsPage = () => {
   const { fetcher, searchStatus, searchProjects } = useProjectOperations();
   const loaderData = useLoaderData<ProjectsLoaderData>();
   const fetcherData = fetcher.data as ProjectsLoaderData;
-  const { projects } = fetcherData || loaderData;
+  const {
+    projects: { total, documents },
+  } = fetcherData || loaderData;
 
   return (
     <>
@@ -25,7 +27,7 @@ export const ProjectsPage = () => {
 
       <TopAppBar
         title="My Projects"
-        taskCount={projects.total}
+        taskCount={total}
       />
 
       <Page aria-labelledby="projects-page-title">
@@ -58,21 +60,21 @@ export const ProjectsPage = () => {
         <PageList aria-label="Project list">
           <div className="h-8 flex items-center border-b mb-1">
             <TotalCounter
-              total={projects.total}
+              total={total}
               label="project"
               icon={FolderKanban}
             />
           </div>
 
           <div className={cn(searchStatus === 'searching' && 'opacity-25')}>
-            {projects.documents.map((project) => (
+            {documents?.map((project) => (
               <ProjectCard
                 key={project.$id}
                 project={project}
               />
             ))}
 
-            {projects.total === 0 && (
+            {!total && (
               <p
                 className="h-14 flex justify-center items-center text-muted-foreground"
                 role="status">

@@ -10,7 +10,9 @@ import { ClipboardCheck } from 'lucide-react';
 import { useLoaderData } from 'react-router';
 
 export const UpcomingPage = () => {
-  const { tasks } = useLoaderData<TasksLoaderData>();
+  const {
+    tasks: { total, documents },
+  } = useLoaderData<TasksLoaderData>();
 
   return (
     <>
@@ -18,15 +20,15 @@ export const UpcomingPage = () => {
 
       <TopAppBar
         title="Upcoming"
-        taskCount={tasks.total}
+        taskCount={total}
       />
 
       <Page aria-labelledby="upcoming-page-title">
         <PageHeader>
           <PageTitle>Upcoming</PageTitle>
-          {tasks.total > 0 && (
+          {total > 0 && (
             <TotalCounter
-              total={tasks.total}
+              total={total}
               label="task"
               icon={ClipboardCheck}
             />
@@ -34,7 +36,7 @@ export const UpcomingPage = () => {
         </PageHeader>
 
         <PageList aria-label="Upcoming tasks">
-          {tasks?.documents.map(({ $id, content, completed, due_date, projectId }) => (
+          {documents?.map(({ $id, content, completed, due_date, projectId }) => (
             <TaskCard
               key={$id}
               id={$id}
@@ -45,7 +47,7 @@ export const UpcomingPage = () => {
             />
           ))}
 
-          {!tasks.total && <EmptyStateMessage variant="upcoming" />}
+          {!total && <EmptyStateMessage variant="upcoming" />}
         </PageList>
       </Page>
     </>

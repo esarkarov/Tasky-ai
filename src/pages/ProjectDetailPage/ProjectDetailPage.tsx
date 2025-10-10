@@ -19,60 +19,61 @@ export const ProjectDetailPage = () => {
   const [isFormShow, setIsFormShow] = useState<boolean>(false);
   const { project } = useLoaderData<ProjectDetailLoaderData>();
   const { createTask } = useTaskOperations();
+  const { tasks, name, color_hex, color_name, $id } = project;
 
   const projectTasks = useMemo(() => {
-    const incompleteTasks = project.tasks?.filter((task: Models.Document) => !task.completed) as Models.Document[];
+    const incompleteTasks = tasks?.filter((task: Models.Document) => !task.completed) as Models.Document[];
 
-    const sortedTasks = incompleteTasks.sort((taskA, taskB) => {
+    const sortedTasks = incompleteTasks?.sort((taskA, taskB) => {
       const dateA = new Date(taskA.due_date);
       const dateB = new Date(taskB.due_date);
       return dateA.getTime() - dateB.getTime();
     });
 
     return sortedTasks;
-  }, [project.tasks]);
+  }, [tasks]);
 
   return (
     <>
-      <Head title={`Tasky AI | ${project.name}`} />
+      <Head title={`Tasky AI | ${name}`} />
 
       <TopAppBar
-        title={project.name}
-        taskCount={projectTasks.length}
+        title={name}
+        taskCount={projectTasks?.length}
       />
 
       <Page aria-labelledby="project-detail-title">
         <PageHeader>
           <div className="flex items-center gap-2">
-            <PageTitle>{project.name}</PageTitle>
+            <PageTitle>{name}</PageTitle>
 
             <ProjectActionMenu
               defaultFormData={{
-                id: project.$id,
-                name: project.name,
-                color_name: project.color_name,
-                color_hex: project.color_hex,
+                id: $id,
+                name: name,
+                color_name: color_name,
+                color_hex: color_hex,
               }}>
               <Button
                 variant="ghost"
                 size="icon"
                 className="w-8 h-8 shrink-0"
-                aria-label={`More actions for project ${project.name}`}>
+                aria-label={`More actions for project ${name}`}>
                 <MoreHorizontal aria-hidden="true" />
               </Button>
             </ProjectActionMenu>
           </div>
-          {projectTasks.length > 0 && (
+          {projectTasks?.length > 0 && (
             <TotalCounter
-              total={projectTasks.length}
+              total={projectTasks?.length}
               label="task"
               icon={ClipboardCheck}
             />
           )}
         </PageHeader>
 
-        <PageList aria-label={`Tasks for project ${project.name}`}>
-          {projectTasks.map(({ $id, content, completed, due_date }) => (
+        <PageList aria-label={`Tasks for project ${name}`}>
+          {projectTasks?.map(({ $id, content, completed, due_date }) => (
             <TaskCard
               key={$id}
               id={$id}
@@ -90,7 +91,7 @@ export const ProjectDetailPage = () => {
             />
           )}
 
-          {!projectTasks.length && !isFormShow && <EmptyStateMessage variant="project" />}
+          {!projectTasks?.length && !isFormShow && <EmptyStateMessage variant="project" />}
 
           {isFormShow && (
             <TaskForm
@@ -99,7 +100,7 @@ export const ProjectDetailPage = () => {
               defaultFormData={{
                 content: '',
                 due_date: null,
-                projectId: project.$id,
+                projectId: $id,
               }}
               onCancel={() => setIsFormShow(false)}
               onSubmit={createTask}

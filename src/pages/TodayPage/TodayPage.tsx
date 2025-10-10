@@ -8,56 +8,70 @@ import { TaskForm } from '@/components/organisms/TaskForm';
 import { TopAppBar } from '@/components/organisms/TopAppBar';
 import { useTaskOperations } from '@/hooks/use-taskOperations.tsx';
 import { TasksLoaderData } from '@/types/loader.types';
+import { Project } from '@/types/project.types';
+import { startOfToday } from 'date-fns';
 import { ClipboardCheck } from 'lucide-react';
 import { useState } from 'react';
 import { useLoaderData } from 'react-router';
 
-export const InboxPage = () => {
-  const { tasks } = useLoaderData<TasksLoaderData>();
+export const TodayPage = () => {
   const { createTask } = useTaskOperations();
+  const {
+    tasks: { total, documents },
+  } = useLoaderData<TasksLoaderData>();
   const [isFormOpen, setIsFormOpen] = useState<boolean>(false);
 
   return (
     <>
-      <Head title="Tasky AI | Inbox" />
+      <Head title="Tasky AI | Today" />
 
       <TopAppBar
-        title="Inbox"
-        taskCount={tasks?.total}
+        title="Today"
+        taskCount={total}
       />
 
-      <Page aria-labelledby="inbox-page-title">
+      <Page aria-labelledby="today-page-title">
         <PageHeader>
-          <PageTitle>Inbox</PageTitle>
-          {tasks.total > 0 && (
+          <PageTitle>Today</PageTitle>
+          {total > 0 && (
             <TotalCounter
-              total={tasks.total}
+              total={total}
               label="task"
               icon={ClipboardCheck}
             />
           )}
         </PageHeader>
 
-        <PageList aria-label="Inbox tasks">
-          {tasks?.documents.map(({ $id, content, completed, due_date, project }) => (
+        <PageList aria-label="Today's tasks">
+          {documents?.map(({ $id, content, completed, due_date, projectId }) => (
             <TaskCard
               key={$id}
               id={$id}
               content={content}
               completed={completed}
               dueDate={due_date as Date}
-              project={project}
+              project={projectId as Project}
             />
           ))}
 
-          {!isFormOpen && <AddTaskButton onClick={() => setIsFormOpen(true)} />}
+          {!isFormOpen && (
+            <AddTaskButton
+              onClick={() => setIsFormOpen(true)}
+              aria-label="Add new task for today"
+            />
+          )}
 
-          {!isFormOpen && !tasks.documents && <EmptyStateMessage variant="inbox" />}
+          {!total && !isFormOpen && <EmptyStateMessage variant="today" />}
 
           {isFormOpen && (
             <TaskForm
               className="mt-1"
               mode="create"
+              defaultFormData={{
+                content: '',
+                due_date: startOfToday(),
+                projectId: null,
+              }}
               onCancel={() => setIsFormOpen(false)}
               onSubmit={createTask}
             />

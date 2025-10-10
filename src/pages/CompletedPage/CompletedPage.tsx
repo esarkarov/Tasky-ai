@@ -10,7 +10,9 @@ import { ClipboardCheck } from 'lucide-react';
 import { useLoaderData } from 'react-router';
 
 export const CompletedPage = () => {
-  const { tasks } = useLoaderData<TasksLoaderData>();
+  const {
+    tasks: { total, documents },
+  } = useLoaderData<TasksLoaderData>();
 
   return (
     <>
@@ -18,15 +20,15 @@ export const CompletedPage = () => {
 
       <TopAppBar
         title="Completed"
-        taskCount={tasks?.total}
+        taskCount={total}
       />
 
       <Page aria-labelledby="completed-page-title">
         <PageHeader>
           <PageTitle>Completed</PageTitle>
-          {tasks.total > 0 && (
+          {total > 0 && (
             <TotalCounter
-              total={tasks.total}
+              total={total}
               label="task"
               icon={ClipboardCheck}
             />
@@ -34,7 +36,7 @@ export const CompletedPage = () => {
         </PageHeader>
 
         <PageList aria-label="Completed tasks">
-          {tasks?.documents.map(({ $id, content, completed, due_date, projectId }) => (
+          {documents?.map(({ $id, content, completed, due_date, projectId }) => (
             <TaskCard
               key={$id}
               id={$id}
@@ -45,7 +47,7 @@ export const CompletedPage = () => {
             />
           ))}
 
-          {!tasks.total && <EmptyStateMessage variant="completed" />}
+          {!total && <EmptyStateMessage variant="completed" />}
         </PageList>
       </Page>
     </>

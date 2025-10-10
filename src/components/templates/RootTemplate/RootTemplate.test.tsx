@@ -3,8 +3,6 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { RootTemplate } from './RootTemplate';
 import { MemoryRouter } from 'react-router';
 
-const mockUseNavigation = vi.fn();
-
 vi.mock('@/components/organisms/Footer', () => ({
   Footer: () => <footer data-testid="footer">Footer</footer>,
 }));
@@ -17,6 +15,7 @@ vi.mock('@/components/atoms/Loader', () => ({
   Loader: () => <div data-testid="loader">Loading...</div>,
 }));
 
+const mockUseNavigation = vi.fn();
 vi.mock('react-router', async () => {
   const actual = await vi.importActual('react-router');
   return {
@@ -31,7 +30,7 @@ describe('RootTemplate', () => {
     vi.clearAllMocks();
   });
 
-  describe('Rendering', () => {
+  describe('Basic Rendering', () => {
     it('should render all main layout components', () => {
       mockUseNavigation.mockReturnValue({ state: 'idle', formData: null });
 
