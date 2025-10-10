@@ -4,7 +4,7 @@ import { ProjectsSidebarSection } from '@/components/organisms/ProjectsSidebarSe
 import { TaskSidebarNavGroup } from '@/components/organisms/TaskSidebarNavGroup';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, useSidebar } from '@/components/ui/sidebar';
 import { ROUTES } from '@/constants/routes';
-import { AppLoaderData } from '@/types/loader.types';
+import { AppLoaderData } from '@/types/loaders.types';
 import { Link, useLoaderData, useLocation } from 'react-router';
 
 export const AppSidebar = () => {

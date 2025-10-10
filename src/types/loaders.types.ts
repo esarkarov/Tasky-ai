@@ -1,5 +1,5 @@
-import { Project, ProjectsListResponse } from '@/types/project.types';
-import { TaskCounts, TasksResponse } from '@/types/task.types';
+import { Project, ProjectsListResponse } from '@/types/projects.types';
+import { TaskCounts, TasksResponse } from '@/types/tasks.types';
 
 export interface AppLoaderData {
   projects: ProjectsListResponse;

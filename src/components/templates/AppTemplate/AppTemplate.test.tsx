@@ -1,4 +1,3 @@
-import type { Project } from '@/types/project.types';
 import { render, screen } from '@testing-library/react';
 import { ReactNode } from 'react';
 import { MemoryRouter } from 'react-router';
@@ -17,10 +16,6 @@ vi.mock('@/components/ui/tooltip', () => ({
   TooltipProvider: ({ children }: { children: ReactNode }) => <div data-testid="tooltip-provider">{children}</div>,
 }));
 
-vi.mock('@/contexts/ProjectContext', () => ({
-  ProjectProvider: ({ children }: { children: ReactNode }) => <div data-testid="project-provider">{children}</div>,
-}));
-
 vi.mock('@/constants/timing', () => ({
   TIMING: {
     DELAY_DURATION: 700,
@@ -32,51 +27,19 @@ vi.mock('@/lib/utils', () => ({
 }));
 
 const mockUseNavigation = vi.fn();
-const mockUseLoaderData = vi.fn();
 vi.mock('react-router', async () => {
   const actual = await vi.importActual('react-router');
   return {
     ...actual,
     useNavigation: () => mockUseNavigation(),
-    useLoaderData: () => mockUseLoaderData(),
     Outlet: () => <div data-testid="outlet">Page Content</div>,
   };
 });
-
-const mockProjects: Project[] = [
-  {
-    $id: '1',
-    userId: 'user-1',
-    name: 'Project 1',
-    color_name: 'blue',
-    color_hex: '#0000FF',
-    tasks: null,
-    $createdAt: '2024-01-01',
-    $updatedAt: '2024-01-01',
-    $permissions: [],
-    $collectionId: 'collection-1',
-    $databaseId: 'database-1',
-  },
-  {
-    $id: '2',
-    userId: 'user-1',
-    name: 'Project 2',
-    color_name: 'green',
-    color_hex: '#00FF00',
-    tasks: null,
-    $createdAt: '2024-01-01',
-    $updatedAt: '2024-01-01',
-    $permissions: [],
-    $collectionId: 'collection-1',
-    $databaseId: 'database-1',
-  },
-];
 
 describe('AppTemplate', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mockUseNavigation.mockReturnValue({ state: 'idle', formData: null });
-    mockUseLoaderData.mockReturnValue({ projects: mockProjects });
   });
 
   describe('Basic Rendering', () => {
@@ -99,7 +62,6 @@ describe('AppTemplate', () => {
         </MemoryRouter>
       );
 
-      expect(screen.getByTestId('project-provider')).toBeInTheDocument();
       expect(screen.getByTestId('sidebar-provider')).toBeInTheDocument();
       expect(screen.getByTestId('tooltip-provider')).toBeInTheDocument();
     });
@@ -113,34 +75,6 @@ describe('AppTemplate', () => {
 
       const layoutContainer = container.querySelector('.flex.h-screen.w-full');
       expect(layoutContainer).toBeInTheDocument();
-    });
-
-    it('should pass projects to ProjectProvider from loader data', () => {
-      const customProjects: Project[] = [
-        {
-          $id: '3',
-          userId: 'user-2',
-          name: 'Custom Project',
-          color_name: 'red',
-          color_hex: '#FF0000',
-          tasks: null,
-          $createdAt: '2024-01-02',
-          $updatedAt: '2024-01-02',
-          $permissions: [],
-          $collectionId: 'collection-1',
-          $databaseId: 'database-1',
-        },
-      ];
-      mockUseLoaderData.mockReturnValue({ projects: customProjects });
-
-      render(
-        <MemoryRouter>
-          <AppTemplate />
-        </MemoryRouter>
-      );
-
-      expect(mockUseLoaderData).toHaveBeenCalled();
-      expect(screen.getByTestId('project-provider')).toBeInTheDocument();
     });
   });
 
@@ -316,47 +250,6 @@ describe('AppTemplate', () => {
 
         unmount();
       });
-    });
-  });
-
-  describe('Loader Data Integration', () => {
-    it('should handle empty projects array', () => {
-      mockUseLoaderData.mockReturnValue({ projects: [] });
-
-      render(
-        <MemoryRouter>
-          <AppTemplate />
-        </MemoryRouter>
-      );
-
-      expect(screen.getByTestId('project-provider')).toBeInTheDocument();
-      expect(screen.getByRole('main')).toBeInTheDocument();
-    });
-
-    it('should handle multiple projects', () => {
-      const manyProjects: Project[] = Array.from({ length: 10 }, (_, i) => ({
-        $id: `project-${i}`,
-        userId: 'user-1',
-        name: `Project ${i}`,
-        color_name: 'blue',
-        color_hex: '#0000FF',
-        tasks: null,
-        $createdAt: '2024-01-01',
-        $updatedAt: '2024-01-01',
-        $permissions: [],
-        $collectionId: 'collection-1',
-        $databaseId: 'database-1',
-      }));
-      mockUseLoaderData.mockReturnValue({ projects: manyProjects });
-
-      render(
-        <MemoryRouter>
-          <AppTemplate />
-        </MemoryRouter>
-      );
-
-      expect(mockUseLoaderData).toHaveBeenCalled();
-      expect(screen.getByTestId('project-provider')).toBeInTheDocument();
     });
   });
 });

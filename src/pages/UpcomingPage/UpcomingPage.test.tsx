@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { UpcomingPage } from './UpcomingPage';
-import type { Task } from '@/types/task.types';
-import type { Project } from '@/types/project.types';
+import type { Task } from '@/types/tasks.types';
+import type { Project } from '@/types/projects.types';
 import type { ReactNode } from 'react';
 import { LucideIcon } from 'lucide-react';
 

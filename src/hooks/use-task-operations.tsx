@@ -1,12 +1,12 @@
 import { ToastAction } from '@/components/ui/toast';
-import { TASK_TOAST_CONTENTS } from '@/constants/contents';
-import { HTTP_METHODS } from '@/constants/http';
+import { TASK_TOAST_CONTENTS } from '@/constants/ui-contents';
+import { HTTP_METHODS } from '@/constants/http-methods';
 import { ROUTES } from '@/constants/routes';
 import { TIMING } from '@/constants/timing';
 import { useToast } from '@/hooks/use-toast';
 import { truncateString } from '@/lib/utils';
-import { UseTaskOperationsParams, UseTaskOperationsResult } from '@/types/hook.types';
-import { TaskFormData } from '@/types/task.types';
+import { UseTaskOperationsParams, UseTaskOperationsResult } from '@/types/hooks.types';
+import { TaskFormData } from '@/types/tasks.types';
 import { useCallback } from 'react';
 import { useFetcher } from 'react-router';
 

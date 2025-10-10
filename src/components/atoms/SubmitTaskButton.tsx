@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import { CrudMode } from '@/types/common.types';
+import { CrudMode } from '@/types/shared.types';
 import { SendHorizonal } from 'lucide-react';
 
 interface SubmitTaskButtonProps {

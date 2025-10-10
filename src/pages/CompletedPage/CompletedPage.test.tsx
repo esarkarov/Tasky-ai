@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { CompletedPage } from './CompletedPage';
-import type { Task } from '@/types/task.types';
-import type { Project } from '@/types/project.types';
+import type { Task } from '@/types/tasks.types';
+import type { Project } from '@/types/projects.types';
 import type { ReactNode } from 'react';
 
 vi.mock('@/components/atoms/Head', () => ({

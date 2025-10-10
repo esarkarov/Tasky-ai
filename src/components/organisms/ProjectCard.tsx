@@ -1,7 +1,7 @@
 import { ProjectActionMenu } from '@/components/organisms/ProjectActionMenu';
 import { Button } from '@/components/ui/button';
 import { ROUTES } from '@/constants/routes';
-import { ProjectListItem } from '@/types/project.types';
+import { ProjectListItem } from '@/types/projects.types';
 import { Hash, MoreHorizontal } from 'lucide-react';
 import { memo } from 'react';
 import { Link } from 'react-router';

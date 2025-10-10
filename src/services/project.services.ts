@@ -1,7 +1,7 @@
-import { env } from '@/config/env';
+import { env } from '@/config/env.config';
 import { databases } from '@/lib/appwrite';
 import { generateID, getUserId } from '@/lib/utils';
-import { Project, ProjectFormData, ProjectListItem, ProjectsListResponse } from '@/types/project.types';
+import { Project, ProjectFormData, ProjectListItem, ProjectsListResponse } from '@/types/projects.types';
 import { Query } from 'appwrite';
 
 export const getProjectById = async (projectId: string): Promise<Project> => {

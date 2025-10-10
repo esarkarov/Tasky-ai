@@ -1,4 +1,4 @@
-import { Project } from '@/types/project.types';
+import { Project } from '@/types/projects.types';
 import { Hash, Inbox } from 'lucide-react';
 
 interface ProjectBadgeProps {

@@ -2,14 +2,17 @@ import { AllProjectsButton } from '@/components/atoms/AllProjectsButton';
 import { ProjectSidebarNavItem } from '@/components/molecules/ProjectSidebarNavItem';
 import { CollapsibleContent } from '@/components/ui/collapsible';
 import { SidebarGroupContent, SidebarMenu, SidebarMenuItem } from '@/components/ui/sidebar';
-import { useProjectList } from '@/contexts/ProjectContext';
+import { ProjectsLoaderData } from '@/types/loaders.types';
+import { useLoaderData } from 'react-router';
 
 interface ProjectsSidebarListProps {
   onNavigationClick: () => void;
 }
 
 export const ProjectsSidebarList = ({ onNavigationClick }: ProjectsSidebarListProps) => {
-  const { documents, total } = useProjectList();
+  const {
+    projects: { documents, total },
+  } = useLoaderData<ProjectsLoaderData>();
 
   return (
     <CollapsibleContent id="projects-list">

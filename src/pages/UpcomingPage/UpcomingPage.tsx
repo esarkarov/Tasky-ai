@@ -4,8 +4,8 @@ import { TotalCounter } from '@/components/atoms/TotalCounter';
 import { EmptyStateMessage } from '@/components/organisms/EmptyStateMessage';
 import { TaskCard } from '@/components/organisms/TaskCard';
 import { TopAppBar } from '@/components/organisms/TopAppBar';
-import { TasksLoaderData } from '@/types/loader.types';
-import { Project } from '@/types/project.types';
+import { TasksLoaderData } from '@/types/loaders.types';
+import { Project } from '@/types/projects.types';
 import { ClipboardCheck } from 'lucide-react';
 import { useLoaderData } from 'react-router';
 

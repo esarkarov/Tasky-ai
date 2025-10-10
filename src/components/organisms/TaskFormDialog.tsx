@@ -1,7 +1,7 @@
 import { TaskForm } from '@/components/organisms/TaskForm';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { ROUTES } from '@/constants/routes';
-import { useTaskOperations } from '@/hooks/use-taskOperations.tsx';
+import { useTaskOperations } from '@/hooks/use-task-operations';
 import { startOfToday } from 'date-fns';
 import type { PropsWithChildren } from 'react';
 import { useEffect, useState } from 'react';

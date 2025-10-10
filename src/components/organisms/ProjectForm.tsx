@@ -5,9 +5,9 @@ import { ColorPicker } from '@/components/molecules/ColorPicker';
 import { ProjectNameInput } from '@/components/molecules/ProjectNameInput';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { DEFAULT_PROJECT_FORM_DATA } from '@/constants/default';
-import { CrudMode } from '@/types/common.types';
-import { ProjectBase, ProjectFormData } from '@/types/project.types';
+import { DEFAULT_PROJECT_FORM_DATA } from '@/constants/defaults';
+import { CrudMode } from '@/types/shared.types';
+import { ProjectBase, ProjectFormData } from '@/types/projects.types';
 import { useCallback, useMemo, useState } from 'react';
 
 interface ProjectFormProps {

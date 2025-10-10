@@ -1,7 +1,7 @@
 import { ROUTES } from '@/constants/routes';
 import { getUserId } from '@/lib/utils';
-import { getRecentProjects } from '@/services/projectService';
-import { getTaskCounts } from '@/services/taskService';
+import { getRecentProjects } from '@/services/project.services';
+import { getTaskCounts } from '@/services/task.services';
 import type { LoaderFunction } from 'react-router';
 import { redirect } from 'react-router';
 

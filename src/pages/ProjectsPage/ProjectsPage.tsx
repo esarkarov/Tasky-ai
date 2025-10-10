@@ -7,19 +7,17 @@ import { ProjectFormDialog } from '@/components/organisms/ProjectFormDialog';
 import { TopAppBar } from '@/components/organisms/TopAppBar';
 import { Button } from '@/components/ui/button';
 import { ROUTES } from '@/constants/routes';
-import { useProjectOperations } from '@/hooks/use-projectOperations';
+import { useProjectOperations } from '@/hooks/use-project-operations';
 import { cn } from '@/lib/utils';
-import { ProjectsLoaderData } from '@/types/loader.types';
+import { ProjectsLoaderData } from '@/types/loaders.types';
 import { FolderKanban, Plus } from 'lucide-react';
 import { useLoaderData } from 'react-router';
 
 export const ProjectsPage = () => {
   const { fetcher, searchStatus, searchProjects } = useProjectOperations();
-  const loaderData = useLoaderData<ProjectsLoaderData>();
-  const fetcherData = fetcher.data as ProjectsLoaderData;
   const {
     projects: { total, documents },
-  } = fetcherData || loaderData;
+  } = useLoaderData<ProjectsLoaderData>();
 
   return (
     <>

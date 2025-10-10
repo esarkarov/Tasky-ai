@@ -1,4 +1,4 @@
-import { env } from '@/config/env';
+import { env } from '@/config/env.config';
 import { ROUTES } from '@/constants/routes';
 import { useAuth } from '@clerk/clerk-react';
 import { useEffect } from 'react';

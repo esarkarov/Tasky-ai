@@ -1,13 +1,13 @@
-import { PROJECT_TOAST_CONTENTS } from '@/constants/contents';
-import { HTTP_METHODS } from '@/constants/http';
+import { PROJECT_TOAST_CONTENTS } from '@/constants/ui-contents';
+import { HTTP_METHODS } from '@/constants/http-methods';
 import { ROUTES } from '@/constants/routes';
 import { TIMING } from '@/constants/timing';
 import { MAX_TRUNCATE_LENGTH } from '@/constants/validation';
 import { useToast } from '@/hooks/use-toast';
 import { truncateString } from '@/lib/utils';
-import { SearchStatus } from '@/types/common.types';
-import { UseProjectOperationsParams, UseProjectOperationsResult } from '@/types/hook.types';
-import { ProjectFormData } from '@/types/project.types';
+import { SearchStatus } from '@/types/shared.types';
+import { UseProjectOperationsParams, UseProjectOperationsResult } from '@/types/hooks.types';
+import { ProjectFormData } from '@/types/projects.types';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { useFetcher, useLocation, useNavigate } from 'react-router';
 

@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandList } from '@/components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { ProjectInfo, ProjectListItem } from '@/types/project.types';
+import { ProjectInfo, ProjectListItem } from '@/types/projects.types';
 import { ChevronDown, Hash, Inbox } from 'lucide-react';
 import { SetStateAction, useState } from 'react';
 

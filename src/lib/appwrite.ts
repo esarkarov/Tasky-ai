@@ -1,4 +1,4 @@
-import { env } from '@/config/env';
+import { env } from '@/config/env.config';
 import { Client, Databases, ID, Query } from 'appwrite';
 
 const client = new Client().setEndpoint(env.appwriteEndpoint).setProject(env.appwriteProjectId);

@@ -1,7 +1,7 @@
-import { env } from '@/config/env';
+import { env } from '@/config/env.config';
 import { ROUTES } from '@/constants/routes';
 import { WEEKDAYS } from '@/constants/weekdays';
-import { TaskCounts } from '@/types/task.types';
+import { TaskCounts } from '@/types/tasks.types';
 import { clsx, type ClassValue } from 'clsx';
 import { format, formatRelative, isBefore, isSameYear, isToday, isTomorrow, startOfToday } from 'date-fns';
 import { redirect } from 'react-router';

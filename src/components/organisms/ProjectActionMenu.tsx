@@ -7,8 +7,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { useProjectOperations } from '@/hooks/use-projectOperations';
-import { ProjectBase } from '@/types/project.types';
+import { useProjectOperations } from '@/hooks/use-project-operations';
+import { ProjectBase } from '@/types/projects.types';
 import type { DropdownMenuContentProps } from '@radix-ui/react-dropdown-menu';
 import { Edit } from 'lucide-react';
 

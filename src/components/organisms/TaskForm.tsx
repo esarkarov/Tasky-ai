@@ -4,15 +4,16 @@ import { TaskDueDatePicker } from '@/components/molecules/TaskDueDatePicker';
 import { TaskFormActions } from '@/components/molecules/TaskFormActions';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { DEFAULT_TASK_FORM_DATA } from '@/constants/default';
-import { useProjectList } from '@/contexts/ProjectContext';
+import { DEFAULT_TASK_FORM_DATA } from '@/constants/defaults';
 import { cn } from '@/lib/utils';
-import { CrudMode } from '@/types/common.types';
-import { Project, ProjectInfo } from '@/types/project.types';
-import { TaskFormData } from '@/types/task.types';
+import { ProjectsLoaderData } from '@/types/loaders.types';
+import { Project, ProjectInfo } from '@/types/projects.types';
+import { CrudMode } from '@/types/shared.types';
+import { TaskFormData } from '@/types/tasks.types';
 import * as chrono from 'chrono-node';
 import type { ClassValue } from 'clsx';
 import { useCallback, useEffect, useState } from 'react';
+import { useLoaderData } from 'react-router';
 
 interface TaskFormProps {
   mode: CrudMode;
@@ -29,7 +30,9 @@ export const TaskForm = ({
   onCancel,
   onSubmit,
 }: TaskFormProps) => {
-  const { documents } = useProjectList();
+  const {
+    projects: { documents },
+  } = useLoaderData<ProjectsLoaderData>();
   const [taskContent, setTaskContent] = useState(defaultFormData.content);
   const [dueDate, setDueDate] = useState(defaultFormData.due_date);
   const [projectId, setProjectId] = useState(defaultFormData.projectId);

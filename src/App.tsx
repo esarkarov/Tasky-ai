@@ -1,5 +1,5 @@
 import { Toaster } from '@/components/ui/toaster';
-import { env } from '@/config/env';
+import { env } from '@/config/env.config';
 import { ROUTES } from '@/constants/routes';
 import { router } from '@/router';
 import { ClerkProvider } from '@clerk/clerk-react';

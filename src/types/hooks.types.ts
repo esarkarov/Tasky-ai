@@ -1,6 +1,6 @@
-import { HttpMethod, SearchStatus } from '@/types/common.types';
-import { ProjectBase, ProjectFormData } from '@/types/project.types';
-import { TaskFormData } from '@/types/task.types';
+import { HttpMethod, SearchStatus } from '@/types/shared.types';
+import { ProjectBase, ProjectFormData } from '@/types/projects.types';
+import { TaskFormData } from '@/types/tasks.types';
 import { useFetcher } from 'react-router';
 
 export interface UseProjectOperationsParams {

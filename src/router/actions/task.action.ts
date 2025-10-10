@@ -1,6 +1,6 @@
-import { HTTP_METHODS } from '@/constants/http';
-import { createTask, deleteTask, updateTask } from '@/services/taskService';
-import { TaskFormData } from '@/types/task.types';
+import { HTTP_METHODS } from '@/constants/http-methods';
+import { createTask, deleteTask, updateTask } from '@/services/task.services';
+import { TaskFormData } from '@/types/tasks.types';
 import { ActionFunction } from 'react-router';
 
 export const taskAction: ActionFunction = async ({ request }) => {

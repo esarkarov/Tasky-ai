@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { ProjectsPage } from './ProjectsPage';
-import type { ProjectListItem } from '@/types/project.types';
+import type { ProjectListItem } from '@/types/projects.types';
 import type { ReactNode } from 'react';
 
 vi.mock('lucide-react', () => ({
@@ -18,31 +18,6 @@ vi.mock('@/constants/routes', () => ({
 
 vi.mock('@/lib/utils', () => ({
   cn: (...args: unknown[]) => args.filter(Boolean).join(' '),
-}));
-
-const mockSearchProjects = vi.fn();
-const mockFetcherForm = vi.fn(({ children, ...props }: { children: ReactNode }) => (
-  <form
-    data-testid="fetcher-form"
-    {...props}>
-    {children}
-  </form>
-));
-
-vi.mock('@/hooks/use-projectOperations', () => ({
-  useProjectOperations: () => ({
-    fetcher: {
-      data: null,
-      Form: mockFetcherForm,
-    },
-    searchStatus: 'idle',
-    searchProjects: mockSearchProjects,
-  }),
-}));
-
-const mockUseLoaderData = vi.fn();
-vi.mock('react-router', () => ({
-  useLoaderData: () => mockUseLoaderData(),
 }));
 
 vi.mock('@/components/atoms/Head', () => ({
@@ -138,6 +113,30 @@ vi.mock('@/components/ui/button', () => ({
       {children}
     </button>
   ),
+}));
+
+const mockSearchProjects = vi.fn();
+const mockFetcherForm = vi.fn(({ children, ...props }: { children: ReactNode }) => (
+  <form
+    data-testid="fetcher-form"
+    {...props}>
+    {children}
+  </form>
+));
+vi.mock('@/hooks/use-project-operations', () => ({
+  useProjectOperations: () => ({
+    fetcher: {
+      data: null,
+      Form: mockFetcherForm,
+    },
+    searchStatus: 'idle',
+    searchProjects: mockSearchProjects,
+  }),
+}));
+
+const mockUseLoaderData = vi.fn();
+vi.mock('react-router', () => ({
+  useLoaderData: () => mockUseLoaderData(),
 }));
 
 const mockProjects: ProjectListItem[] = [

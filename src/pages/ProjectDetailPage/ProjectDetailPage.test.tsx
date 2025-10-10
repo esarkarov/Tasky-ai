@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { ProjectDetailPage } from './ProjectDetailPage';
-import type { Project, ProjectBase } from '@/types/project.types';
+import type { Project, ProjectBase } from '@/types/projects.types';
 import type { ReactNode } from 'react';
 
 vi.mock('@/components/atoms/Head', () => ({
@@ -120,7 +120,7 @@ vi.mock('lucide-react', () => ({
 }));
 
 const mockCreateTask = vi.fn();
-vi.mock('@/hooks/use-taskOperations.tsx', () => ({
+vi.mock('@/hooks/use-task-operations.tsx', () => ({
   useTaskOperations: () => ({
     createTask: mockCreateTask,
   }),

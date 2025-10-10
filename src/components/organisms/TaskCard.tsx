@@ -1,8 +1,8 @@
 import { TaskForm } from '@/components/organisms/TaskForm';
 import { TaskItem } from '@/components/organisms/TaskItem';
-import { useTaskOperations } from '@/hooks/use-taskOperations.tsx';
-import { Project } from '@/types/project.types';
-import { Task } from '@/types/task.types';
+import { useTaskOperations } from '@/hooks/use-task-operations';
+import { Project } from '@/types/projects.types';
+import { Task } from '@/types/tasks.types';
 import { memo, useState } from 'react';
 
 interface TaskCardProps {

@@ -12,9 +12,9 @@ import {
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { truncateString } from '@/lib/utils';
-import { EntityType } from '@/types/common.types';
-import { ProjectBase } from '@/types/project.types';
-import { Task } from '@/types/task.types';
+import { EntityType } from '@/types/shared.types';
+import { ProjectBase } from '@/types/projects.types';
+import { Task } from '@/types/tasks.types';
 import { Trash2 } from 'lucide-react';
 
 interface ConfirmationDialogProps {

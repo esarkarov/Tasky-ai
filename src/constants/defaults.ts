@@ -1,7 +1,8 @@
-import { ProjectBase } from '@/types/project.types';
-import { TaskFormData } from '@/types/task.types';
+import { ProjectBase } from '@/types/projects.types';
+import { TaskFormData } from '@/types/tasks.types';
 
-export const GEMINI_DEFAULT_MODEL = 'gemini-2.5-flash';
+export const DEFAULT_GEMINI_MODEL = 'gemini-2.5-flash';
+export const DEFAULT_EMPTY_STATE_IMAGE_HEIGHT = 260;
 
 export const DEFAULT_TASK_FORM_DATA: TaskFormData = {
   content: '',

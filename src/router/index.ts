@@ -1,9 +1,9 @@
 import { Loader } from '@/components/atoms/Loader';
 import { ROUTES } from '@/constants/routes';
 import { ErrorPage } from '@/pages/ErrorPage/ErrorPage';
-import { appLoader, AppTemplate, RootTemplate, taskAction } from '@/router/lazy/lazy';
-import { protectedRoutes } from '@/router/routes/protectedRoutes';
-import { publicRoutes } from '@/router/routes/publicRoutes';
+import { appLoader, AppTemplate, RootTemplate, taskAction } from '@/router/lazy/router-lazy';
+import { protectedRoutes } from '@/router/routes/protected.routes';
+import { publicRoutes } from '@/router/routes/public.routes';
 import { createElement } from 'react';
 import { createBrowserRouter } from 'react-router';
 

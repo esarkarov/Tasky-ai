@@ -1,5 +1,5 @@
-import { EMPTY_STATE_CONTENTS } from '@/constants/contents';
-import { EmptyStateVariant } from '@/types/common.types';
+import { EMPTY_STATE_CONTENTS } from '@/constants/ui-contents';
+import { EmptyStateVariant } from '@/types/shared.types';
 import { memo } from 'react';
 
 interface EmptyStateMessageProps {

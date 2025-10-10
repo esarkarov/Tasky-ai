@@ -1,5 +1,5 @@
-import { getProjects } from '@/services/projectService';
-import { ProjectsLoaderData } from '@/types/loader.types';
+import { getProjects } from '@/services/project.services';
+import { ProjectsLoaderData } from '@/types/loaders.types';
 import type { LoaderFunction } from 'react-router';
 
 export const projectsLoader: LoaderFunction = async ({ request }): Promise<ProjectsLoaderData> => {

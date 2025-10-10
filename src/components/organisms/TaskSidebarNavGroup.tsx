@@ -7,8 +7,8 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { TASK_SIDEBAR_LINKS } from '@/constants/links';
-import { TaskCounts } from '@/types/task.types';
+import { TASK_SIDEBAR_LINKS } from '@/constants/app-links';
+import { TaskCounts } from '@/types/tasks.types';
 import { CirclePlus } from 'lucide-react';
 
 interface TaskSidebarNavGroupProps {

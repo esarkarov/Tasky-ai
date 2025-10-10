@@ -19,14 +19,16 @@ export const ProjectsPage = async () => createElement((await import('@/pages/Pro
 export const ProjectDetailPage = async () =>
   createElement((await import('@/pages/ProjectDetailPage/ProjectDetailPage')).ProjectDetailPage);
 
-export const taskAction = async () => (await import('@/router/actions/taskAction')).taskAction;
-export const projectAction = async () => (await import('@/router/actions/projectAction')).projectAction;
+export const taskAction = async () => (await import('@/router/actions/task.action')).taskAction;
+export const projectAction = async () => (await import('@/router/actions/project.action')).projectAction;
 
-export const appLoader = async () => (await import('@/router/loaders/appLoader')).appLoader;
-export const completedLoader = async () => (await import('@/router/loaders/completedLoader')).completedLoader;
-export const inboxLoader = async () => (await import('@/router/loaders/inboxLoader')).inboxLoader;
-export const projectsLoader = async () => (await import('@/router/loaders/projectsLoader')).projectsLoader;
-export const todayLoader = async () => (await import('@/router/loaders/todayLoader')).todayLoader;
-export const upcomingLoader = async () => (await import('@/router/loaders/upcomingLoader')).upcomingLoader;
+export const appLoader = async () => (await import('@/router/loaders/app.loader')).appLoader;
+export const tasksCompletedLoader = async () =>
+  (await import('@/router/loaders/tasks-completed.loader')).tasksCompletedLoader;
+export const tasksInboxLoader = async () => (await import('@/router/loaders/tasks-inbox.loader')).tasksInboxLoader;
+export const projectsLoader = async () => (await import('@/router/loaders/projects.loader')).projectsLoader;
+export const tasksTodayLoader = async () => (await import('@/router/loaders/tasks-today.loader')).tasksTodayLoader;
+export const tasksUpcomingLoader = async () =>
+  (await import('@/router/loaders/tasks-upcoming.loader')).tasksUpcomingLoader;
 export const projectDetailLoader = async () =>
-  (await import('@/router/loaders/projectDetailLoader')).projectDetailLoader;
+  (await import('@/router/loaders/project-detail.loader')).projectDetailLoader;

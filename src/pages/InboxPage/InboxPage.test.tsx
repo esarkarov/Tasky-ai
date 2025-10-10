@@ -2,8 +2,8 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { InboxPage } from './InboxPage';
-import type { Task } from '@/types/task.types';
-import type { Project } from '@/types/project.types';
+import type { Task } from '@/types/tasks.types';
+import type { Project } from '@/types/projects.types';
 import type { ReactNode } from 'react';
 
 vi.mock('@/components/atoms/Head', () => ({
@@ -90,7 +90,7 @@ vi.mock('lucide-react', () => ({
 }));
 
 const mockCreateTask = vi.fn();
-vi.mock('@/hooks/use-taskOperations.tsx', () => ({
+vi.mock('@/hooks/use-task-operations.tsx', () => ({
   useTaskOperations: () => ({
     createTask: mockCreateTask,
   }),

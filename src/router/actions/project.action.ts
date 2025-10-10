@@ -1,9 +1,9 @@
-import { HTTP_METHODS } from '@/constants/http';
+import { HTTP_METHODS } from '@/constants/http-methods';
 import { ROUTES } from '@/constants/routes';
-import { generateProjectTasks } from '@/services/aiService';
-import { createProject, deleteProject, updateProject } from '@/services/projectService';
-import { createTasksForProject } from '@/services/taskService';
-import { ProjectFormData } from '@/types/project.types';
+import { generateProjectTasks } from '@/services/ai.services';
+import { createProject, deleteProject, updateProject } from '@/services/project.services';
+import { createTasksForProject } from '@/services/task.services';
+import { ProjectFormData } from '@/types/projects.types';
 import type { ActionFunction } from 'react-router';
 import { redirect } from 'react-router';
 

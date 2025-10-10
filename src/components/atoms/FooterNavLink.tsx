@@ -1,5 +1,5 @@
 import { Separator } from '@/components/ui/separator';
-import { SOCIAL_LINKS } from '@/constants/links';
+import { SOCIAL_LINKS } from '@/constants/app-links';
 
 interface FooterNavLinkProps {
   href: string;

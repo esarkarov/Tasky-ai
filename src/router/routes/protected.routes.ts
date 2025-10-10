@@ -1,19 +1,19 @@
 import { ROUTES } from '@/constants/routes';
 import {
-  completedLoader,
+  tasksCompletedLoader,
   CompletedPage,
-  inboxLoader,
+  tasksInboxLoader,
   InboxPage,
   projectAction,
   projectDetailLoader,
   ProjectDetailPage,
   projectsLoader,
   ProjectsPage,
-  todayLoader,
+  tasksTodayLoader,
   TodayPage,
-  upcomingLoader,
+  tasksUpcomingLoader,
   UpcomingPage,
-} from '@/router/lazy/lazy';
+} from '@/router/lazy/router-lazy';
 import { RouteObject } from 'react-router';
 
 export const protectedRoutes: RouteObject[] = [
@@ -21,28 +21,28 @@ export const protectedRoutes: RouteObject[] = [
     path: ROUTES.APP_PATHS.INBOX,
     lazy: {
       element: InboxPage,
-      loader: inboxLoader,
+      loader: tasksInboxLoader,
     },
   },
   {
     path: ROUTES.APP_PATHS.TODAY,
     lazy: {
       element: TodayPage,
-      loader: todayLoader,
+      loader: tasksTodayLoader,
     },
   },
   {
     path: ROUTES.APP_PATHS.UPCOMING,
     lazy: {
       element: UpcomingPage,
-      loader: upcomingLoader,
+      loader: tasksUpcomingLoader,
     },
   },
   {
     path: ROUTES.APP_PATHS.COMPLETED,
     lazy: {
       element: CompletedPage,
-      loader: completedLoader,
+      loader: tasksCompletedLoader,
     },
   },
   {

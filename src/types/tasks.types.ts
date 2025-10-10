@@ -1,5 +1,5 @@
 import { PaginatedResponse } from '@/types/pagination.types';
-import { Project } from '@/types/project.types';
+import { Project } from '@/types/projects.types';
 import { Models } from 'appwrite';
 
 export interface Task extends Models.Document {

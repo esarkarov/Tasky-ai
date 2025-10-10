@@ -5,16 +5,15 @@ import {
   todayTaskEmptyState,
   upcomingTaskEmptyState,
 } from '@/assets';
-import { EmptyStateVariant } from '@/types/common.types';
-import { EmptyStateContent } from '@/types/empty.types';
-
-const EMPTY_STATE_IMAGE_HEIGHT = 260;
+import { EmptyStateVariant } from '@/types/shared.types';
+import { EmptyStateContent } from '@/types/empty-state.types';
+import { DEFAULT_EMPTY_STATE_IMAGE_HEIGHT } from './defaults';
 
 const createEmptyState = (src: string, width: number, title: string, description: string): EmptyStateContent => ({
   img: {
     src,
     width,
-    height: EMPTY_STATE_IMAGE_HEIGHT,
+    height: DEFAULT_EMPTY_STATE_IMAGE_HEIGHT,
   },
   title,
   description,

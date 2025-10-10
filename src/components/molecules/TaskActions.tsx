@@ -1,7 +1,7 @@
 import { EditTaskButton } from '@/components/atoms/EditTaskButton';
 import { ConfirmationDialog } from '@/components/molecules/ConfirmationDialog';
-import { useTaskOperations } from '@/hooks/use-taskOperations.tsx';
-import { Task } from '@/types/task.types';
+import { useTaskOperations } from '@/hooks/use-task-operations';
+import { Task } from '@/types/tasks.types';
 
 interface TaskActionsProps {
   task: Task;
