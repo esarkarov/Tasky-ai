@@ -1,11 +1,11 @@
 import { env } from '@/config/env.config';
 import { databases } from '@/lib/appwrite';
 import {
-  CreateProjectData,
+  ProjectCreateData,
   Project,
   ProjectListItem,
   ProjectsListResponse,
-  UpdateProjectData,
+  ProjectUpdateData,
 } from '@/types/projects.types';
 import { Query } from 'appwrite';
 
@@ -30,10 +30,10 @@ export const projectRepository = {
     return databases.listDocuments<ProjectListItem>(env.appwriteDatabaseId, env.appwriteProjectsCollectionId, queries);
   },
 
-  create: (id: string, data: CreateProjectData): Promise<Project> =>
+  create: (id: string, data: ProjectCreateData): Promise<Project> =>
     databases.createDocument<Project>(env.appwriteDatabaseId, env.appwriteProjectsCollectionId, id, data),
 
-  update: (id: string, data: UpdateProjectData): Promise<Project> =>
+  update: (id: string, data: ProjectUpdateData): Promise<Project> =>
     databases.updateDocument<Project>(env.appwriteDatabaseId, env.appwriteProjectsCollectionId, id, data),
 
   delete: (id: string) => databases.deleteDocument(env.appwriteDatabaseId, env.appwriteProjectsCollectionId, id),

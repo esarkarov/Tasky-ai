@@ -1,9 +1,9 @@
-import { getInboxTasks } from '@/services/task.services';
+import { taskService } from '@/services/task.service';
 import { TasksLoaderData } from '@/types/loaders.types';
 import type { LoaderFunction } from 'react-router';
 
 export const tasksInboxLoader: LoaderFunction = async (): Promise<TasksLoaderData> => {
-  const tasks = await getInboxTasks();
+  const tasks = await taskService.getInboxTasks();
 
   return { tasks };
 };

@@ -15,13 +15,13 @@ export interface ProjectBase {
   color_name: string;
   color_hex: string;
 }
-export interface CreateProjectData {
+export interface ProjectCreateData {
   name: string;
   color_name: string;
   color_hex: string;
   userId: string;
 }
-export interface UpdateProjectData {
+export interface ProjectUpdateData {
   name: string;
   color_name: string;
   color_hex: string;

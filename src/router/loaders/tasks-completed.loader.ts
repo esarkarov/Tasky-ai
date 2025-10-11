@@ -1,9 +1,9 @@
-import { getCompletedTasks } from '@/services/task.services';
+import { taskService } from '@/services/task.service';
 import { TasksLoaderData } from '@/types/loaders.types';
 import type { LoaderFunction } from 'react-router';
 
 export const tasksCompletedLoader: LoaderFunction = async (): Promise<TasksLoaderData> => {
-  const tasks = await getCompletedTasks();
+  const tasks = await taskService.getCompletedTasks();
 
   return { tasks };
 };

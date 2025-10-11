@@ -1,5 +1,5 @@
 import { HTTP_METHODS } from '@/constants/http-methods';
-import { createTask, deleteTask, updateTask } from '@/services/task.services';
+import { taskService } from '@/services/task.service';
 import { TaskFormData } from '@/types/tasks.types';
 import { ActionFunction } from 'react-router';
 
@@ -23,7 +23,7 @@ export const taskAction: ActionFunction = async ({ request }) => {
         );
       }
 
-      const task = await createTask(data);
+      const task = await taskService.createTask(data);
 
       return new Response(
         JSON.stringify({
@@ -55,7 +55,7 @@ export const taskAction: ActionFunction = async ({ request }) => {
       }
 
       const { id, ...updateData } = data;
-      const task = await updateTask(id, updateData);
+      const task = await taskService.updateTask(id, updateData);
 
       return new Response(
         JSON.stringify({
@@ -86,7 +86,7 @@ export const taskAction: ActionFunction = async ({ request }) => {
         );
       }
 
-      await deleteTask(data.id);
+      await taskService.deleteTask(data.id);
 
       return new Response(
         JSON.stringify({

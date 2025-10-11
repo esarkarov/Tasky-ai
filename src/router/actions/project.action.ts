@@ -1,8 +1,8 @@
 import { HTTP_METHODS } from '@/constants/http-methods';
 import { ROUTES } from '@/constants/routes';
-import { generateProjectTasks } from '@/services/ai.services';
+import { aiService } from '@/services/ai.service';
 import { projectService } from '@/services/project.service';
-import { createTasksForProject } from '@/services/task.services';
+import { taskService } from '@/services/task.service';
 import { ProjectFormData } from '@/types/projects.types';
 import type { ActionFunction } from 'react-router';
 import { redirect } from 'react-router';
@@ -30,10 +30,10 @@ export const projectAction: ActionFunction = async ({ request }) => {
       const project = await projectService.createProject(data);
 
       if (data.ai_task_gen && data.task_gen_prompt) {
-        const aiTasks = await generateProjectTasks(data.task_gen_prompt);
+        const aiTasks = await aiService.generateProjectTasks(data.task_gen_prompt);
 
         if (aiTasks.length > 0) {
-          await createTasksForProject(project.$id, aiTasks);
+          await taskService.createTasksForProject(project.$id, aiTasks);
         }
       }
 

@@ -16,6 +16,21 @@ export interface TaskFormData {
   completed?: boolean;
   projectId: string | null;
 }
+
+export interface TaskCreateData {
+  content: string;
+  due_date: Date | null;
+  completed: boolean;
+  projectId: string | null;
+  userId: string;
+}
+
+export interface TaskUpdateData {
+  content: string;
+  due_date: Date | null;
+  completed?: boolean;
+  projectId: string | null;
+}
 export interface AIGeneratedTask {
   content: string;
   due_date?: Date | null;
