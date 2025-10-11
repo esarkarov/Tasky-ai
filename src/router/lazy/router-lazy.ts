@@ -6,7 +6,6 @@ export const AppTemplate = async () =>
   createElement((await import('@/components/templates/AppTemplate/AppTemplate')).AppTemplate);
 
 export const HomePage = async () => createElement((await import('@/pages/HomePage/HomePage')).HomePage);
-export const ErrorPage = async () => createElement((await import('@/pages/ErrorPage/ErrorPage')).ErrorPage);
 export const LoginPage = async () => createElement((await import('@/pages/LoginPage/LoginPage')).LoginPage);
 export const RegisterPage = async () => createElement((await import('@/pages/RegisterPage/RegisterPage')).RegisterPage);
 export const AuthSyncPage = async () => createElement((await import('@/pages/AuthSyncPage/AuthSyncPage')).AuthSyncPage);
