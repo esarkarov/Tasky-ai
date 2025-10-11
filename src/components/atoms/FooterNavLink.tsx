@@ -14,7 +14,7 @@ export const FooterNavLink = ({ href, index, label }: FooterNavLinkProps) => {
     <li className="flex items-center">
       <a
         href={href}
-        className="text-sm text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+        className="text-sm text-muted-foreground transition-colors duration-200 hover:text-foreground"
         target="_blank"
         rel="noopener noreferrer"
         aria-label={label}>

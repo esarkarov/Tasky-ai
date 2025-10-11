@@ -9,11 +9,11 @@ export const RootTemplate = memo(() => {
   const isLoading = state === 'loading' && !formData;
 
   return (
-    <div className="relative isolate flex min-h-[100dvh] flex-col overflow-hidden">
+    <div className="relative isolate flex flex-col overflow-hidden bg-background">
       <Header />
       <main
         id="main-content"
-        className="grow grid grid-cols-1 items-center pt-36 pb-16"
+        className="grow grid grid-cols-1 items-center pt-36 pb-24 md:pt-40 md:pb-28"
         tabIndex={-1}
         aria-busy={isLoading}
         aria-live="polite">
@@ -21,11 +21,12 @@ export const RootTemplate = memo(() => {
       </main>
       <Footer />
       <div
-        className="absolute top-20 left-0 h-10 w-80 origin-top-left rotate-45 bg-primary/20 blur-3xl"
+        className="absolute top-20 left-0 h-[500px] w-[500px] origin-top-left rotate-45 bg-primary/15 blur-[140px] pointer-events-none animate-pulse"
         aria-hidden="true"
       />
       <div
-        className="absolute top-20 right-0 h-10 w-80 origin-top-right -rotate-45 bg-primary/20 blur-3xl"
+        className="absolute top-20 right-0 h-[500px] w-[500px] origin-top-right -rotate-45 bg-orange-500/15 blur-[140px] pointer-events-none animate-pulse"
+        style={{ animationDelay: '1s' }}
         aria-hidden="true"
       />
       {isLoading && <Loader />}
