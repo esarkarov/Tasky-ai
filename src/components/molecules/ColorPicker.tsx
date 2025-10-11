@@ -13,9 +13,10 @@ interface ColorPickerProps {
   colorName: string;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   handleSelect: (value: string) => void;
+  disabled: boolean;
 }
 
-export const ColorPicker = ({ isOpen, setIsOpen, colorName, colorHex, handleSelect }: ColorPickerProps) => {
+export const ColorPicker = ({ isOpen, setIsOpen, colorName, colorHex, handleSelect, disabled }: ColorPickerProps) => {
   return (
     <div>
       <Label htmlFor="color">Color</Label>
@@ -31,6 +32,7 @@ export const ColorPicker = ({ isOpen, setIsOpen, colorName, colorHex, handleSele
             className="w-full mt-2 justify-between"
             aria-haspopup="listbox"
             aria-expanded={isOpen}
+            disabled={disabled}
             aria-label={`Select project color (currently ${colorName})`}>
             <Circle
               fill={colorHex}
@@ -53,6 +55,7 @@ export const ColorPicker = ({ isOpen, setIsOpen, colorName, colorHex, handleSele
             <CommandInput
               placeholder="Search color..."
               aria-label="Search color"
+              disabled={disabled}
             />
             <CommandList>
               <ScrollArea>

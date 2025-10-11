@@ -13,7 +13,7 @@ interface ProjectFormDialogProps {
 
 export const ProjectFormDialog = ({ defaultFormData, children, method }: ProjectFormDialogProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const { saveProject } = useProjectOperations({
+  const { saveProject, formState } = useProjectOperations({
     onSuccess: () => setIsOpen(false),
     method: method,
   });
@@ -31,6 +31,7 @@ export const ProjectFormDialog = ({ defaultFormData, children, method }: Project
           defaultFormData={defaultFormData}
           onCancel={() => setIsOpen(false)}
           onSubmit={saveProject}
+          formState={formState}
         />
       </DialogContent>
     </Dialog>

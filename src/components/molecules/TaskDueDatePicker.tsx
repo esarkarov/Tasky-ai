@@ -8,11 +8,12 @@ import { SetStateAction, useState } from 'react';
 
 interface TaskDueDatePickerProps {
   dueDate: Date | null;
+  disabled: boolean;
   onDateChange: (date: SetStateAction<Date | null>) => void;
   onDateRemove: () => void;
 }
 
-export const TaskDueDatePicker = ({ dueDate, onDateChange, onDateRemove }: TaskDueDatePickerProps) => {
+export const TaskDueDatePicker = ({ dueDate, disabled, onDateChange, onDateRemove }: TaskDueDatePickerProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const handleDateSelect = (selectedDate: Date | undefined) => {
@@ -35,7 +36,8 @@ export const TaskDueDatePicker = ({ dueDate, onDateChange, onDateRemove }: TaskD
             aria-haspopup="dialog"
             aria-expanded={isOpen}
             aria-controls="due-date-calendar"
-            className={cn(getTaskDueDateColorClass(dueDate, false))}>
+            className={cn(getTaskDueDateColorClass(dueDate, false))}
+            disabled={disabled}>
             <CalendarIcon aria-hidden="true" />
             <span className="ml-1">{dueDate ? formatCustomDate(dueDate) : 'Due date'}</span>
           </Button>

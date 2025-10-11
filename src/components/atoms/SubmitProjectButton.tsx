@@ -3,15 +3,15 @@ import { Button } from '@/components/ui/button';
 
 interface SubmitProjectButtonProps {
   mode: CrudMode;
-  isFormValid: boolean;
+  disabled: boolean;
   handleSubmit: () => void;
 }
 
-export const SubmitProjectButton = ({ mode, isFormValid, handleSubmit }: SubmitProjectButtonProps) => {
+export const SubmitProjectButton = ({ mode, disabled, handleSubmit }: SubmitProjectButtonProps) => {
   return (
     <Button
       type="submit"
-      disabled={!isFormValid}
+      disabled={!disabled}
       onClick={handleSubmit}
       aria-label={mode === 'create' ? 'Add project' : 'Save project'}>
       {mode === 'create' ? 'Add' : 'Save'}

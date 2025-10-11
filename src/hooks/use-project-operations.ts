@@ -21,6 +21,7 @@ export const useProjectOperations = (params: UseProjectOperationsParams = {}): U
   const { state, location } = useNavigation();
   const [searchStatus, setSearchState] = useState<SearchStatus>('idle');
   const searchTimeout = useRef<NodeJS.Timeout | null>(null);
+  const formState = fetcher.state !== 'idle';
   const isViewingProject = pathname === ROUTES.PROJECT(projectData?.id as string);
   const isNavigating = state === 'loading' && location?.pathname === ROUTES.PROJECTS;
 
@@ -139,7 +140,8 @@ export const useProjectOperations = (params: UseProjectOperationsParams = {}): U
     saveProject,
     deleteProject,
     searchProjects,
-    searchStatus: isNavigating ? 'searching' : searchStatus,
     fetcher,
+    formState,
+    searchStatus: isNavigating ? 'searching' : searchStatus,
   };
 };

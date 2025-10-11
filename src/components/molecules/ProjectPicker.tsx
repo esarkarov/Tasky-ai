@@ -12,9 +12,16 @@ interface ProjectPickerProps {
   setProjectId: (value: string | null) => void;
   projectInfo: ProjectInfo;
   projects: ProjectsListResponse;
+  disabled: boolean;
 }
 
-export const ProjectPicker = ({ projectInfo, projects, setProjectId, setProjectInfo }: ProjectPickerProps) => {
+export const ProjectPicker = ({
+  projectInfo,
+  projects,
+  setProjectId,
+  setProjectInfo,
+  disabled,
+}: ProjectPickerProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   return (
@@ -30,7 +37,8 @@ export const ProjectPicker = ({ projectInfo, projects, setProjectId, setProjectI
           aria-expanded={isOpen}
           aria-haspopup="listbox"
           aria-label="Select project"
-          className="max-w-max">
+          className="max-w-max"
+          disabled={disabled}>
           {projectInfo.name ? (
             <Hash
               color={projectInfo.colorHex}

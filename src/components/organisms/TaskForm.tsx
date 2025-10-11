@@ -5,6 +5,7 @@ import { TaskFormActions } from '@/components/molecules/TaskFormActions';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { DEFAULT_TASK_FORM_DATA } from '@/constants/defaults';
+import { useTaskOperations } from '@/hooks/use-task-operations';
 import { cn } from '@/lib/utils';
 import { ProjectsLoaderData } from '@/types/loaders.types';
 import { Project, ProjectInfo } from '@/types/projects.types';
@@ -30,10 +31,14 @@ export const TaskForm = ({
   onCancel,
   onSubmit,
 }: TaskFormProps) => {
+  const { formState } = useTaskOperations({
+    onSuccess: onCancel,
+  });
   const { projects } = useLoaderData<ProjectsLoaderData>();
   const [taskContent, setTaskContent] = useState(defaultFormData.content);
   const [dueDate, setDueDate] = useState(defaultFormData.due_date);
   const [projectId, setProjectId] = useState(defaultFormData.projectId);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [projectInfo, setProjectInfo] = useState<ProjectInfo>({
     name: '',
     colorHex: '',
@@ -77,12 +82,18 @@ export const TaskForm = ({
   }, [taskContent]);
 
   const handleSubmit = useCallback(async () => {
-    if (onSubmit) {
-      await onSubmit(formData, defaultFormData.id);
+    if (onSubmit && !isSubmitting) {
+      setIsSubmitting(true);
+      try {
+        await onSubmit(formData, defaultFormData.id);
+        setDueDate(null);
+        setProjectId(null);
+        setTaskContent('');
+      } finally {
+        setIsSubmitting(false);
+      }
     }
-    setDueDate(null);
-    setTaskContent('');
-  }, [onSubmit, defaultFormData.id, formData]);
+  }, [onSubmit, defaultFormData.id, formData, isSubmitting]);
 
   useEffect(() => {
     const listener = (event: KeyboardEvent) => {
@@ -96,13 +107,19 @@ export const TaskForm = ({
     return () => document.removeEventListener('keydown', listener);
   }, [handleSubmit]);
 
-  const isFormValid = taskContent.trim().length > 0;
+  const isDisabled = taskContent.trim().length > 0;
+  const isPending = isSubmitting || formState;
 
   return (
     <Card
       role="form"
       aria-labelledby="task-form-title"
-      className={cn('focus-within:border-foreground/30', className)}>
+      aria-busy={isPending}
+      className={cn(
+        'focus-within:border-foreground/30 transition-opacity',
+        isPending && 'animate-pulse pointer-events-none',
+        className
+      )}>
       <CardContent className="p-2">
         <h2
           id="task-form-title"
@@ -112,11 +129,13 @@ export const TaskForm = ({
         <TaskContentInput
           value={taskContent}
           onChange={setTaskContent}
+          disabled={isPending}
         />
         <TaskDueDatePicker
           dueDate={dueDate as Date}
           onDateChange={setDueDate}
           onDateRemove={() => setDueDate(null)}
+          disabled={isPending}
         />
       </CardContent>
       <Separator />
@@ -126,9 +145,10 @@ export const TaskForm = ({
           setProjectId={setProjectId}
           projectInfo={projectInfo}
           projects={projects}
+          disabled={isPending}
         />
         <TaskFormActions
-          isFormValid={isFormValid}
+          disabled={isDisabled}
           mode={mode}
           onCancel={onCancel}
           onSubmit={handleSubmit}

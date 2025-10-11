@@ -11,11 +11,13 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { useTaskOperations } from '@/hooks/use-task-operations';
 import { truncateString } from '@/lib/utils';
-import { EntityType } from '@/types/shared.types';
 import { ProjectBase } from '@/types/projects.types';
+import { EntityType } from '@/types/shared.types';
 import { Task } from '@/types/tasks.types';
-import { Trash2 } from 'lucide-react';
+import { Loader2, Trash2 } from 'lucide-react';
+import { useCallback, useState } from 'react';
 
 interface ConfirmationDialogProps {
   selectedItem: Task | ProjectBase;
@@ -24,11 +26,29 @@ interface ConfirmationDialogProps {
 }
 
 export const ConfirmationDialog = ({ selectedItem, onDelete, entityType }: ConfirmationDialogProps) => {
-  const isTask = entityType === 'task';
+  const { formState } = useTaskOperations();
+  const [isDeleting, setIsDeleting] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   const itemLabel = 'content' in selectedItem ? selectedItem.content : selectedItem.name;
+  const isTask = entityType === 'task';
+
+  const handleDelete = useCallback(async () => {
+    if (onDelete && !isDeleting) {
+      setIsDeleting(true);
+      try {
+        await onDelete(selectedItem.id as string);
+        setIsOpen(false);
+      } finally {
+        setIsDeleting(false);
+      }
+    }
+  }, [isDeleting, onDelete, selectedItem.id]);
+  const isPending = isDeleting || formState;
 
   return (
-    <AlertDialog>
+    <AlertDialog
+      open={isOpen}
+      onOpenChange={setIsOpen}>
       <Tooltip>
         <TooltipTrigger asChild>
           <AlertDialogTrigger asChild>
@@ -37,7 +57,8 @@ export const ConfirmationDialog = ({ selectedItem, onDelete, entityType }: Confi
                 variant="ghost"
                 size="icon"
                 className="h-6 w-6 text-muted-foreground"
-                aria-label="Delete task">
+                aria-label="Delete task"
+                disabled={isDeleting}>
                 <Trash2 aria-hidden="true" />
               </Button>
             ) : (
@@ -45,7 +66,8 @@ export const ConfirmationDialog = ({ selectedItem, onDelete, entityType }: Confi
                 variant="ghost"
                 size="sm"
                 className="w-full justify-start px-2 !text-destructive"
-                aria-label="Delete project">
+                aria-label="Delete project"
+                disabled={isDeleting}>
                 <Trash2 aria-hidden="true" /> <span>Delete</span>
               </Button>
             )}
@@ -56,7 +78,9 @@ export const ConfirmationDialog = ({ selectedItem, onDelete, entityType }: Confi
 
       <AlertDialogContent
         role="alertdialog"
-        aria-describedby="delete-description">
+        aria-describedby="delete-description"
+        aria-busy={isPending}
+        className={isPending ? 'opacity-60 pointer-events-none transition-opacity' : ''}>
         <AlertDialogHeader>
           <AlertDialogTitle>Delete {isTask ? 'task' : 'project'}?</AlertDialogTitle>
           <AlertDialogDescription id="delete-description">
@@ -65,11 +89,23 @@ export const ConfirmationDialog = ({ selectedItem, onDelete, entityType }: Confi
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel aria-label="Cancel deletion">Cancel</AlertDialogCancel>
+          <AlertDialogCancel
+            aria-label="Cancel deletion"
+            disabled={isPending}>
+            Cancel
+          </AlertDialogCancel>
           <AlertDialogAction
             aria-label={`Confirm delete ${isTask ? 'task' : 'project'}`}
-            onClick={() => onDelete(selectedItem.id as string)}>
-            Delete
+            onClick={handleDelete}
+            disabled={isPending}
+            className="gap-2">
+            {isPending && (
+              <Loader2
+                className="h-4 w-4 animate-spin"
+                aria-hidden="true"
+              />
+            )}
+            {isPending ? 'Deleting...' : 'Delete'}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

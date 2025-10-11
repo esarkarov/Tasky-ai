@@ -15,6 +15,7 @@ export interface UseProjectOperationsResult {
   searchProjects: (e: React.ChangeEvent<HTMLInputElement>) => void;
   searchStatus: SearchStatus;
   fetcher: ReturnType<typeof useFetcher>;
+  formState: boolean;
 }
 
 export interface UseTaskOperationsParams {
@@ -28,4 +29,5 @@ export interface UseTaskOperationsResult {
   toggleTaskComplete: (taskId: string, completed: boolean) => Promise<void>;
   deleteTask: (taskId: string) => Promise<void>;
   fetcher: ReturnType<typeof useFetcher>;
+  formState: boolean;
 }

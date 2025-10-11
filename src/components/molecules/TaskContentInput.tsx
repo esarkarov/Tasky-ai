@@ -4,10 +4,11 @@ import { CONTENT_WARNING_THRESHOLD, MAX_CONTENT_LENGTH } from '@/constants/valid
 
 interface TaskContentInputProps {
   value: string;
+  disabled: boolean;
   onChange: (value: string) => void;
 }
 
-export const TaskContentInput = ({ value, onChange }: TaskContentInputProps) => {
+export const TaskContentInput = ({ value, onChange, disabled }: TaskContentInputProps) => {
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
@@ -26,11 +27,12 @@ export const TaskContentInput = ({ value, onChange }: TaskContentInputProps) => 
         id="task-content"
         className="mb-2 p-1"
         placeholder="After finishing the project, take a tour"
-        autoFocus
         maxLength={MAX_CONTENT_LENGTH}
         value={value}
+        disabled={disabled}
         onInput={(e) => onChange(e.currentTarget.value)}
         onKeyDown={handleKeyDown}
+        autoFocus
         aria-label="Task content input"
         aria-multiline="true"
       />

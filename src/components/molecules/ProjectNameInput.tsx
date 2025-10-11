@@ -7,9 +7,10 @@ interface ProjectNameInputProps {
   value: string;
   onChange: (value: string) => void;
   onKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+  disabled: boolean;
 }
 
-export const ProjectNameInput = ({ value, onChange, onKeyDown }: ProjectNameInputProps) => {
+export const ProjectNameInput = ({ value, onChange, onKeyDown, disabled }: ProjectNameInputProps) => {
   return (
     <div>
       <Label htmlFor="project_name">Project name</Label>
@@ -19,6 +20,7 @@ export const ProjectNameInput = ({ value, onChange, onKeyDown }: ProjectNameInpu
         className="mt-2 mb-1"
         placeholder="Enter project name (e.g. Performance Tracker)"
         value={value}
+        disabled={disabled}
         maxLength={MAX_NAME_LENGTH}
         onInput={(e) => onChange(e.currentTarget.value)}
         onKeyDown={onKeyDown}

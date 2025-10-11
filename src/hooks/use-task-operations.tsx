@@ -14,6 +14,7 @@ export const useTaskOperations = (params: UseTaskOperationsParams = {}): UseTask
   const { onSuccess, enableUndo = true } = params;
   const { toast } = useToast();
   const fetcher = useFetcher();
+  const formState = fetcher.state !== 'idle';
 
   const showToast = useCallback(
     (message: string, duration = Infinity) => {
@@ -178,5 +179,6 @@ export const useTaskOperations = (params: UseTaskOperationsParams = {}): UseTask
     toggleTaskComplete,
     deleteTask,
     fetcher,
+    formState,
   };
 };

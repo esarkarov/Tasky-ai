@@ -19,7 +19,7 @@ export const AppTemplate = memo(() => {
           <AppSidebar />
           <main
             id="main-content"
-            className={cn('flex-1 focus:outline-none', isLoading && 'pointer-events-none opacity-50')}
+            className={cn('flex-1 focus:outline-none', isLoading && 'pointer-events-none animate-pulse opacity-50')}
             tabIndex={-1}
             aria-busy={isLoading}
             aria-live="polite">
