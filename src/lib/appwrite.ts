@@ -1,8 +1,8 @@
 import { env } from '@/config/env.config';
-import { Client, Databases, ID, Query } from 'appwrite';
+import { Client, Databases } from 'appwrite';
 
 const client = new Client().setEndpoint(env.appwriteEndpoint).setProject(env.appwriteProjectId);
 
 const databases = new Databases(client);
 
-export { databases, ID, Query };
+export { databases };

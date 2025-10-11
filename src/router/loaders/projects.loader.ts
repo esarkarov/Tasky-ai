@@ -1,11 +1,11 @@
-import { getProjects } from '@/services/project.services';
+import { projectService } from '@/services/project.service';
 import { ProjectsLoaderData } from '@/types/loaders.types';
 import type { LoaderFunction } from 'react-router';
 
 export const projectsLoader: LoaderFunction = async ({ request }): Promise<ProjectsLoaderData> => {
   const searchQuery = new URL(request.url).searchParams.get('q') || '';
 
-  const projects = await getProjects(searchQuery);
+  const projects = await projectService.getUserProjects(searchQuery);
 
   return { projects };
 };

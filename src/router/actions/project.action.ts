@@ -1,7 +1,7 @@
 import { HTTP_METHODS } from '@/constants/http-methods';
 import { ROUTES } from '@/constants/routes';
 import { generateProjectTasks } from '@/services/ai.services';
-import { createProject, deleteProject, updateProject } from '@/services/project.services';
+import { projectService } from '@/services/project.service';
 import { createTasksForProject } from '@/services/task.services';
 import { ProjectFormData } from '@/types/projects.types';
 import type { ActionFunction } from 'react-router';
@@ -27,7 +27,7 @@ export const projectAction: ActionFunction = async ({ request }) => {
         );
       }
 
-      const project = await createProject(data);
+      const project = await projectService.createProject(data);
 
       if (data.ai_task_gen && data.task_gen_prompt) {
         const aiTasks = await generateProjectTasks(data.task_gen_prompt);
@@ -37,7 +37,7 @@ export const projectAction: ActionFunction = async ({ request }) => {
         }
       }
 
-      return redirect(ROUTES.PROJECT(project.$id));
+      return redirect(ROUTES.PROJECT(project?.$id));
     }
 
     if (method === HTTP_METHODS.PUT) {
@@ -57,7 +57,7 @@ export const projectAction: ActionFunction = async ({ request }) => {
       }
 
       const { id, ...updateData } = data;
-      const project = await updateProject(id, updateData);
+      const project = await projectService.updateProject(id, updateData);
 
       return new Response(
         JSON.stringify({
@@ -88,7 +88,7 @@ export const projectAction: ActionFunction = async ({ request }) => {
         );
       }
 
-      await deleteProject(data.id);
+      await projectService.deleteProject(data.id);
 
       return new Response(
         JSON.stringify({

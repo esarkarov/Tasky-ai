@@ -15,6 +15,17 @@ export interface ProjectBase {
   color_name: string;
   color_hex: string;
 }
+export interface CreateProjectData {
+  name: string;
+  color_name: string;
+  color_hex: string;
+  userId: string;
+}
+export interface UpdateProjectData {
+  name: string;
+  color_name: string;
+  color_hex: string;
+}
 export interface ProjectFormData {
   id?: string | null;
   name: string;

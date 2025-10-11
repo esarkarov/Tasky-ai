@@ -1,7 +1,8 @@
 import { env } from '@/config/env.config';
-import { databases, Query } from '@/lib/appwrite';
+import { databases } from '@/lib/appwrite';
 import { generateID, getUserId } from '@/lib/utils';
 import { AIGeneratedTask, Task, TaskCounts, TaskFormData, TasksResponse } from '@/types/tasks.types';
+import { Query } from 'appwrite';
 import { startOfToday, startOfTomorrow } from 'date-fns';
 
 export const getUpcomingTasks = async (): Promise<TasksResponse> => {
