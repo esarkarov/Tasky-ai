@@ -1,34 +1,24 @@
 import { env } from '@/config/env.config';
 import { databases } from '@/lib/appwrite';
+import { projectQueries } from '@/queries/project.queries';
 import {
-  ProjectCreateData,
   Project,
+  ProjectCreateData,
   ProjectListItem,
   ProjectsListResponse,
   ProjectUpdateData,
 } from '@/types/projects.types';
-import { Query } from 'appwrite';
 
 export const projectRepository = {
   findById: (id: string): Promise<Project> =>
     databases.getDocument<Project>(env.appwriteDatabaseId, env.appwriteProjectsCollectionId, id),
 
-  listByUserId: (userId: string, options?: { search?: string; limit?: number }): Promise<ProjectsListResponse> => {
-    const queries = [
-      Query.select(['$id', 'name', 'color_name', 'color_hex', '$createdAt']),
-      Query.equal('userId', userId),
-      Query.orderDesc('$createdAt'),
-    ];
-
-    if (options?.search) {
-      queries.push(Query.contains('name', options.search));
-    }
-    if (options?.limit) {
-      queries.push(Query.limit(options.limit));
-    }
-
-    return databases.listDocuments<ProjectListItem>(env.appwriteDatabaseId, env.appwriteProjectsCollectionId, queries);
-  },
+  listByUserId: (userId: string, options?: { search?: string; limit?: number }): Promise<ProjectsListResponse> =>
+    databases.listDocuments<ProjectListItem>(
+      env.appwriteDatabaseId,
+      env.appwriteProjectsCollectionId,
+      projectQueries.userProjects(userId, options)
+    ),
 
   create: (id: string, data: ProjectCreateData): Promise<Project> =>
     databases.createDocument<Project>(env.appwriteDatabaseId, env.appwriteProjectsCollectionId, id, data),
