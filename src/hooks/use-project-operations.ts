@@ -9,7 +9,7 @@ import { SearchStatus } from '@/types/shared.types';
 import { UseProjectOperationsParams, UseProjectOperationsResult } from '@/types/hooks.types';
 import { ProjectFormData } from '@/types/projects.types';
 import { useCallback, useMemo, useRef, useState } from 'react';
-import { useFetcher, useLocation, useNavigate } from 'react-router';
+import { useFetcher, useLocation, useNavigate, useNavigation } from 'react-router';
 
 export const useProjectOperations = (params: UseProjectOperationsParams = {}): UseProjectOperationsResult => {
   const { method = 'POST', projectData, onSuccess } = params;
@@ -18,9 +18,11 @@ export const useProjectOperations = (params: UseProjectOperationsParams = {}): U
   const { pathname } = useLocation();
   const fetcher = useFetcher();
   const navigate = useNavigate();
+  const { state, location } = useNavigation();
   const [searchStatus, setSearchState] = useState<SearchStatus>('idle');
   const searchTimeout = useRef<NodeJS.Timeout | null>(null);
   const isViewingProject = pathname === ROUTES.PROJECT(projectData?.id as string);
+  const isNavigating = state === 'loading' && location?.pathname === ROUTES.PROJECTS;
 
   const operationMessages = useMemo(
     () => (method === 'POST' ? PROJECT_TOAST_CONTENTS.CREATE : PROJECT_TOAST_CONTENTS.UPDATE),
@@ -118,24 +120,26 @@ export const useProjectOperations = (params: UseProjectOperationsParams = {}): U
       if (searchTimeout.current) {
         clearTimeout(searchTimeout.current);
       }
-      const submitTarget = e.currentTarget.form;
 
-      searchTimeout.current = setTimeout(async () => {
+      const searchValue = e.target.value;
+
+      searchTimeout.current = setTimeout(() => {
         setSearchState('searching');
-        await fetcher.submit(submitTarget);
-        setSearchState('idle');
+        const url = searchValue ? `${ROUTES.PROJECTS}?q=${encodeURIComponent(searchValue)}` : ROUTES.PROJECTS;
+        navigate(url);
+        setTimeout(() => setSearchState('idle'), 100);
       }, TIMING.DELAY_DURATION);
 
       setSearchState('loading');
     },
-    [fetcher]
+    [navigate]
   );
 
   return {
     saveProject,
     deleteProject,
     searchProjects,
-    searchStatus,
+    searchStatus: isNavigating ? 'searching' : searchStatus,
     fetcher,
   };
 };
