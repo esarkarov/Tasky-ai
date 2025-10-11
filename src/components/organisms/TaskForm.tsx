@@ -30,9 +30,7 @@ export const TaskForm = ({
   onCancel,
   onSubmit,
 }: TaskFormProps) => {
-  const {
-    projects: { documents },
-  } = useLoaderData<ProjectsLoaderData>();
+  const { projects } = useLoaderData<ProjectsLoaderData>();
   const [taskContent, setTaskContent] = useState(defaultFormData.content);
   const [dueDate, setDueDate] = useState(defaultFormData.due_date);
   const [projectId, setProjectId] = useState(defaultFormData.projectId);
@@ -48,7 +46,7 @@ export const TaskForm = ({
 
   useEffect(() => {
     if (projectId) {
-      const project = documents.find(({ $id }) => projectId === $id) as Project;
+      const project = projects?.documents.find(({ $id }) => projectId === $id) as Project;
       if (project) {
         setProjectInfo({
           name: project.name,
@@ -56,7 +54,7 @@ export const TaskForm = ({
         });
       }
     }
-  }, [projectId, documents]);
+  }, [projectId, projects?.documents]);
 
   useEffect(() => {
     setFormData((prevFormData) => ({
@@ -127,7 +125,7 @@ export const TaskForm = ({
           setProjectInfo={setProjectInfo}
           setProjectId={setProjectId}
           projectInfo={projectInfo}
-          projects={documents}
+          projects={projects}
         />
         <TaskFormActions
           isFormValid={isFormValid}

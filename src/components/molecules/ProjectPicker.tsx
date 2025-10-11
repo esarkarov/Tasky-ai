@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandList } from '@/components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { ProjectInfo, ProjectListItem } from '@/types/projects.types';
+import { ProjectInfo, ProjectsListResponse } from '@/types/projects.types';
 import { ChevronDown, Hash, Inbox } from 'lucide-react';
 import { SetStateAction, useState } from 'react';
 
@@ -11,7 +11,7 @@ interface ProjectPickerProps {
   setProjectInfo: (value: SetStateAction<ProjectInfo>) => void;
   setProjectId: (value: string | null) => void;
   projectInfo: ProjectInfo;
-  projects: ProjectListItem[];
+  projects: ProjectsListResponse;
 }
 
 export const ProjectPicker = ({ projectInfo, projects, setProjectId, setProjectInfo }: ProjectPickerProps) => {
@@ -61,7 +61,7 @@ export const ProjectPicker = ({ projectInfo, projects, setProjectId, setProjectI
             <ScrollArea>
               <CommandEmpty>No project found.</CommandEmpty>
               <CommandGroup>
-                {projects.map(({ $id, name, color_hex }) => {
+                {projects?.documents.map(({ $id, name, color_hex }) => {
                   const isSelected = projectInfo.name === name;
 
                   const handleProjectSelect = () => {
