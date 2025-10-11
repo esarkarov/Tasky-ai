@@ -1,5 +1,6 @@
 import { env } from '@/config/env.config';
 import { databases } from '@/lib/appwrite';
+import { generateID } from '@/lib/utils';
 import { taskQueries } from '@/queries/task.queries';
 import { Task, TaskCreateData, TasksResponse, TaskUpdateData } from '@/types/tasks.types';
 
@@ -46,8 +47,14 @@ export const taskRepository = {
       taskQueries.upcomingTasks(todayDate, userId)
     ),
 
-  createMany: (id: string, inputs: TaskCreateData[]): Promise<Task[]> =>
-    Promise.all(inputs.map((input) => taskRepository.create(id, input))),
+  createMany: (tasks: Array<TaskCreateData & { id?: string }>): Promise<Task[]> =>
+    Promise.all(
+      tasks.map((task) => {
+        const { id, ...data } = task;
+        const docId = id ?? generateID();
+        return taskRepository.create(docId, data as TaskCreateData);
+      })
+    ),
 
   create: (id: string, data: TaskCreateData): Promise<Task> =>
     databases.createDocument<Task>(env.appwriteDatabaseId, env.appwriteTasksCollectionId, id, data),

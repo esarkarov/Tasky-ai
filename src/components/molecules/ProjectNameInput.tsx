@@ -17,6 +17,7 @@ export const ProjectNameInput = ({ value, onChange, onKeyDown }: ProjectNameInpu
         type="text"
         id="project_name"
         className="mt-2 mb-1"
+        placeholder="Enter project name (e.g. Performance Tracker)"
         value={value}
         maxLength={MAX_NAME_LENGTH}
         onInput={(e) => onChange(e.currentTarget.value)}

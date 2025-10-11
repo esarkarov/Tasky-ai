@@ -101,7 +101,7 @@ export const taskService = {
         userId,
       }));
 
-      const docs = await taskRepository.createMany(generateID(), mapedTasks);
+      const docs = await taskRepository.createMany(mapedTasks);
 
       return docs;
     } catch (error) {

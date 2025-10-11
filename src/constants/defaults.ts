@@ -12,7 +12,7 @@ export const DEFAULT_TASK_FORM_DATA: TaskFormData = {
 
 export const DEFAULT_PROJECT_FORM_DATA: ProjectBase = {
   id: null,
-  name: 'Untitled',
+  name: '',
   color_name: 'Slate',
   color_hex: '#64748b',
 } as const;
