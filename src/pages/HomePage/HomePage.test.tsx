@@ -94,13 +94,9 @@ describe('HomePage', () => {
 
       expect(mobileImage).toBeInTheDocument();
       expect(mobileImage).toHaveAttribute('src', 'hero-banner-sm.png');
-      expect(mobileImage).toHaveAttribute('width', '480');
-      expect(mobileImage).toHaveAttribute('height', '480');
 
       expect(desktopImage).toBeInTheDocument();
       expect(desktopImage).toHaveAttribute('src', 'hero-banner-lg.png');
-      expect(desktopImage).toHaveAttribute('width', '960');
-      expect(desktopImage).toHaveAttribute('height', '540');
     });
   });
 

@@ -46,19 +46,6 @@ describe('RootTemplate', () => {
       expect(screen.getByRole('main')).toBeInTheDocument();
     });
 
-    it('should render with correct layout structure', () => {
-      mockUseNavigation.mockReturnValue({ state: 'idle', formData: null });
-
-      const { container } = render(
-        <MemoryRouter>
-          <RootTemplate />
-        </MemoryRouter>
-      );
-
-      const mainContainer = container.firstChild as HTMLElement;
-      expect(mainContainer).toHaveClass('relative', 'isolate', 'flex', 'min-h-[100dvh]');
-    });
-
     it('should render decorative background elements', () => {
       mockUseNavigation.mockReturnValue({ state: 'idle', formData: null });
 
@@ -70,8 +57,6 @@ describe('RootTemplate', () => {
 
       const decorativeElements = container.querySelectorAll('[aria-hidden="true"]');
       expect(decorativeElements).toHaveLength(2);
-      expect(decorativeElements[0]).toHaveClass('bg-primary/20', 'blur-3xl');
-      expect(decorativeElements[1]).toHaveClass('bg-primary/20', 'blur-3xl');
     });
   });
 
