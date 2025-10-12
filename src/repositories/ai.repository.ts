@@ -1,5 +1,5 @@
 import { DEFAULT_GEMINI_MODEL } from '@/constants/defaults';
-import { genAI } from '@/lib/googleAI';
+import { genAI } from '@/lib/google-ai';
 import { GenerateContentResponse } from '@google/genai';
 
 export const aiRepository = {
