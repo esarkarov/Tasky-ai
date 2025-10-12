@@ -1,5 +1,6 @@
 import { HTTP_METHODS } from '@/constants/http-methods';
 import { ROUTES } from '@/constants/routes';
+import { errorResponse, successResponse } from '@/lib/utils';
 import { aiService } from '@/services/ai.service';
 import { projectService } from '@/services/project.service';
 import { taskService } from '@/services/task.service';
@@ -7,123 +8,70 @@ import { ProjectFormData } from '@/types/projects.types';
 import type { ActionFunction } from 'react-router';
 import { redirect } from 'react-router';
 
+const handleCreateProject = async (request: Request) => {
+  const data = (await request.json()) as ProjectFormData;
+
+  if (!data.name || data.name.trim().length === 0) {
+    return errorResponse('Project name is required', 400);
+  }
+
+  const project = await projectService.createProject(data);
+
+  if (data.ai_task_gen && data.task_gen_prompt) {
+    const aiTasks = await aiService.generateProjectTasks(data.task_gen_prompt);
+
+    if (aiTasks.length > 0) {
+      await taskService.createTasksForProject(project.$id, aiTasks);
+    }
+  }
+
+  return redirect(ROUTES.PROJECT(project.$id));
+};
+
+const handleUpdateProject = async (request: Request) => {
+  const data = (await request.json()) as ProjectFormData;
+
+  if (!data.id) {
+    return errorResponse('Project ID is required', 400);
+  }
+
+  const { id, ...updateData } = data;
+  const project = await projectService.updateProject(id, updateData);
+
+  return successResponse('Project updated successfully', { project });
+};
+
+const handleDeleteProject = async (request: Request) => {
+  const data = (await request.json()) as { id: string };
+
+  if (!data.id) {
+    return errorResponse('Project ID is required', 400);
+  }
+
+  await projectService.deleteProject(data.id);
+
+  return successResponse('Project deleted successfully');
+};
+
 export const projectAction: ActionFunction = async ({ request }) => {
   const method = request.method;
 
   try {
-    if (method === HTTP_METHODS.POST) {
-      const data = (await request.json()) as ProjectFormData;
+    switch (method) {
+      case HTTP_METHODS.POST:
+        return await handleCreateProject(request);
 
-      if (!data.name || data.name.trim().length === 0) {
-        return new Response(
-          JSON.stringify({
-            success: false,
-            message: 'Project name is required',
-          }),
-          {
-            status: 400,
-            headers: { 'Content-Type': 'application/json' },
-          }
-        );
-      }
+      case HTTP_METHODS.PUT:
+        return await handleUpdateProject(request);
 
-      const project = await projectService.createProject(data);
+      case HTTP_METHODS.DELETE:
+        return await handleDeleteProject(request);
 
-      if (data.ai_task_gen && data.task_gen_prompt) {
-        const aiTasks = await aiService.generateProjectTasks(data.task_gen_prompt);
-
-        if (aiTasks.length > 0) {
-          await taskService.createTasksForProject(project.$id, aiTasks);
-        }
-      }
-
-      return redirect(ROUTES.PROJECT(project?.$id));
+      default:
+        return errorResponse('Method not allowed', 405);
     }
-
-    if (method === HTTP_METHODS.PUT) {
-      const data = (await request.json()) as ProjectFormData;
-
-      if (!data.id) {
-        return new Response(
-          JSON.stringify({
-            success: false,
-            message: 'Project ID is required',
-          }),
-          {
-            status: 400,
-            headers: { 'Content-Type': 'application/json' },
-          }
-        );
-      }
-
-      const { id, ...updateData } = data;
-      const project = await projectService.updateProject(id, updateData);
-
-      return new Response(
-        JSON.stringify({
-          success: true,
-          project,
-          message: 'Project updated successfully',
-        }),
-        {
-          status: 200,
-          headers: { 'Content-Type': 'application/json' },
-        }
-      );
-    }
-
-    if (method === HTTP_METHODS.DELETE) {
-      const data = (await request.json()) as { id: string };
-
-      if (!data.id) {
-        return new Response(
-          JSON.stringify({
-            success: false,
-            message: 'Project ID is required',
-          }),
-          {
-            status: 400,
-            headers: { 'Content-Type': 'application/json' },
-          }
-        );
-      }
-
-      await projectService.deleteProject(data.id);
-
-      return new Response(
-        JSON.stringify({
-          success: true,
-          message: 'Project deleted successfully',
-        }),
-        {
-          status: 200,
-          headers: { 'Content-Type': 'application/json' },
-        }
-      );
-    }
-
-    return new Response(
-      JSON.stringify({
-        success: false,
-        message: 'Method not allowed',
-      }),
-      {
-        status: 405,
-        headers: { 'Content-Type': 'application/json' },
-      }
-    );
   } catch (error) {
-    console.error('Project action error:', error);
-
-    return new Response(
-      JSON.stringify({
-        success: false,
-        message: error instanceof Error ? error.message : 'Failed to process request',
-      }),
-      {
-        status: 500,
-        headers: { 'Content-Type': 'application/json' },
-      }
-    );
+    const message = error instanceof Error ? error.message : 'Failed to process request';
+    return errorResponse(message, 500);
   }
 };

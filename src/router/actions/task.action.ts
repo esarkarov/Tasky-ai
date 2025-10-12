@@ -1,121 +1,65 @@
 import { HTTP_METHODS } from '@/constants/http-methods';
+import { errorResponse, successResponse } from '@/lib/utils';
 import { taskService } from '@/services/task.service';
 import { TaskFormData } from '@/types/tasks.types';
 import { ActionFunction } from 'react-router';
+
+const handleCreateTask = async (request: Request) => {
+  const data = (await request.json()) as TaskFormData;
+
+  if (!data.content || data.content.trim().length === 0) {
+    return errorResponse('Task content is required', 400);
+  }
+
+  const task = await taskService.createTask(data);
+
+  return successResponse('Task created successfully', { task }, 201);
+};
+
+const handleUpdateTask = async (request: Request) => {
+  const data = (await request.json()) as TaskFormData;
+
+  if (!data.id) {
+    return errorResponse('Task ID is required', 400);
+  }
+
+  const { id, ...updateData } = data;
+  const task = await taskService.updateTask(id, updateData);
+
+  return successResponse('Task updated successfully', { task });
+};
+
+const handleDeleteTask = async (request: Request) => {
+  const data = (await request.json()) as { id: string };
+
+  if (!data.id) {
+    return errorResponse('Task ID is required', 400);
+  }
+
+  await taskService.deleteTask(data.id);
+
+  return successResponse('Task deleted successfully');
+};
 
 export const taskAction: ActionFunction = async ({ request }) => {
   const method = request.method;
 
   try {
-    if (method === HTTP_METHODS.POST) {
-      const data = (await request.json()) as TaskFormData;
+    switch (method) {
+      case HTTP_METHODS.POST:
+        return await handleCreateTask(request);
 
-      if (!data.content || data.content.trim().length === 0) {
-        return new Response(
-          JSON.stringify({
-            success: false,
-            message: 'Task content is required',
-          }),
-          {
-            status: 400,
-            headers: { 'Content-Type': 'application/json' },
-          }
-        );
-      }
+      case HTTP_METHODS.PUT:
+        return await handleUpdateTask(request);
 
-      const task = await taskService.createTask(data);
+      case HTTP_METHODS.DELETE:
+        return await handleDeleteTask(request);
 
-      return new Response(
-        JSON.stringify({
-          success: true,
-          task,
-          message: 'Task created successfully',
-        }),
-        {
-          status: 201,
-          headers: { 'Content-Type': 'application/json' },
-        }
-      );
+      default:
+        return errorResponse('Method not allowed', 405);
     }
-
-    if (method === HTTP_METHODS.PUT) {
-      const data = (await request.json()) as TaskFormData;
-
-      if (!data.id) {
-        return new Response(
-          JSON.stringify({
-            success: false,
-            message: 'Task ID is required',
-          }),
-          {
-            status: 400,
-            headers: { 'Content-Type': 'application/json' },
-          }
-        );
-      }
-
-      const { id, ...updateData } = data;
-      const task = await taskService.updateTask(id, updateData);
-
-      return new Response(
-        JSON.stringify({
-          success: true,
-          task,
-          message: 'Task updated successfully',
-        }),
-        {
-          status: 200,
-          headers: { 'Content-Type': 'application/json' },
-        }
-      );
-    }
-
-    if (method === HTTP_METHODS.DELETE) {
-      const data = (await request.json()) as { id: string };
-
-      if (!data.id) {
-        return new Response(
-          JSON.stringify({
-            success: false,
-            message: 'Task ID is required',
-          }),
-          {
-            status: 400,
-            headers: { 'Content-Type': 'application/json' },
-          }
-        );
-      }
-
-      await taskService.deleteTask(data.id);
-
-      return new Response(
-        JSON.stringify({
-          success: true,
-          message: 'Task deleted successfully',
-        }),
-        {
-          status: 200,
-          headers: { 'Content-Type': 'application/json' },
-        }
-      );
-    }
-
-    return new Response(JSON.stringify({ success: false, message: 'Method not allowed' }), {
-      status: 405,
-      headers: { 'Content-Type': 'application/json' },
-    });
   } catch (error) {
-    console.error('Task action error:', error);
-
-    return new Response(
-      JSON.stringify({
-        success: false,
-        message: error instanceof Error ? error.message : 'Failed to process request',
-      }),
-      {
-        status: 500,
-        headers: { 'Content-Type': 'application/json' },
-      }
-    );
+    const message = error instanceof Error ? error.message : 'Failed to process request';
+    return errorResponse(message, 500);
   }
 };
