@@ -8,8 +8,9 @@ import { truncateString } from '@/lib/utils';
 import { SearchStatus } from '@/types/shared.types';
 import { UseProjectOperationsParams, UseProjectOperationsResult } from '@/types/hooks.types';
 import { ProjectFormData } from '@/types/projects.types';
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useFetcher, useLocation, useNavigate, useNavigation } from 'react-router';
+import { buildProjectSuccessDescription, buildSearchUrl, executeWithToast } from '@/utils/operation.utils';
 
 export const useProjectOperations = (params: UseProjectOperationsParams = {}): UseProjectOperationsResult => {
   const { method = 'POST', projectData, onSuccess } = params;
@@ -19,119 +20,77 @@ export const useProjectOperations = (params: UseProjectOperationsParams = {}): U
   const fetcher = useFetcher();
   const navigate = useNavigate();
   const { state, location } = useNavigation();
-  const [searchStatus, setSearchState] = useState<SearchStatus>('idle');
-  const searchTimeout = useRef<NodeJS.Timeout | null>(null);
-  const formState = fetcher.state !== 'idle';
-  const isViewingProject = pathname === ROUTES.PROJECT(projectData?.id as string);
-  const isNavigating = state === 'loading' && location?.pathname === ROUTES.PROJECTS;
+
+  const [searchStatus, setSearchStatus] = useState<SearchStatus>('idle');
+  const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const isFormBusy = fetcher.state !== 'idle';
+  const isViewingCurrentProject = pathname === ROUTES.PROJECT(projectData?.id as string);
+  const isNavigatingToProjects = state === 'loading' && location?.pathname === ROUTES.PROJECTS;
 
   const operationMessages = useMemo(
     () => (method === 'POST' ? PROJECT_TOAST_CONTENTS.CREATE : PROJECT_TOAST_CONTENTS.UPDATE),
     [method]
   );
 
-  const showToast = useCallback(
-    (message: string, duration = Infinity) => {
-      return toast({ title: message, duration });
-    },
-    [toast]
-  );
-
-  const getSuccessDescription = useCallback(
-    (projectName: string, hasAiGen: boolean): string => {
-      const truncatedName = truncateString(projectName, MAX_TRUNCATE_LENGTH);
-      const aiTaskInfo = hasAiGen ? ' and its tasks' : '';
-      const action = method === 'POST' ? 'created' : 'updated';
-      return `The project ${truncatedName}${aiTaskInfo} ${hasAiGen ? 'have' : 'has'} been successfully ${action}.`;
-    },
-    [method]
-  );
+  useEffect(() => {
+    return () => {
+      if (searchTimeoutRef.current) {
+        clearTimeout(searchTimeoutRef.current);
+      }
+    };
+  }, []);
 
   const saveProject = useCallback(
     async (formData: ProjectFormData): Promise<void> => {
       if (!formData) return;
 
-      const { id, update } = showToast(operationMessages.LOADING);
-
-      try {
-        await fetcher.submit(JSON.stringify(formData), {
+      const operation = () =>
+        fetcher.submit(JSON.stringify(formData), {
           action: ROUTES.PROJECTS,
           method,
           encType: 'application/json',
         });
 
-        update({
-          id,
-          title: operationMessages.SUCCESS,
-          description: getSuccessDescription(formData.name, formData.ai_task_gen ?? false),
-          duration: TIMING.TOAST_DURATION,
-        });
+      const description = buildProjectSuccessDescription(formData.name, formData.ai_task_gen, method);
 
-        onSuccess?.();
-      } catch {
-        update({
-          id,
-          title: operationMessages.ERROR,
-          description: operationMessages.ERROR_DESC,
-          duration: TIMING.TOAST_DURATION,
-          variant: 'destructive',
-        });
-      }
+      await executeWithToast(operation, toast, operationMessages, description, onSuccess);
     },
-    [fetcher, method, operationMessages, showToast, getSuccessDescription, onSuccess]
+    [fetcher, method, operationMessages, toast, onSuccess]
   );
 
   const deleteProject = useCallback(async (): Promise<void> => {
     if (!projectData) return;
 
-    if (isViewingProject) {
+    if (isViewingCurrentProject) {
       navigate(ROUTES.INBOX);
     }
 
-    const { id, update } = showToast(PROJECT_TOAST_CONTENTS.DELETE.LOADING);
-
-    try {
-      await fetcher.submit(JSON.stringify(projectData), {
+    const operation = () =>
+      fetcher.submit(JSON.stringify(projectData), {
         action: ROUTES.PROJECTS,
         method: HTTP_METHODS.DELETE,
         encType: 'application/json',
       });
 
-      update({
-        id,
-        title: PROJECT_TOAST_CONTENTS.DELETE.SUCCESS,
-        description: `The project ${truncateString(projectData.name, MAX_TRUNCATE_LENGTH)} has been successfully deleted.`,
-        duration: TIMING.TOAST_DURATION,
-      });
+    const description = `The project ${truncateString(projectData.name, MAX_TRUNCATE_LENGTH)} has been successfully deleted.`;
 
-      onSuccess?.();
-    } catch {
-      update({
-        id,
-        title: PROJECT_TOAST_CONTENTS.DELETE.ERROR,
-        description: PROJECT_TOAST_CONTENTS.DELETE.ERROR_DESC,
-        duration: TIMING.TOAST_DURATION,
-        variant: 'destructive',
-      });
-    }
-  }, [projectData, isViewingProject, showToast, navigate, fetcher, onSuccess]);
+    await executeWithToast(operation, toast, PROJECT_TOAST_CONTENTS.DELETE, description, onSuccess);
+  }, [projectData, isViewingCurrentProject, navigate, fetcher, toast, onSuccess]);
 
   const searchProjects = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>): void => {
-      if (searchTimeout.current) {
-        clearTimeout(searchTimeout.current);
+      if (searchTimeoutRef.current) {
+        clearTimeout(searchTimeoutRef.current);
       }
+      const searchValue = e.target.value.trim();
+      setSearchStatus('loading');
 
-      const searchValue = e.target.value;
-
-      searchTimeout.current = setTimeout(() => {
-        setSearchState('searching');
-        const url = searchValue ? `${ROUTES.PROJECTS}?q=${encodeURIComponent(searchValue)}` : ROUTES.PROJECTS;
-        navigate(url);
-        setTimeout(() => setSearchState('idle'), 100);
+      searchTimeoutRef.current = setTimeout(() => {
+        setSearchStatus('searching');
+        navigate(buildSearchUrl(ROUTES.PROJECTS, searchValue));
+        setTimeout(() => setSearchStatus('idle'), 100);
       }, TIMING.DELAY_DURATION);
-
-      setSearchState('loading');
     },
     [navigate]
   );
@@ -141,7 +100,7 @@ export const useProjectOperations = (params: UseProjectOperationsParams = {}): U
     deleteProject,
     searchProjects,
     fetcher,
-    formState,
-    searchStatus: isNavigating ? 'searching' : searchStatus,
+    formState: isFormBusy,
+    searchStatus: isNavigatingToProjects ? 'searching' : searchStatus,
   };
 };

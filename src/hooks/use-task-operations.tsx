@@ -1,12 +1,12 @@
 import { ToastAction } from '@/components/ui/toast';
-import { TASK_TOAST_CONTENTS } from '@/constants/ui-contents';
 import { HTTP_METHODS } from '@/constants/http-methods';
 import { ROUTES } from '@/constants/routes';
 import { TIMING } from '@/constants/timing';
+import { TASK_TOAST_CONTENTS } from '@/constants/ui-contents';
 import { useToast } from '@/hooks/use-toast';
-import { truncateString } from '@/lib/utils';
 import { UseTaskOperationsParams, UseTaskOperationsResult } from '@/types/hooks.types';
 import { TaskFormData } from '@/types/tasks.types';
+import { buildTaskSuccessDescription, executeWithToast } from '@/utils/operation.utils';
 import { useCallback } from 'react';
 import { useFetcher } from 'react-router';
 
@@ -14,61 +14,32 @@ export const useTaskOperations = (params: UseTaskOperationsParams = {}): UseTask
   const { onSuccess, enableUndo = true } = params;
   const { toast } = useToast();
   const fetcher = useFetcher();
-  const formState = fetcher.state !== 'idle';
-
-  const showToast = useCallback(
-    (message: string, duration = Infinity) => {
-      return toast({ title: message, duration });
-    },
-    [toast]
-  );
-
-  const getSuccessDescription = useCallback((content: string, baseMessage: string): string => {
-    const truncatedContent = truncateString(content, 50);
-    return `${baseMessage} "${truncatedContent}"`;
-  }, []);
+  const isFormBusy = fetcher.state !== 'idle';
 
   const createTask = useCallback(
     async (formData: TaskFormData): Promise<void> => {
       if (!formData) return;
 
-      const { id, update } = showToast(TASK_TOAST_CONTENTS.CREATE.LOADING);
-
-      try {
-        await fetcher.submit(JSON.stringify(formData), {
+      const operation = () =>
+        fetcher.submit(JSON.stringify(formData), {
           action: ROUTES.APP,
           method: HTTP_METHODS.POST,
           encType: 'application/json',
         });
-        onSuccess?.();
 
-        update({
-          id,
-          title: TASK_TOAST_CONTENTS.CREATE.SUCCESS,
-          description: getSuccessDescription(formData.content, 'Task created:'),
-          duration: TIMING.TOAST_DURATION,
-        });
-      } catch {
-        update({
-          id,
-          title: TASK_TOAST_CONTENTS.CREATE.ERROR,
-          description: TASK_TOAST_CONTENTS.CREATE.ERROR_DESC,
-          duration: TIMING.TOAST_DURATION,
-          variant: 'destructive',
-        });
-      }
+      const description = buildTaskSuccessDescription(formData.content, 'Task created:');
+
+      await executeWithToast(operation, toast, TASK_TOAST_CONTENTS.CREATE, description, onSuccess);
     },
-    [showToast, fetcher, onSuccess, getSuccessDescription]
+    [toast, onSuccess, fetcher]
   );
 
   const updateTask = useCallback(
     async (formData: TaskFormData, taskId?: string): Promise<void> => {
       if (!taskId && !formData.id) return;
 
-      const { id, update } = showToast(TASK_TOAST_CONTENTS.UPDATE.LOADING);
-
-      try {
-        await fetcher.submit(
+      const operation = () =>
+        fetcher.submit(
           JSON.stringify({
             ...formData,
             id: taskId || formData.id,
@@ -79,25 +50,12 @@ export const useTaskOperations = (params: UseTaskOperationsParams = {}): UseTask
             encType: 'application/json',
           }
         );
-        onSuccess?.();
 
-        update({
-          id,
-          title: TASK_TOAST_CONTENTS.UPDATE.SUCCESS,
-          description: getSuccessDescription(formData.content, 'Task updated:'),
-          duration: TIMING.TOAST_DURATION,
-        });
-      } catch {
-        update({
-          id,
-          title: TASK_TOAST_CONTENTS.UPDATE.ERROR,
-          description: TASK_TOAST_CONTENTS.UPDATE.ERROR_DESC,
-          duration: TIMING.TOAST_DURATION,
-          variant: 'destructive',
-        });
-      }
+      const description = buildTaskSuccessDescription(formData.content, 'Task updated:');
+
+      await executeWithToast(operation, toast, TASK_TOAST_CONTENTS.UPDATE, description, onSuccess);
     },
-    [showToast, fetcher, onSuccess, getSuccessDescription]
+    [toast, onSuccess, fetcher]
   );
 
   const toggleTaskComplete = useCallback(
@@ -145,32 +103,16 @@ export const useTaskOperations = (params: UseTaskOperationsParams = {}): UseTask
     async (taskId: string): Promise<void> => {
       if (!taskId) return;
 
-      const { id, update } = showToast(TASK_TOAST_CONTENTS.DELETE.LOADING);
-
-      try {
-        await fetcher.submit(JSON.stringify({ id: taskId }), {
+      const operation = () =>
+        fetcher.submit(JSON.stringify({ id: taskId }), {
           action: ROUTES.APP,
           method: HTTP_METHODS.DELETE,
           encType: 'application/json',
         });
 
-        update({
-          id,
-          title: TASK_TOAST_CONTENTS.DELETE.SUCCESS,
-          description: TASK_TOAST_CONTENTS.DELETE.SUCCESS_DESC,
-          duration: TIMING.TOAST_DURATION,
-        });
-      } catch {
-        update({
-          id,
-          title: TASK_TOAST_CONTENTS.DELETE.ERROR,
-          description: TASK_TOAST_CONTENTS.DELETE.ERROR_DESC,
-          duration: TIMING.TOAST_DURATION,
-          variant: 'destructive',
-        });
-      }
+      await executeWithToast(operation, toast, TASK_TOAST_CONTENTS.DELETE, TASK_TOAST_CONTENTS.DELETE.SUCCESS_DESC);
     },
-    [fetcher, showToast]
+    [fetcher, toast]
   );
 
   return {
@@ -179,6 +121,6 @@ export const useTaskOperations = (params: UseTaskOperationsParams = {}): UseTask
     toggleTaskComplete,
     deleteTask,
     fetcher,
-    formState,
+    formState: isFormBusy,
   };
 };
