@@ -190,15 +190,19 @@ jobs:
           node-version: '20'
           cache: 'npm'
 
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-output
+          path: dist/
+
       - name: Install dependencies
         run: npm ci --legacy-peer-deps
-
-      - name: Build project
-        run: npm run build
 
       - name: Start application server
         run: |
           npm run dev &
+          sleep 10
           echo "Application started on http://localhost:5174"
 
       - name: Run OWASP ZAP Full Scan
@@ -207,3 +211,4 @@ jobs:
           target: 'http://localhost:5174'
           rules_file_name: '.zap/rules.tsv'
           cmd_options: '-a'
+          allow_issue_writing: false
