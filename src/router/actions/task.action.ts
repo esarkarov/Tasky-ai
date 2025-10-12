@@ -1,7 +1,7 @@
 import { HTTP_METHODS } from '@/constants/http-methods';
-import { errorResponse, successResponse } from '@/lib/utils';
 import { taskService } from '@/services/task.service';
 import { TaskFormData } from '@/types/tasks.types';
+import { errorResponse, successResponse } from '@/utils/response.utils';
 import { ActionFunction } from 'react-router';
 
 const handleCreateTask = async (request: Request) => {

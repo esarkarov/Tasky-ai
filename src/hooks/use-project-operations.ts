@@ -4,7 +4,7 @@ import { ROUTES } from '@/constants/routes';
 import { TIMING } from '@/constants/timing';
 import { MAX_TRUNCATE_LENGTH } from '@/constants/validation';
 import { useToast } from '@/hooks/use-toast';
-import { truncateString } from '@/lib/utils';
+import { truncateString } from '@/utils/text.utils';
 import { SearchStatus } from '@/types/shared.types';
 import { UseProjectOperationsParams, UseProjectOperationsResult } from '@/types/hooks.types';
 import { ProjectFormData } from '@/types/projects.types';

@@ -1,10 +1,10 @@
 import { HTTP_METHODS } from '@/constants/http-methods';
 import { ROUTES } from '@/constants/routes';
-import { errorResponse, successResponse } from '@/lib/utils';
 import { aiService } from '@/services/ai.service';
 import { projectService } from '@/services/project.service';
 import { taskService } from '@/services/task.service';
 import { ProjectFormData } from '@/types/projects.types';
+import { errorResponse, successResponse } from '@/utils/response.utils';
 import type { ActionFunction } from 'react-router';
 import { redirect } from 'react-router';
 

@@ -1,5 +1,5 @@
 import { Input } from '@/components/ui/input';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/ui.utils';
 import { SearchStatus } from '@/types/shared.types';
 import { Loader2, Search } from 'lucide-react';
 import { ChangeEventHandler } from 'react';

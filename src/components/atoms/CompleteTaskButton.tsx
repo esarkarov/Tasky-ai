@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { useTaskOperations } from '@/hooks/use-task-operations';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/ui.utils';
 import { Task } from '@/types/tasks.types';
 import { Check } from 'lucide-react';
 

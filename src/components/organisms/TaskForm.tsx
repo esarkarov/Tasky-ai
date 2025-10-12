@@ -6,7 +6,7 @@ import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { DEFAULT_TASK_FORM_DATA } from '@/constants/defaults';
 import { useTaskOperations } from '@/hooks/use-task-operations';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/ui.utils';
 import { ProjectsLoaderData } from '@/types/loaders.types';
 import { Project, ProjectInfo } from '@/types/projects.types';
 import { CrudMode } from '@/types/shared.types';

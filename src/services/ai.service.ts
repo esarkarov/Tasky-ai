@@ -1,4 +1,4 @@
-import { generateContents } from '@/lib/utils';
+import { generateContents } from '@/utils/ai.utils';
 import { aiRepository } from '@/repositories/ai.repository';
 import { AIGeneratedTask } from '@/types/tasks.types';
 

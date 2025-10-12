@@ -1,7 +1,7 @@
 import { AppBarTitle } from '@/components/atoms/AppBarTitle';
 import { ToggleSidebarButton } from '@/components/atoms/ToggleSidebarButton';
 import { TIMING } from '@/constants/timing';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/ui.utils';
 import { useEffect, useState } from 'react';
 
 interface TopAppBarProps {

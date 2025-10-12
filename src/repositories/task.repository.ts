@@ -1,8 +1,8 @@
 import { env } from '@/config/env.config';
 import { databases } from '@/lib/appwrite';
-import { generateID } from '@/lib/utils';
 import { taskQueries } from '@/queries/task.queries';
 import { Task, TaskCreateData, TasksResponse, TaskUpdateData } from '@/types/tasks.types';
+import { generateID } from '@/utils/text.utils';
 
 export const taskRepository = {
   getTodayCountByUserId: (todayDate: string, tomorrowDate: string, userId: string): Promise<TasksResponse> =>

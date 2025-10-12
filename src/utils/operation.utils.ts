@@ -1,7 +1,7 @@
 import { TIMING } from '@/constants/timing';
 import { MAX_TRUNCATE_LENGTH } from '@/constants/validation';
 import { Toast } from '@/hooks/use-toast';
-import { truncateString } from '@/lib/utils';
+import { truncateString } from '@/utils/text.utils';
 import { HttpMethod } from '@/types/shared.types';
 import { ToastHandler, ToastMessages } from '@/types/toast.types';
 

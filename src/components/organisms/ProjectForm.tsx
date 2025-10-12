@@ -9,7 +9,7 @@ import { DEFAULT_PROJECT_FORM_DATA } from '@/constants/defaults';
 import { CrudMode } from '@/types/shared.types';
 import { ProjectBase, ProjectFormData } from '@/types/projects.types';
 import { useCallback, useMemo, useState } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/ui.utils';
 
 interface ProjectFormProps {
   onSubmit: (formData: ProjectFormData) => Promise<void>;
