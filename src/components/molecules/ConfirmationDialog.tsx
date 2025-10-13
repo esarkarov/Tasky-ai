@@ -12,7 +12,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useTaskOperations } from '@/hooks/use-task-operations';
-import { truncateString } from '@/utils/text.utils';
+import { truncateString } from '@/utils/text/text.utils';
 import { ProjectBase } from '@/types/projects.types';
 import { EntityType } from '@/types/shared.types';
 import { Task } from '@/types/tasks.types';

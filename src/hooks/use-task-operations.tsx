@@ -6,7 +6,7 @@ import { TASK_TOAST_CONTENTS } from '@/constants/ui-contents';
 import { useToast } from '@/hooks/use-toast';
 import { UseTaskOperationsParams, UseTaskOperationsResult } from '@/types/hooks.types';
 import { TaskFormData } from '@/types/tasks.types';
-import { buildTaskSuccessDescription, executeWithToast } from '@/utils/operation.utils';
+import { buildTaskSuccessDescription, executeWithToast } from '@/utils/operation/operation.utils';
 import { useCallback } from 'react';
 import { useFetcher } from 'react-router';
 

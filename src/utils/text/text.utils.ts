@@ -1,8 +1,12 @@
 export function toTitleCase(str: string): string {
-  return str[0].toUpperCase() + str.slice(1);
+  if (!str) return '';
+
+  return str[0]?.toUpperCase() + str.slice(1);
 }
 
 export function truncateString(str: string, maxLength: number): string {
+  if (!str) return '';
+
   if (str.length > maxLength) {
     return `${str.slice(0, maxLength - 1)}...`;
   }

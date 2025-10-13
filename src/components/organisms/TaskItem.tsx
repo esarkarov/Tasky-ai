@@ -2,7 +2,7 @@ import { CompleteTaskButton } from '@/components/atoms/CompleteTaskButton';
 import { TaskActions } from '@/components/molecules/TaskActions';
 import { TaskMeta } from '@/components/molecules/TaskMeta';
 import { Card, CardContent } from '@/components/ui/card';
-import { cn } from '@/utils/ui.utils';
+import { cn } from '@/utils/ui/ui.utils';
 import { Project } from '@/types/projects.types';
 import { Task } from '@/types/tasks.types';
 

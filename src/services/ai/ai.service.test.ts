@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { aiService } from './ai.service';
 import { aiRepository } from '@/repositories/ai/ai.repository';
-import { generateContents } from '@/utils/ai.utils';
+import { generateContents } from '@/utils/ai/ai.utils';
 import { AIGeneratedTask } from '@/types/tasks.types';
 
 vi.mock('@/repositories/ai/ai.repository', () => ({
@@ -9,7 +9,7 @@ vi.mock('@/repositories/ai/ai.repository', () => ({
     generateContent: vi.fn(),
   },
 }));
-vi.mock('@/utils/ai.utils', () => ({
+vi.mock('@/utils/ai/ai.utils', () => ({
   generateContents: vi.fn(),
 }));
 

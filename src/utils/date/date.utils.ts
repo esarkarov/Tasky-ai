@@ -1,5 +1,5 @@
 import { WEEKDAYS } from '@/constants/weekdays';
-import { toTitleCase } from '@/utils/text.utils';
+import { toTitleCase } from '@/utils/text/text.utils';
 import { format, formatRelative, isSameYear } from 'date-fns';
 
 export function formatCustomDate(date: string | number | Date): string {

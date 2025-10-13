@@ -1,7 +1,7 @@
 import { projectRepository } from '@/repositories/project/project.repository';
 import { Project, ProjectFormData, ProjectsListResponse } from '@/types/projects.types';
-import { getUserId } from '@/utils/auth.utils';
-import { generateID } from '@/utils/text.utils';
+import { getUserId } from '@/utils/auth/auth.utils';
+import { generateID } from '@/utils/text/text.utils';
 
 export const projectService = {
   getProjectById: async (projectId: string): Promise<Project> => {

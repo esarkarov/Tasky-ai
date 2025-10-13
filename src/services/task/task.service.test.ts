@@ -1,7 +1,7 @@
 import { taskRepository } from '@/repositories/task/task.repository';
 import { AIGeneratedTask, Task, TaskFormData, TasksResponse } from '@/types/tasks.types';
-import { getUserId } from '@/utils/auth.utils';
-import { generateID } from '@/utils/text.utils';
+import { getUserId } from '@/utils/auth/auth.utils';
+import { generateID } from '@/utils/text/text.utils';
 import { startOfToday, startOfTomorrow } from 'date-fns';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { taskService } from './task.service';
@@ -20,10 +20,10 @@ vi.mock('@/repositories/task/task.repository', () => ({
     delete: vi.fn(),
   },
 }));
-vi.mock('@/utils/auth.utils', () => ({
+vi.mock('@/utils/auth/auth.utils', () => ({
   getUserId: vi.fn(),
 }));
-vi.mock('@/utils/text.utils', () => ({
+vi.mock('@/utils/text/text.utils', () => ({
   generateID: vi.fn(),
 }));
 vi.mock('date-fns', () => ({

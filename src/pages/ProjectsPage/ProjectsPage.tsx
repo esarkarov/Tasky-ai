@@ -8,7 +8,7 @@ import { TopAppBar } from '@/components/organisms/TopAppBar';
 import { Button } from '@/components/ui/button';
 import { ROUTES } from '@/constants/routes';
 import { useProjectOperations } from '@/hooks/use-project-operations';
-import { cn } from '@/utils/ui.utils';
+import { cn } from '@/utils/ui/ui.utils';
 import { ProjectsLoaderData } from '@/types/loaders.types';
 import { FolderKanban, Plus } from 'lucide-react';
 import { useLoaderData } from 'react-router';

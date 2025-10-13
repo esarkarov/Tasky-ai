@@ -2,7 +2,7 @@ import { AppSidebar } from '@/components/organisms/AppSidebar';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { TIMING } from '@/constants/timing';
-import { cn } from '@/utils/ui.utils';
+import { cn } from '@/utils/ui/ui.utils';
 import { memo } from 'react';
 import { Outlet, useNavigation } from 'react-router';
 

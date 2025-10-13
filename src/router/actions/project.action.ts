@@ -4,7 +4,7 @@ import { aiService } from '@/services/ai/ai.service';
 import { projectService } from '@/services/project/project.service';
 import { taskService } from '@/services/task/task.service';
 import { ProjectFormData } from '@/types/projects.types';
-import { errorResponse, successResponse } from '@/utils/response.utils';
+import { errorResponse, successResponse } from '@/utils/response/response.utils';
 import type { ActionFunction } from 'react-router';
 import { redirect } from 'react-router';
 

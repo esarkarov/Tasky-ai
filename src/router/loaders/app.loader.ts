@@ -1,7 +1,7 @@
 import { ROUTES } from '@/constants/routes';
 import { projectService } from '@/services/project/project.service';
 import { taskService } from '@/services/task/task.service';
-import { getUserId } from '@/utils/auth.utils';
+import { getUserId } from '@/utils/auth/auth.utils';
 import type { LoaderFunction } from 'react-router';
 import { redirect } from 'react-router';
 

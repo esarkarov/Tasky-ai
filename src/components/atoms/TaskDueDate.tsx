@@ -1,6 +1,6 @@
-import { cn } from '@/utils/ui.utils';
-import { formatCustomDate } from '@/utils/date.utils';
-import { getTaskDueDateColorClass } from '@/utils/ui.utils';
+import { cn } from '@/utils/ui/ui.utils';
+import { formatCustomDate } from '@/utils/date/date.utils';
+import { getTaskDueDateColorClass } from '@/utils/ui/ui.utils';
 import { CalendarDays } from 'lucide-react';
 
 interface DueDateProps {

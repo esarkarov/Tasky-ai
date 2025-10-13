@@ -4,13 +4,13 @@ import { ROUTES } from '@/constants/routes';
 import { TIMING } from '@/constants/timing';
 import { MAX_TRUNCATE_LENGTH } from '@/constants/validation';
 import { useToast } from '@/hooks/use-toast';
-import { truncateString } from '@/utils/text.utils';
+import { truncateString } from '@/utils/text/text.utils';
 import { SearchStatus } from '@/types/shared.types';
 import { UseProjectOperationsParams, UseProjectOperationsResult } from '@/types/hooks.types';
 import { ProjectFormData } from '@/types/projects.types';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useFetcher, useLocation, useNavigate, useNavigation } from 'react-router';
-import { buildProjectSuccessDescription, buildSearchUrl, executeWithToast } from '@/utils/operation.utils';
+import { buildProjectSuccessDescription, buildSearchUrl, executeWithToast } from '@/utils/operation/operation.utils';
 
 export const useProjectOperations = (params: UseProjectOperationsParams = {}): UseProjectOperationsResult => {
   const { method = 'POST', projectData, onSuccess } = params;

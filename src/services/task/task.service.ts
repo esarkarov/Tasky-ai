@@ -1,7 +1,7 @@
 import { taskRepository } from '@/repositories/task/task.repository';
 import { AIGeneratedTask, Task, TaskCounts, TaskFormData, TasksResponse } from '@/types/tasks.types';
-import { getUserId } from '@/utils/auth.utils';
-import { generateID } from '@/utils/text.utils';
+import { getUserId } from '@/utils/auth/auth.utils';
+import { generateID } from '@/utils/text/text.utils';
 import { startOfToday, startOfTomorrow } from 'date-fns';
 
 export const taskService = {

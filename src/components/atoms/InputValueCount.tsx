@@ -1,4 +1,4 @@
-import { cn } from '@/utils/ui.utils';
+import { cn } from '@/utils/ui/ui.utils';
 
 interface InputValueCountProps {
   value: string;

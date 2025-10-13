@@ -1,8 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { projectService } from './project.service';
 import { projectRepository } from '@/repositories/project/project.repository';
-import { getUserId } from '@/utils/auth.utils';
-import { generateID } from '@/utils/text.utils';
+import { getUserId } from '@/utils/auth/auth.utils';
+import { generateID } from '@/utils/text/text.utils';
 import { Project, ProjectsListResponse, ProjectFormData, ProjectListItem } from '@/types/projects.types';
 
 vi.mock('@/repositories/project/project.repository', () => ({
@@ -14,10 +14,10 @@ vi.mock('@/repositories/project/project.repository', () => ({
     update: vi.fn(),
   },
 }));
-vi.mock('@/utils/auth.utils', () => ({
+vi.mock('@/utils/auth/auth.utils', () => ({
   getUserId: vi.fn(),
 }));
-vi.mock('@/utils/text.utils', () => ({
+vi.mock('@/utils/text/text.utils', () => ({
   generateID: vi.fn(),
 }));
 

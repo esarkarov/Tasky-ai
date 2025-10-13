@@ -3,7 +3,7 @@ import { taskRepository } from './task.repository';
 import { databases } from '@/lib/appwrite';
 import { env } from '@/config/env.config';
 import { taskQueries } from '@/queries/task/task.queries';
-import { generateID } from '@/utils/text.utils';
+import { generateID } from '@/utils/text/text.utils';
 import { Task, TasksResponse, TaskCreateData, TaskUpdateData } from '@/types/tasks.types';
 
 vi.mock('@/lib/appwrite', () => ({
@@ -34,7 +34,7 @@ vi.mock('@/queries/task/task.queries', () => ({
   },
 }));
 
-vi.mock('@/utils/text.utils', () => ({
+vi.mock('@/utils/text/text.utils', () => ({
   generateID: vi.fn(),
 }));
 
