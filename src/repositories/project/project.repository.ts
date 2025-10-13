@@ -1,6 +1,6 @@
 import { env } from '@/config/env.config';
 import { databases } from '@/lib/appwrite';
-import { projectQueries } from '@/queries/project.queries';
+import { projectQueries } from '@/queries/project/project.queries';
 import {
   Project,
   ProjectCreateData,

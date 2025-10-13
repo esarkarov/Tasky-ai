@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { taskRepository } from './task.repository';
 import { databases } from '@/lib/appwrite';
 import { env } from '@/config/env.config';
-import { taskQueries } from '@/queries/task.queries';
+import { taskQueries } from '@/queries/task/task.queries';
 import { generateID } from '@/utils/text.utils';
 import { Task, TasksResponse, TaskCreateData, TaskUpdateData } from '@/types/tasks.types';
 
@@ -23,7 +23,7 @@ vi.mock('@/config/env.config', () => ({
   },
 }));
 
-vi.mock('@/queries/task.queries', () => ({
+vi.mock('@/queries/task/task.queries', () => ({
   taskQueries: {
     todayCount: vi.fn(),
     inboxCount: vi.fn(),

@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { projectRepository } from './project.repository';
 import { databases } from '@/lib/appwrite';
 import { env } from '@/config/env.config';
-import { projectQueries } from '@/queries/project.queries';
+import { projectQueries } from '@/queries/project/project.queries';
 import { Project, ProjectsListResponse, ProjectCreateData, ProjectUpdateData } from '@/types/projects.types';
 
 vi.mock('@/lib/appwrite', () => ({
@@ -20,7 +20,7 @@ vi.mock('@/config/env.config', () => ({
     appwriteProjectsCollectionId: 'test-projects',
   },
 }));
-vi.mock('@/queries/project.queries', () => ({
+vi.mock('@/queries/project/project.queries', () => ({
   projectQueries: {
     selectListFields: vi.fn(),
     byUserId: vi.fn(),

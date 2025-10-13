@@ -1,6 +1,6 @@
 import { env } from '@/config/env.config';
 import { databases } from '@/lib/appwrite';
-import { taskQueries } from '@/queries/task.queries';
+import { taskQueries } from '@/queries/task/task.queries';
 import { Task, TaskCreateData, TasksResponse, TaskUpdateData } from '@/types/tasks.types';
 import { generateID } from '@/utils/text.utils';
 
