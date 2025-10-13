@@ -5,19 +5,25 @@ import { Task, TaskCreateData, TasksResponse, TaskUpdateData } from '@/types/tas
 import { generateID } from '@/utils/text.utils';
 
 export const taskRepository = {
-  getTodayCountByUserId: (todayDate: string, tomorrowDate: string, userId: string): Promise<TasksResponse> =>
-    databases.listDocuments<Task>(
+  getTodayCountByUserId: async (todayDate: string, tomorrowDate: string, userId: string): Promise<number> => {
+    const { total } = await databases.listDocuments<Task>(
       env.appwriteDatabaseId,
       env.appwriteTasksCollectionId,
       taskQueries.todayCount(todayDate, tomorrowDate, userId)
-    ),
+    );
 
-  getInboxCountByUserId: (userId: string): Promise<TasksResponse> =>
-    databases.listDocuments<Task>(
+    return total;
+  },
+
+  getInboxCountByUserId: async (userId: string): Promise<number> => {
+    const { total } = await databases.listDocuments<Task>(
       env.appwriteDatabaseId,
       env.appwriteTasksCollectionId,
       taskQueries.inboxCount(userId)
-    ),
+    );
+
+    return total;
+  },
 
   getCompleted: (userId: string): Promise<TasksResponse> =>
     databases.listDocuments<Task>(

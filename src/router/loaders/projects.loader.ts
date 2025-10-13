@@ -1,4 +1,4 @@
-import { projectService } from '@/services/project.service';
+import { projectService } from '@/services/project/project.service';
 import { ProjectsLoaderData } from '@/types/loaders.types';
 import type { LoaderFunction } from 'react-router';
 

@@ -1,5 +1,5 @@
 import { HTTP_METHODS } from '@/constants/http-methods';
-import { taskService } from '@/services/task.service';
+import { taskService } from '@/services/task/task.service';
 import { TaskFormData } from '@/types/tasks.types';
 import { errorResponse, successResponse } from '@/utils/response.utils';
 import { ActionFunction } from 'react-router';

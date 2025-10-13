@@ -59,7 +59,7 @@ export const taskService = {
   getInboxTaskCount: async (): Promise<number> => {
     const userId = getUserId();
     try {
-      const { total } = await taskRepository.getInboxCountByUserId(userId);
+      const total = await taskRepository.getInboxCountByUserId(userId);
 
       return total;
     } catch (error) {
@@ -73,7 +73,7 @@ export const taskService = {
     const todayDate = startOfToday().toISOString();
     const tomorrowDate = startOfTomorrow().toISOString();
     try {
-      const { total } = await taskRepository.getTodayCountByUserId(todayDate, tomorrowDate, userId);
+      const total = await taskRepository.getTodayCountByUserId(todayDate, tomorrowDate, userId);
 
       return total;
     } catch (error) {

@@ -1,4 +1,4 @@
-import { taskService } from '@/services/task.service';
+import { taskService } from '@/services/task/task.service';
 import { TasksLoaderData } from '@/types/loaders.types';
 import type { LoaderFunction } from 'react-router';
 

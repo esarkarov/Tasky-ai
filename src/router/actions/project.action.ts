@@ -1,8 +1,8 @@
 import { HTTP_METHODS } from '@/constants/http-methods';
 import { ROUTES } from '@/constants/routes';
-import { aiService } from '@/services/ai.service';
-import { projectService } from '@/services/project.service';
-import { taskService } from '@/services/task.service';
+import { aiService } from '@/services/ai/ai.service';
+import { projectService } from '@/services/project/project.service';
+import { taskService } from '@/services/task/task.service';
 import { ProjectFormData } from '@/types/projects.types';
 import { errorResponse, successResponse } from '@/utils/response.utils';
 import type { ActionFunction } from 'react-router';
