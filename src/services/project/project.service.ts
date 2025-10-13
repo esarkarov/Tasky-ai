@@ -1,4 +1,4 @@
-import { projectRepository } from '@/repositories/project.repository';
+import { projectRepository } from '@/repositories/project/project.repository';
 import { Project, ProjectFormData, ProjectsListResponse } from '@/types/projects.types';
 import { getUserId } from '@/utils/auth.utils';
 import { generateID } from '@/utils/text.utils';

@@ -2,15 +2,10 @@ import { Query } from 'appwrite';
 
 export const projectQueries = {
   selectListFields: () => Query.select(['$id', 'name', 'color_name', 'color_hex', '$createdAt']),
-
   byUserId: (userId: string) => Query.equal('userId', userId),
-
   searchByName: (searchTerm: string) => Query.contains('name', searchTerm),
-
   orderByCreatedDesc: () => Query.orderDesc('$createdAt'),
-
   limit: (count: number) => Query.limit(count),
-
   userProjects: (userId: string, options?: { search?: string; limit?: number }) => {
     const queries = [
       projectQueries.selectListFields(),

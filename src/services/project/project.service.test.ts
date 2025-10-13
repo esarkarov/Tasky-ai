@@ -1,11 +1,11 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { projectService } from './project.service';
-import { projectRepository } from '@/repositories/project.repository';
+import { projectRepository } from '@/repositories/project/project.repository';
 import { getUserId } from '@/utils/auth.utils';
 import { generateID } from '@/utils/text.utils';
 import { Project, ProjectsListResponse, ProjectFormData, ProjectListItem } from '@/types/projects.types';
 
-vi.mock('@/repositories/project.repository', () => ({
+vi.mock('@/repositories/project/project.repository', () => ({
   projectRepository: {
     findById: vi.fn(),
     listByUserId: vi.fn(),

@@ -1,4 +1,4 @@
-import { taskRepository } from '@/repositories/task.repository';
+import { taskRepository } from '@/repositories/task/task.repository';
 import { AIGeneratedTask, Task, TaskCounts, TaskFormData, TasksResponse } from '@/types/tasks.types';
 import { getUserId } from '@/utils/auth.utils';
 import { generateID } from '@/utils/text.utils';

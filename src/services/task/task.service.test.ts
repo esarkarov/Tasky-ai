@@ -1,4 +1,4 @@
-import { taskRepository } from '@/repositories/task.repository';
+import { taskRepository } from '@/repositories/task/task.repository';
 import { AIGeneratedTask, Task, TaskFormData, TasksResponse } from '@/types/tasks.types';
 import { getUserId } from '@/utils/auth.utils';
 import { generateID } from '@/utils/text.utils';
@@ -6,7 +6,7 @@ import { startOfToday, startOfTomorrow } from 'date-fns';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { taskService } from './task.service';
 
-vi.mock('@/repositories/task.repository', () => ({
+vi.mock('@/repositories/task/task.repository', () => ({
   taskRepository: {
     getTodayCountByUserId: vi.fn(),
     getInboxCountByUserId: vi.fn(),

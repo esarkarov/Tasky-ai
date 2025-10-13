@@ -1,5 +1,5 @@
 import { generateContents } from '@/utils/ai.utils';
-import { aiRepository } from '@/repositories/ai.repository';
+import { aiRepository } from '@/repositories/ai/ai.repository';
 import { AIGeneratedTask } from '@/types/tasks.types';
 
 export const aiService = {
