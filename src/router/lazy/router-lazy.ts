@@ -18,8 +18,8 @@ export const ProjectsPage = async () => createElement((await import('@/pages/Pro
 export const ProjectDetailPage = async () =>
   createElement((await import('@/pages/ProjectDetailPage/ProjectDetailPage')).ProjectDetailPage);
 
-export const taskAction = async () => (await import('@/router/actions/task.action')).taskAction;
-export const projectAction = async () => (await import('@/router/actions/project.action')).projectAction;
+export const taskAction = async () => (await import('@/router/actions/task/task.action')).taskAction;
+export const projectAction = async () => (await import('@/router/actions/project/project.action')).projectAction;
 
 export const appLoader = async () => (await import('@/router/loaders/app.loader')).appLoader;
 export const tasksCompletedLoader = async () =>
