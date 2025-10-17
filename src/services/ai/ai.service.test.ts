@@ -17,32 +17,32 @@ const mockedAiRepository = vi.mocked(aiRepository);
 const mockedGenerateContents = vi.mocked(generateContents);
 
 describe('aiService', () => {
+  const mockPrompt = 'Create a project for building a website';
+  const mockTasks: AIGeneratedTask[] = [
+    {
+      content: 'Setup React project',
+      due_date: null,
+      completed: false,
+    },
+    {
+      content: 'Install dependencies',
+      due_date: null,
+      completed: false,
+    },
+  ];
+  const createMockGenerateContentResponse = (text: string) => ({
+    text,
+    data: '',
+    functionCalls: [],
+    executableCode: '',
+    codeExecutionResult: '',
+  });
+
   beforeEach(() => {
     vi.resetAllMocks();
   });
 
   describe('generateProjectTasks', () => {
-    const mockPrompt = 'Create a project for building a website';
-    const mockTasks: AIGeneratedTask[] = [
-      {
-        content: 'Setup React project',
-        due_date: null,
-        completed: false,
-      },
-      {
-        content: 'Install dependencies',
-        due_date: null,
-        completed: false,
-      },
-    ];
-    const createMockGenerateContentResponse = (text: string) => ({
-      text,
-      data: '',
-      functionCalls: [],
-      executableCode: '',
-      codeExecutionResult: '',
-    });
-
     it('should return empty array when prompt is empty', async () => {
       const emptyPrompt = '';
 

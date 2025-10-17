@@ -36,15 +36,10 @@ const mockedEnv = vi.mocked(env);
 const mockedProjectQueries = vi.mocked(projectQueries);
 
 describe('projectRepository', () => {
-  beforeEach(() => {
-    vi.resetAllMocks();
-  });
-
   const mockDatabaseId = 'test-database';
   const mockCollectionId = 'test-projects';
   const mockProjectId = 'project-123';
   const mockUserId = 'user-123';
-
   const mockProject: Project = {
     $id: mockProjectId,
     userId: mockUserId,
@@ -76,6 +71,7 @@ describe('projectRepository', () => {
   };
 
   beforeEach(() => {
+    vi.resetAllMocks();
     mockedEnv.appwriteDatabaseId = mockDatabaseId;
     mockedEnv.appwriteProjectsCollectionId = mockCollectionId;
   });

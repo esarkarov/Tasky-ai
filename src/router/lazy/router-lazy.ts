@@ -21,13 +21,15 @@ export const ProjectDetailPage = async () =>
 export const taskAction = async () => (await import('@/router/actions/task/task.action')).taskAction;
 export const projectAction = async () => (await import('@/router/actions/project/project.action')).projectAction;
 
-export const appLoader = async () => (await import('@/router/loaders/app.loader')).appLoader;
+export const appLoader = async () => (await import('@/router/loaders/app/app.loader')).appLoader;
 export const tasksCompletedLoader = async () =>
-  (await import('@/router/loaders/tasks-completed.loader')).tasksCompletedLoader;
-export const tasksInboxLoader = async () => (await import('@/router/loaders/tasks-inbox.loader')).tasksInboxLoader;
-export const projectsLoader = async () => (await import('@/router/loaders/projects.loader')).projectsLoader;
-export const tasksTodayLoader = async () => (await import('@/router/loaders/tasks-today.loader')).tasksTodayLoader;
+  (await import('@/router/loaders/tasks-completed/tasks-completed.loader')).tasksCompletedLoader;
+export const tasksInboxLoader = async () =>
+  (await import('@/router/loaders/tasks-inbox/tasks-inbox.loader')).tasksInboxLoader;
+export const projectsLoader = async () => (await import('@/router/loaders/projects/projects.loader')).projectsLoader;
+export const tasksTodayLoader = async () =>
+  (await import('@/router/loaders/tasks-today/tasks-today.loader')).tasksTodayLoader;
 export const tasksUpcomingLoader = async () =>
-  (await import('@/router/loaders/tasks-upcoming.loader')).tasksUpcomingLoader;
+  (await import('@/router/loaders/tasks-upcoming/tasks-upcoming.loader')).tasksUpcomingLoader;
 export const projectDetailLoader = async () =>
-  (await import('@/router/loaders/project-detail.loader')).projectDetailLoader;
+  (await import('@/router/loaders/project-detail/project-detail.loader')).projectDetailLoader;

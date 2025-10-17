@@ -44,17 +44,12 @@ const mockedTaskQueries = vi.mocked(taskQueries);
 const mockedGenerateID = vi.mocked(generateID);
 
 describe('taskRepository', () => {
-  beforeEach(() => {
-    vi.resetAllMocks();
-  });
-
   const mockDatabaseId = 'test-database';
   const mockCollectionId = 'test-tasks';
   const mockTaskId = 'task-123';
   const mockUserId = 'user-123';
   const mockTodayDate = '2023-01-01T00:00:00.000Z';
   const mockTomorrowDate = '2023-01-02T00:00:00.000Z';
-
   const mockTask: Task = {
     $id: mockTaskId,
     id: mockTaskId,
@@ -74,6 +69,7 @@ describe('taskRepository', () => {
   };
 
   beforeEach(() => {
+    vi.resetAllMocks();
     mockedEnv.appwriteDatabaseId = mockDatabaseId;
     mockedEnv.appwriteTasksCollectionId = mockCollectionId;
   });

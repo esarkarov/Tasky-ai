@@ -26,10 +26,6 @@ const mockedGetUserId = vi.mocked(getUserId);
 const mockedGenerateID = vi.mocked(generateID);
 
 describe('projectService', () => {
-  beforeEach(() => {
-    vi.resetAllMocks();
-  });
-
   const mockUserId = 'user-123';
   const mockProjectId = 'project-123';
   const mockProject: Project = {
@@ -60,6 +56,10 @@ describe('projectService', () => {
     documents: [mockProjectListItem],
     total: 1,
   };
+
+  beforeEach(() => {
+    vi.resetAllMocks();
+  });
 
   describe('getProjectById', () => {
     it('should return project when found successfully', async () => {

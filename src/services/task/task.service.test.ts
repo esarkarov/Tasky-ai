@@ -40,6 +40,9 @@ const mockedStartOfTomorrow = vi.mocked(startOfTomorrow);
 describe('taskService', () => {
   beforeEach(() => {
     vi.resetAllMocks();
+    mockedGetUserId.mockReturnValue(mockUserId);
+    mockedStartOfToday.mockReturnValue(new Date(mockTodayDate));
+    mockedStartOfTomorrow.mockReturnValue(new Date(mockTomorrowDate));
   });
 
   const mockUserId = 'user-123';
@@ -64,12 +67,6 @@ describe('taskService', () => {
     documents: [mockTask],
     total: 1,
   };
-
-  beforeEach(() => {
-    mockedGetUserId.mockReturnValue(mockUserId);
-    mockedStartOfToday.mockReturnValue(new Date(mockTodayDate));
-    mockedStartOfTomorrow.mockReturnValue(new Date(mockTomorrowDate));
-  });
 
   describe('getUpcomingTasks', () => {
     it('should return upcoming tasks successfully', async () => {
@@ -218,8 +215,8 @@ describe('taskService', () => {
   describe('createTasksForProject', () => {
     const mockProjectId = 'project-123';
     const mockAITasks: AIGeneratedTask[] = [
-      { content: 'Task 1', due_date: new Date(), completed: false },
-      { content: 'Task 2', due_date: null, completed: true },
+      { content: 'Task 1 content', due_date: new Date(), completed: false },
+      { content: 'Task 2 content', due_date: null, completed: true },
     ];
 
     it('should create multiple tasks for project successfully', async () => {
@@ -231,14 +228,14 @@ describe('taskService', () => {
       expect(mockedGetUserId).toHaveBeenCalled();
       expect(mockedTaskRepository.createMany).toHaveBeenCalledWith([
         {
-          content: 'Task 1',
+          content: 'Task 1 content',
           due_date: mockAITasks[0].due_date,
           completed: false,
           projectId: mockProjectId,
           userId: mockUserId,
         },
         {
-          content: 'Task 2',
+          content: 'Task 2 content',
           due_date: null,
           completed: true,
           projectId: mockProjectId,

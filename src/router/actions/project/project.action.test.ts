@@ -46,10 +46,6 @@ const mockedSuccessResponse = vi.mocked(successResponse);
 const mockedRedirect = vi.mocked(redirect);
 
 describe('projectAction', () => {
-  beforeEach(() => {
-    vi.resetAllMocks();
-  });
-
   const createActionArgs = (request: Request) => ({
     request,
     params: {},
@@ -71,6 +67,10 @@ describe('projectAction', () => {
     $databaseId: 'default',
     $permissions: [],
     ...overrides,
+  });
+
+  beforeEach(() => {
+    vi.resetAllMocks();
   });
 
   describe('POST request', () => {

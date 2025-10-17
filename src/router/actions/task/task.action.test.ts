@@ -29,10 +29,6 @@ const mockedErrorResponse = vi.mocked(errorResponse);
 const mockedSuccessResponse = vi.mocked(successResponse);
 
 describe('taskAction', () => {
-  beforeEach(() => {
-    vi.resetAllMocks();
-  });
-
   const createActionArgs = (request: Request) => ({
     request,
     params: {},
@@ -52,6 +48,10 @@ describe('taskAction', () => {
     $databaseId: 'default',
     $permissions: [],
     ...overrides,
+  });
+
+  beforeEach(() => {
+    vi.resetAllMocks();
   });
 
   describe('POST request', () => {

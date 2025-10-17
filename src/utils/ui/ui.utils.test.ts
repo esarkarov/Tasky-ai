@@ -6,6 +6,7 @@ import clsx from 'clsx';
 import { isBefore, isToday, isTomorrow, startOfToday } from 'date-fns';
 import { twMerge } from 'tailwind-merge';
 
+vi.mock('clsx');
 vi.mock('@/constants/routes', () => ({
   ROUTES: {
     INBOX: '/inbox',
@@ -13,8 +14,6 @@ vi.mock('@/constants/routes', () => ({
     UPCOMING: '/upcoming',
   },
 }));
-
-vi.mock('clsx');
 vi.mock('tailwind-merge', () => ({
   twMerge: vi.fn(),
 }));
