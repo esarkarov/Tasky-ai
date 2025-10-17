@@ -3,9 +3,9 @@ import { z } from 'zod';
 const envSchema = z.object({
   VITE_CLERK_PUBLISHABLE_KEY: z.string().nonempty().readonly(),
   VITE_CLERK_USER_STORAGE_KEY: z.string().nonempty().readonly(),
+  VITE_APPWRITE_PROJECT_ID: z.string().nonempty().readonly(),
   VITE_APPWRITE_TASKS_COLLECTION_ID: z.string().nonempty().readonly(),
   VITE_APPWRITE_PROJECTS_COLLECTION_ID: z.string().nonempty().readonly(),
-  VITE_APPWRITE_PROJECT_ID: z.string().nonempty().readonly(),
   VITE_APPWRITE_ENDPOINT: z.string().nonempty().readonly(),
   VITE_APPWRITE_DATABASE_ID: z.string().nonempty().readonly(),
   VITE_GEMINI_API_KEY: z.string().nonempty().readonly(),
@@ -16,6 +16,8 @@ export const parsedEnv = envSchema.safeParse(import.meta.env);
 if (!parsedEnv.success) {
   throw new Error('Invalid environment configuration');
 }
+
+console.log(parsedEnv);
 
 export const env = {
   clerkPublishableKey: parsedEnv.data.VITE_CLERK_PUBLISHABLE_KEY,
