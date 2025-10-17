@@ -6,6 +6,8 @@ import { taskQueries } from '@/queries/task/task.queries';
 import { generateID } from '@/utils/text/text.utils';
 import { Task, TasksResponse, TaskCreateData, TaskUpdateData } from '@/types/tasks.types';
 
+vi.mock('@/config/env.config');
+
 vi.mock('@/lib/appwrite', () => ({
   databases: {
     getDocument: vi.fn(),
@@ -13,13 +15,6 @@ vi.mock('@/lib/appwrite', () => ({
     createDocument: vi.fn(),
     updateDocument: vi.fn(),
     deleteDocument: vi.fn(),
-  },
-}));
-
-vi.mock('@/config/env.config', () => ({
-  env: {
-    appwriteDatabaseId: 'test-database',
-    appwriteTasksCollectionId: 'test-tasks',
   },
 }));
 
