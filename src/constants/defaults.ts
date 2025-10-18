@@ -1,16 +1,16 @@
-import { ProjectBase } from '@/types/projects.types';
-import { TaskFormData } from '@/types/tasks.types';
+import { ProjectInput } from '@/types/projects.types';
+import { TaskFormInput } from '@/types/tasks.types';
 
 export const DEFAULT_GEMINI_MODEL = 'gemini-2.5-flash';
 export const DEFAULT_EMPTY_STATE_IMAGE_HEIGHT = 260;
 
-export const DEFAULT_TASK_FORM_DATA: TaskFormData = {
+export const DEFAULT_TASK_FORM_DATA: TaskFormInput = {
   content: '',
   due_date: null,
   projectId: null,
 } as const;
 
-export const DEFAULT_PROJECT_FORM_DATA: ProjectBase = {
+export const DEFAULT_PROJECT_FORM_DATA: ProjectInput = {
   id: null,
   name: '',
   color_name: 'Slate',

@@ -7,7 +7,7 @@ import { useToast } from '@/hooks/use-toast';
 import { truncateString } from '@/utils/text/text.utils';
 import { SearchStatus } from '@/types/shared.types';
 import { UseProjectOperationsParams, UseProjectOperationsResult } from '@/types/hooks.types';
-import { ProjectFormData } from '@/types/projects.types';
+import { ProjectFormInput } from '@/types/projects.types';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useFetcher, useLocation, useNavigate, useNavigation } from 'react-router';
 import { buildProjectSuccessDescription, buildSearchUrl, executeWithToast } from '@/utils/operation/operation.utils';
@@ -42,7 +42,7 @@ export const useProjectOperations = (params: UseProjectOperationsParams = {}): U
   }, []);
 
   const saveProject = useCallback(
-    async (formData: ProjectFormData): Promise<void> => {
+    async (formData: ProjectFormInput): Promise<void> => {
       if (!formData) return;
 
       const operation = () =>

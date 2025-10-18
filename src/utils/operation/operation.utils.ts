@@ -13,7 +13,7 @@ export const executeWithToast = async <T>(
   onSuccess?: () => void
 ): Promise<void> => {
   const { id, update } = toastHandler({
-    title: messages.LOADING,
+    title: messages.loading,
     duration: Infinity,
   });
 
@@ -22,7 +22,7 @@ export const executeWithToast = async <T>(
 
     update({
       id,
-      title: messages.SUCCESS,
+      title: messages.success,
       description: successDescription,
       duration: TIMING.TOAST_DURATION,
     });
@@ -31,8 +31,8 @@ export const executeWithToast = async <T>(
   } catch {
     update({
       id,
-      title: messages.ERROR,
-      description: messages.ERROR_DESC,
+      title: messages.error,
+      description: messages.errorDescription,
       duration: TIMING.TOAST_DURATION,
       variant: 'destructive',
     });

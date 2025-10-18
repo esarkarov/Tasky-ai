@@ -1,49 +1,35 @@
 import { PaginatedResponse } from '@/types/pagination.types';
-import { Task } from '@/types/tasks.types';
-import { Models } from 'appwrite';
+import { BaseEntity } from '@/types/shared.types';
+import { TaskEntity } from '@/types/tasks.types';
 
-export interface Project extends Models.Document {
+export interface ProjectEntity extends BaseEntity {
   userId: string;
   name: string;
   color_name: string;
   color_hex: string;
-  tasks: Task[] | null;
+  tasks: TaskEntity[] | null;
 }
-export interface ProjectBase {
-  id: string | null;
+export interface ProjectListItem extends BaseEntity {
   name: string;
   color_name: string;
   color_hex: string;
 }
-export interface ProjectCreateData {
-  name: string;
-  color_name: string;
-  color_hex: string;
-  userId: string;
-}
-export interface ProjectUpdateData {
-  name: string;
-  color_name: string;
-  color_hex: string;
-}
-export interface ProjectFormData {
+export interface ProjectInput {
   id?: string | null;
   name: string;
   color_name: string;
   color_hex: string;
-  ai_task_gen: boolean;
-  task_gen_prompt: string;
 }
 export interface ProjectInfo {
   name: string;
   colorHex: string;
 }
-export interface ProjectListItem extends Models.Document {
-  $id: string;
-  name: string;
-  color_name: string;
-  color_hex: string;
-  $createdAt: string;
+export interface ProjectFormInput extends ProjectInput {
+  ai_task_gen: boolean;
+  task_gen_prompt: string;
 }
-
+export interface ProjectCreateInput extends ProjectInput {
+  userId: string;
+}
+export type ProjectUpdateInput = ProjectInput;
 export type ProjectsListResponse = PaginatedResponse<ProjectListItem>;

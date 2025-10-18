@@ -1,8 +1,8 @@
 import { TaskForm } from '@/components/organisms/TaskForm';
 import { TaskItem } from '@/components/organisms/TaskItem';
 import { useTaskOperations } from '@/hooks/use-task-operations';
-import { Project } from '@/types/projects.types';
-import { Task } from '@/types/tasks.types';
+import { ProjectEntity } from '@/types/projects.types';
+import { TaskEntity } from '@/types/tasks.types';
 import { memo, useState } from 'react';
 
 interface TaskCardProps {
@@ -10,7 +10,7 @@ interface TaskCardProps {
   content: string;
   completed: boolean;
   dueDate: Date;
-  project: Project;
+  project: ProjectEntity;
 }
 
 export const TaskCard = memo(({ id, content, completed, dueDate, project }: TaskCardProps) => {
@@ -19,7 +19,7 @@ export const TaskCard = memo(({ id, content, completed, dueDate, project }: Task
     onSuccess: () => setIsEditing(false),
   });
 
-  const task: Task = Object.assign(
+  const task: TaskEntity = Object.assign(
     {
       id,
       content,
@@ -27,7 +27,7 @@ export const TaskCard = memo(({ id, content, completed, dueDate, project }: Task
       due_date: dueDate,
       project,
     },
-    fetcher.json as Task
+    fetcher.json as TaskEntity
   );
 
   return (

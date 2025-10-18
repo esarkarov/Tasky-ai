@@ -13,14 +13,14 @@ import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useTaskOperations } from '@/hooks/use-task-operations';
 import { truncateString } from '@/utils/text/text.utils';
-import { ProjectBase } from '@/types/projects.types';
+import { ProjectInput } from '@/types/projects.types';
 import { EntityType } from '@/types/shared.types';
-import { Task } from '@/types/tasks.types';
+import { TaskEntity } from '@/types/tasks.types';
 import { Loader2, Trash2 } from 'lucide-react';
 import { useCallback, useState } from 'react';
 
 interface ConfirmationDialogProps {
-  selectedItem: Task | ProjectBase;
+  selectedItem: TaskEntity | ProjectInput;
   entityType: EntityType;
   onDelete: (taskId: string) => Promise<void>;
 }

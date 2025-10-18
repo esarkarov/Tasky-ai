@@ -3,7 +3,7 @@ import { projectService } from './project.service';
 import { projectRepository } from '@/repositories/project/project.repository';
 import { getUserId } from '@/utils/auth/auth.utils';
 import { generateID } from '@/utils/text/text.utils';
-import { Project, ProjectsListResponse, ProjectFormData, ProjectListItem } from '@/types/projects.types';
+import { ProjectEntity, ProjectsListResponse, ProjectFormInput, ProjectListItem } from '@/types/projects.types';
 
 vi.mock('@/repositories/project/project.repository', () => ({
   projectRepository: {
@@ -28,7 +28,7 @@ const mockedGenerateID = vi.mocked(generateID);
 describe('projectService', () => {
   const mockUserId = 'user-123';
   const mockProjectId = 'project-123';
-  const mockProject: Project = {
+  const mockProject: ProjectEntity = {
     $id: mockProjectId,
     userId: mockUserId,
     name: 'Test Project',
@@ -134,7 +134,7 @@ describe('projectService', () => {
 
   describe('createProject', () => {
     const mockGeneratedId = 'generated-id-123';
-    const mockFormData: ProjectFormData = {
+    const mockFormData: ProjectFormInput = {
       name: 'New Project',
       color_name: 'red',
       color_hex: '#FF0000',
@@ -170,7 +170,7 @@ describe('projectService', () => {
   });
 
   describe('updateProject', () => {
-    const mockUpdateData: ProjectFormData = {
+    const mockUpdateData: ProjectFormInput = {
       name: 'Updated Project',
       color_name: 'green',
       color_hex: '#00FF00',

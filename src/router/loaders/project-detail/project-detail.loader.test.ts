@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { projectDetailLoader } from './project-detail.loader';
 import { projectService } from '@/services/project/project.service';
-import type { Project } from '@/types/projects.types';
+import type { ProjectEntity } from '@/types/projects.types';
 import type { ProjectDetailLoaderData } from '@/types/loaders.types';
 
 vi.mock('@/services/project/project.service');
@@ -19,7 +19,7 @@ describe('projectDetailLoader', () => {
     context: {},
   });
 
-  const createMockProject = (overrides: Partial<Project> = {}): Project => ({
+  const createMockProject = (overrides: Partial<ProjectEntity> = {}): ProjectEntity => ({
     $id: 'project-123',
     name: 'Test Project',
     description: 'Test description',

@@ -3,12 +3,12 @@ import { TaskActions } from '@/components/molecules/TaskActions';
 import { TaskMeta } from '@/components/molecules/TaskMeta';
 import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/utils/ui/ui.utils';
-import { Project } from '@/types/projects.types';
-import { Task } from '@/types/tasks.types';
+import { ProjectEntity } from '@/types/projects.types';
+import { TaskEntity } from '@/types/tasks.types';
 
 interface TaskItemProps {
-  project: Project;
-  task: Task;
+  project: ProjectEntity;
+  task: TaskEntity;
   onEdit: () => void;
 }
 

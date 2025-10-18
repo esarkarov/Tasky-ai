@@ -8,12 +8,12 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useProjectOperations } from '@/hooks/use-project-operations';
-import { ProjectBase } from '@/types/projects.types';
+import { ProjectInput } from '@/types/projects.types';
 import type { DropdownMenuContentProps } from '@radix-ui/react-dropdown-menu';
 import { Edit } from 'lucide-react';
 
 interface ProjectActionMenuProps extends DropdownMenuContentProps {
-  defaultFormData: ProjectBase;
+  defaultFormData: ProjectInput;
 }
 
 export const ProjectActionMenu = ({ children, defaultFormData, ...props }: ProjectActionMenuProps) => {

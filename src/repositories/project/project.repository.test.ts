@@ -3,7 +3,7 @@ import { projectRepository } from './project.repository';
 import { databases } from '@/lib/appwrite';
 import { env } from '@/config/env.config';
 import { projectQueries } from '@/queries/project/project.queries';
-import { Project, ProjectsListResponse, ProjectCreateData, ProjectUpdateData } from '@/types/projects.types';
+import { ProjectEntity, ProjectsListResponse, ProjectCreateInput, ProjectUpdateInput } from '@/types/projects.types';
 
 vi.mock('@/lib/appwrite', () => ({
   databases: {
@@ -40,7 +40,7 @@ describe('projectRepository', () => {
   const mockCollectionId = 'test-projects';
   const mockProjectId = 'project-123';
   const mockUserId = 'user-123';
-  const mockProject: Project = {
+  const mockProject: ProjectEntity = {
     $id: mockProjectId,
     userId: mockUserId,
     name: 'Test Project',
@@ -141,7 +141,7 @@ describe('projectRepository', () => {
   });
 
   describe('create', () => {
-    const mockCreateData: ProjectCreateData = {
+    const mockCreateData: ProjectCreateInput = {
       name: 'New Project',
       color_name: 'red',
       color_hex: '#FF0000',
@@ -170,7 +170,7 @@ describe('projectRepository', () => {
   });
 
   describe('update', () => {
-    const mockUpdateData: ProjectUpdateData = {
+    const mockUpdateData: ProjectUpdateInput = {
       name: 'Updated Project',
       color_name: 'green',
       color_hex: '#00FF00',

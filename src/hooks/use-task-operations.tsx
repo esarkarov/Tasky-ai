@@ -5,7 +5,7 @@ import { TIMING } from '@/constants/timing';
 import { TASK_TOAST_CONTENTS } from '@/constants/ui-contents';
 import { useToast } from '@/hooks/use-toast';
 import { UseTaskOperationsParams, UseTaskOperationsResult } from '@/types/hooks.types';
-import { TaskFormData } from '@/types/tasks.types';
+import { TaskFormInput } from '@/types/tasks.types';
 import { buildTaskSuccessDescription, executeWithToast } from '@/utils/operation/operation.utils';
 import { useCallback } from 'react';
 import { useFetcher } from 'react-router';
@@ -17,7 +17,7 @@ export const useTaskOperations = (params: UseTaskOperationsParams = {}): UseTask
   const isFormBusy = fetcher.state !== 'idle';
 
   const createTask = useCallback(
-    async (formData: TaskFormData): Promise<void> => {
+    async (formData: TaskFormInput): Promise<void> => {
       if (!formData) return;
 
       const operation = () =>
@@ -35,7 +35,7 @@ export const useTaskOperations = (params: UseTaskOperationsParams = {}): UseTask
   );
 
   const updateTask = useCallback(
-    async (formData: TaskFormData, taskId?: string): Promise<void> => {
+    async (formData: TaskFormInput, taskId?: string): Promise<void> => {
       if (!taskId && !formData.id) return;
 
       const operation = () =>
@@ -83,14 +83,14 @@ export const useTaskOperations = (params: UseTaskOperationsParams = {}): UseTask
           });
         } else {
           toast({
-            title: completed ? TASK_TOAST_CONTENTS.COMPLETE.SUCCESS : TASK_TOAST_CONTENTS.COMPLETE.UNCOMPLETE,
+            title: completed ? TASK_TOAST_CONTENTS.COMPLETE.success : TASK_TOAST_CONTENTS.COMPLETE.UNCOMPLETE,
             duration: TIMING.TOAST_DURATION,
           });
         }
       } catch {
         toast({
-          title: TASK_TOAST_CONTENTS.COMPLETE.ERROR,
-          description: TASK_TOAST_CONTENTS.COMPLETE.ERROR_DESC,
+          title: TASK_TOAST_CONTENTS.COMPLETE.error,
+          description: TASK_TOAST_CONTENTS.COMPLETE.errorDescription,
           duration: TIMING.TOAST_DURATION,
           variant: 'destructive',
         });
@@ -110,7 +110,12 @@ export const useTaskOperations = (params: UseTaskOperationsParams = {}): UseTask
           encType: 'application/json',
         });
 
-      await executeWithToast(operation, toast, TASK_TOAST_CONTENTS.DELETE, TASK_TOAST_CONTENTS.DELETE.SUCCESS_DESC);
+      await executeWithToast(
+        operation,
+        toast,
+        TASK_TOAST_CONTENTS.DELETE,
+        TASK_TOAST_CONTENTS.DELETE.successDescription
+      );
     },
     [fetcher, toast]
   );

@@ -37,10 +37,10 @@ describe('operation utils', () => {
       const mockUpdate = vi.fn();
       const mockId = 'toast-123';
       const messages = {
-        LOADING: 'Loading...',
-        SUCCESS: 'Success!',
-        ERROR: 'Error!',
-        ERROR_DESC: 'Something went wrong',
+        loading: 'Loading...',
+        success: 'Success!',
+        error: 'Error!',
+        errorDescription: 'Something went wrong',
       };
       const successDescription = 'Operation completed successfully';
       const onSuccess = vi.fn();
@@ -50,13 +50,13 @@ describe('operation utils', () => {
       await executeWithToast(mockOperation, mockToastHandler, messages, successDescription, onSuccess);
 
       expect(mockToastHandler).toHaveBeenCalledWith({
-        title: messages.LOADING,
+        title: messages.loading,
         duration: Infinity,
       });
       expect(mockOperation).toHaveBeenCalled();
       expect(mockUpdate).toHaveBeenCalledWith({
         id: mockId,
-        title: messages.SUCCESS,
+        title: messages.success,
         description: successDescription,
         duration: TIMING.TOAST_DURATION,
       });
@@ -69,10 +69,10 @@ describe('operation utils', () => {
       const mockUpdate = vi.fn();
       const mockId = 'toast-123';
       const messages = {
-        LOADING: 'Loading...',
-        SUCCESS: 'Success!',
-        ERROR: 'Error!',
-        ERROR_DESC: 'Something went wrong',
+        loading: 'Loading...',
+        success: 'Success!',
+        error: 'Error!',
+        errorDescription: 'Something went wrong',
       };
       const successDescription = 'Operation completed successfully';
       const onSuccess = vi.fn();
@@ -82,14 +82,14 @@ describe('operation utils', () => {
       await executeWithToast(mockOperation, mockToastHandler, messages, successDescription, onSuccess);
 
       expect(mockToastHandler).toHaveBeenCalledWith({
-        title: messages.LOADING,
+        title: messages.loading,
         duration: Infinity,
       });
       expect(mockOperation).toHaveBeenCalled();
       expect(mockUpdate).toHaveBeenCalledWith({
         id: mockId,
-        title: messages.ERROR,
-        description: messages.ERROR_DESC,
+        title: messages.error,
+        description: messages.errorDescription,
         duration: TIMING.TOAST_DURATION,
         variant: 'destructive',
       });
@@ -102,10 +102,10 @@ describe('operation utils', () => {
       const mockUpdate = vi.fn();
       const mockId = 'toast-123';
       const messages = {
-        LOADING: 'Loading...',
-        SUCCESS: 'Success!',
-        ERROR: 'Error!',
-        ERROR_DESC: 'Something went wrong',
+        loading: 'Loading...',
+        success: 'Success!',
+        error: 'Error!',
+        errorDescription: 'Something went wrong',
       };
       const successDescription = 'Operation completed successfully';
 
@@ -116,7 +116,7 @@ describe('operation utils', () => {
       expect(mockOperation).toHaveBeenCalled();
       expect(mockUpdate).toHaveBeenCalledWith({
         id: mockId,
-        title: messages.SUCCESS,
+        title: messages.success,
         description: successDescription,
         duration: TIMING.TOAST_DURATION,
       });

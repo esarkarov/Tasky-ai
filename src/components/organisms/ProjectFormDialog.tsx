@@ -2,11 +2,11 @@ import { ProjectForm } from '@/components/organisms/ProjectForm';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { useProjectOperations } from '@/hooks/use-project-operations';
 import { HttpMethod } from '@/types/shared.types';
-import { ProjectBase } from '@/types/projects.types';
+import { ProjectInput } from '@/types/projects.types';
 import { ReactNode, useState } from 'react';
 
 interface ProjectFormDialogProps {
-  defaultFormData?: ProjectBase;
+  defaultFormData?: ProjectInput;
   children: ReactNode;
   method: HttpMethod;
 }

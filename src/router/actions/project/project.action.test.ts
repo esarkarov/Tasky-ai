@@ -2,7 +2,7 @@ import { ROUTES } from '@/constants/routes';
 import { aiService } from '@/services/ai/ai.service';
 import { projectService } from '@/services/project/project.service';
 import { taskService } from '@/services/task/task.service';
-import type { Project } from '@/types/projects.types';
+import type { ProjectEntity } from '@/types/projects.types';
 import { AIGeneratedTask } from '@/types/tasks.types';
 import { errorResponse, successResponse } from '@/utils/response/response.utils';
 import { redirect } from 'react-router';
@@ -51,8 +51,7 @@ describe('projectAction', () => {
     params: {},
     context: {},
   });
-
-  const createMockProject = (overrides: Partial<Project> = {}): Project => ({
+  const createMockProject = (overrides: Partial<ProjectEntity> = {}): ProjectEntity => ({
     $id: 'project-1',
     name: 'Test Project',
     description: null,

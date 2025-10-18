@@ -1,5 +1,5 @@
 import { taskRepository } from '@/repositories/task/task.repository';
-import { AIGeneratedTask, Task, TaskFormData, TasksResponse } from '@/types/tasks.types';
+import { AIGeneratedTask, TaskEntity, TaskFormInput, TasksResponse } from '@/types/tasks.types';
 import { getUserId } from '@/utils/auth/auth.utils';
 import { generateID } from '@/utils/text/text.utils';
 import { startOfToday, startOfTomorrow } from 'date-fns';
@@ -49,7 +49,7 @@ describe('taskService', () => {
   const mockTaskId = 'task-123';
   const mockTodayDate = '2023-01-01T00:00:00.000Z';
   const mockTomorrowDate = '2023-01-02T00:00:00.000Z';
-  const mockTask: Task = {
+  const mockTask: TaskEntity = {
     $id: mockTaskId,
     id: mockTaskId,
     content: 'Test Task',
@@ -256,7 +256,7 @@ describe('taskService', () => {
 
   describe('createTask', () => {
     const mockGeneratedId = 'generated-task-id';
-    const mockFormData: TaskFormData = {
+    const mockFormData: TaskFormInput = {
       content: 'New Task',
       due_date: new Date(),
       projectId: 'project-123',

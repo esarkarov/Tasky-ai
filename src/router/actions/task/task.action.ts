@@ -1,11 +1,11 @@
 import { HTTP_METHODS } from '@/constants/http-methods';
 import { taskService } from '@/services/task/task.service';
-import { TaskFormData } from '@/types/tasks.types';
+import { TaskFormInput } from '@/types/tasks.types';
 import { errorResponse, successResponse } from '@/utils/response/response.utils';
 import { ActionFunction } from 'react-router';
 
 const handleCreateTask = async (request: Request) => {
-  const data = (await request.json()) as TaskFormData;
+  const data = (await request.json()) as TaskFormInput;
 
   if (!data.content || data.content.trim().length === 0) {
     return errorResponse('Task content is required', 400);
@@ -17,7 +17,7 @@ const handleCreateTask = async (request: Request) => {
 };
 
 const handleUpdateTask = async (request: Request) => {
-  const data = (await request.json()) as TaskFormData;
+  const data = (await request.json()) as TaskFormInput;
 
   if (!data.id) {
     return errorResponse('Task ID is required', 400);

@@ -8,7 +8,7 @@ import { TaskForm } from '@/components/organisms/TaskForm';
 import { TopAppBar } from '@/components/organisms/TopAppBar';
 import { useTaskOperations } from '@/hooks/use-task-operations';
 import { TasksLoaderData } from '@/types/loaders.types';
-import { Project } from '@/types/projects.types';
+import { ProjectEntity } from '@/types/projects.types';
 import { startOfToday } from 'date-fns';
 import { ClipboardCheck } from 'lucide-react';
 import { useState } from 'react';
@@ -50,7 +50,7 @@ export const TodayPage = () => {
               content={content}
               completed={completed}
               dueDate={due_date as Date}
-              project={projectId as Project}
+              project={projectId as ProjectEntity}
             />
           ))}
 

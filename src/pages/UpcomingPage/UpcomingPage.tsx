@@ -5,7 +5,7 @@ import { EmptyStateMessage } from '@/components/organisms/EmptyStateMessage';
 import { TaskCard } from '@/components/organisms/TaskCard';
 import { TopAppBar } from '@/components/organisms/TopAppBar';
 import { TasksLoaderData } from '@/types/loaders.types';
-import { Project } from '@/types/projects.types';
+import { ProjectEntity } from '@/types/projects.types';
 import { ClipboardCheck } from 'lucide-react';
 import { useLoaderData } from 'react-router';
 
@@ -43,7 +43,7 @@ export const UpcomingPage = () => {
               content={content}
               completed={completed}
               dueDate={due_date as Date}
-              project={projectId as Project}
+              project={projectId as ProjectEntity}
             />
           ))}
 

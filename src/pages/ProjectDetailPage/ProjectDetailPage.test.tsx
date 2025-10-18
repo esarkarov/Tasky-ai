@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { ProjectDetailPage } from './ProjectDetailPage';
-import type { Project, ProjectBase } from '@/types/projects.types';
+import type { ProjectEntity, ProjectInput } from '@/types/projects.types';
 import type { ReactNode } from 'react';
 
 vi.mock('@/components/atoms/Head', () => ({
@@ -55,7 +55,7 @@ vi.mock('@/components/organisms/EmptyStateMessage', () => ({
 }));
 
 vi.mock('@/components/organisms/ProjectActionMenu', () => ({
-  ProjectActionMenu: ({ children, defaultFormData }: { children: ReactNode; defaultFormData: ProjectBase }) => (
+  ProjectActionMenu: ({ children, defaultFormData }: { children: ReactNode; defaultFormData: ProjectInput }) => (
     <div
       data-testid="project-action-menu"
       aria-label={`Actions for project ${defaultFormData.name}`}>
@@ -131,7 +131,7 @@ vi.mock('react-router', () => ({
   useLoaderData: () => mockUseLoaderData(),
 }));
 
-const mockProject: Project = {
+const mockProject: ProjectEntity = {
   $id: 'project-1',
   userId: 'user-1',
   name: 'Work Project',

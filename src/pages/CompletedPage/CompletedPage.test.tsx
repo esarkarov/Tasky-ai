@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { CompletedPage } from './CompletedPage';
-import type { Task } from '@/types/tasks.types';
-import type { Project } from '@/types/projects.types';
+import type { TaskEntity } from '@/types/tasks.types';
+import type { ProjectEntity } from '@/types/projects.types';
 import type { ReactNode } from 'react';
 
 vi.mock('@/components/atoms/Head', () => ({
@@ -70,7 +70,7 @@ vi.mock('react-router', () => ({
   useLoaderData: () => mockUseLoaderData(),
 }));
 
-const mockProject: Project = {
+const mockProject: ProjectEntity = {
   $id: 'project-1',
   userId: 'user-1',
   name: 'Work Project',
@@ -84,7 +84,7 @@ const mockProject: Project = {
   $databaseId: 'database-1',
 };
 
-const mockCompletedTasks: Task[] = [
+const mockCompletedTasks: TaskEntity[] = [
   {
     id: '1',
     $id: 'task-1',
@@ -326,7 +326,7 @@ describe('CompletedPage', () => {
     });
 
     it('should handle loader data with multiple completed tasks', () => {
-      const multipleTasks: Task[] = [
+      const multipleTasks: TaskEntity[] = [
         ...mockCompletedTasks,
         {
           id: '3',
@@ -354,7 +354,7 @@ describe('CompletedPage', () => {
     });
 
     it('should handle tasks without project', () => {
-      const taskWithoutProject: Task[] = [
+      const taskWithoutProject: TaskEntity[] = [
         {
           ...mockCompletedTasks[0],
           projectId: null,

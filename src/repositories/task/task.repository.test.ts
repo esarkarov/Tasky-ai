@@ -4,7 +4,7 @@ import { databases } from '@/lib/appwrite';
 import { env } from '@/config/env.config';
 import { taskQueries } from '@/queries/task/task.queries';
 import { generateID } from '@/utils/text/text.utils';
-import { Task, TasksResponse, TaskCreateData, TaskUpdateData } from '@/types/tasks.types';
+import { TaskEntity, TasksResponse, TaskCreateInput, TaskUpdateInput } from '@/types/tasks.types';
 
 vi.mock('@/config/env.config');
 
@@ -45,7 +45,7 @@ describe('taskRepository', () => {
   const mockUserId = 'user-123';
   const mockTodayDate = '2023-01-01T00:00:00.000Z';
   const mockTomorrowDate = '2023-01-02T00:00:00.000Z';
-  const mockTask: Task = {
+  const mockTask: TaskEntity = {
     $id: mockTaskId,
     id: mockTaskId,
     content: 'Test Task',
@@ -178,7 +178,7 @@ describe('taskRepository', () => {
   });
 
   describe('createMany', () => {
-    const mockTasksData: Array<TaskCreateData & { id?: string }> = [
+    const mockTasksData: Array<TaskCreateInput & { id?: string }> = [
       { content: 'Task 1', due_date: new Date(), completed: false, projectId: null, userId: mockUserId },
       {
         content: 'Task 2',
@@ -223,7 +223,7 @@ describe('taskRepository', () => {
   });
 
   describe('create', () => {
-    const mockCreateData: TaskCreateData = {
+    const mockCreateData: TaskCreateInput = {
       content: 'New Task',
       due_date: new Date(),
       completed: false,
@@ -253,7 +253,7 @@ describe('taskRepository', () => {
   });
 
   describe('update', () => {
-    const mockUpdateData: TaskUpdateData = {
+    const mockUpdateData: TaskUpdateInput = {
       content: 'Updated Task',
       due_date: new Date(),
       projectId: 'project-123',

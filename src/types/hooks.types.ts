@@ -1,16 +1,16 @@
 import { HttpMethod, SearchStatus } from '@/types/shared.types';
-import { ProjectBase, ProjectFormData } from '@/types/projects.types';
-import { TaskFormData } from '@/types/tasks.types';
+import { ProjectInput, ProjectFormInput } from '@/types/projects.types';
+import { TaskFormInput } from '@/types/tasks.types';
 import { useFetcher } from 'react-router';
 
 export interface UseProjectOperationsParams {
   method?: HttpMethod;
-  projectData?: ProjectBase;
+  projectData?: ProjectInput;
   onSuccess?: () => void;
 }
 
 export interface UseProjectOperationsResult {
-  saveProject: (data: ProjectFormData) => Promise<void>;
+  saveProject: (data: ProjectFormInput) => Promise<void>;
   deleteProject: () => Promise<void>;
   searchProjects: (e: React.ChangeEvent<HTMLInputElement>) => void;
   searchStatus: SearchStatus;
@@ -24,8 +24,8 @@ export interface UseTaskOperationsParams {
 }
 
 export interface UseTaskOperationsResult {
-  createTask: (formData: TaskFormData) => Promise<void>;
-  updateTask: (formData: TaskFormData, taskId?: string) => Promise<void>;
+  createTask: (formData: TaskFormInput) => Promise<void>;
+  updateTask: (formData: TaskFormInput, taskId?: string) => Promise<void>;
   toggleTaskComplete: (taskId: string, completed: boolean) => Promise<void>;
   deleteTask: (taskId: string) => Promise<void>;
   fetcher: ReturnType<typeof useFetcher>;

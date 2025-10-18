@@ -2,16 +2,16 @@ import { env } from '@/config/env.config';
 import { databases } from '@/lib/appwrite';
 import { projectQueries } from '@/queries/project/project.queries';
 import {
-  Project,
-  ProjectCreateData,
+  ProjectEntity,
+  ProjectCreateInput,
   ProjectListItem,
   ProjectsListResponse,
-  ProjectUpdateData,
+  ProjectUpdateInput,
 } from '@/types/projects.types';
 
 export const projectRepository = {
-  findById: (id: string): Promise<Project> =>
-    databases.getDocument<Project>(env.appwriteDatabaseId, env.appwriteProjectsCollectionId, id),
+  findById: (id: string): Promise<ProjectEntity> =>
+    databases.getDocument<ProjectEntity>(env.appwriteDatabaseId, env.appwriteProjectsCollectionId, id),
 
   listByUserId: (userId: string, options?: { search?: string; limit?: number }): Promise<ProjectsListResponse> =>
     databases.listDocuments<ProjectListItem>(
@@ -20,11 +20,11 @@ export const projectRepository = {
       projectQueries.userProjects(userId, options)
     ),
 
-  create: (id: string, data: ProjectCreateData): Promise<Project> =>
-    databases.createDocument<Project>(env.appwriteDatabaseId, env.appwriteProjectsCollectionId, id, data),
+  create: (id: string, data: ProjectCreateInput): Promise<ProjectEntity> =>
+    databases.createDocument<ProjectEntity>(env.appwriteDatabaseId, env.appwriteProjectsCollectionId, id, data),
 
-  update: (id: string, data: ProjectUpdateData): Promise<Project> =>
-    databases.updateDocument<Project>(env.appwriteDatabaseId, env.appwriteProjectsCollectionId, id, data),
+  update: (id: string, data: ProjectUpdateInput): Promise<ProjectEntity> =>
+    databases.updateDocument<ProjectEntity>(env.appwriteDatabaseId, env.appwriteProjectsCollectionId, id, data),
 
   delete: (id: string) => databases.deleteDocument(env.appwriteDatabaseId, env.appwriteProjectsCollectionId, id),
 };

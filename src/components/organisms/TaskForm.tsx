@@ -8,9 +8,9 @@ import { DEFAULT_TASK_FORM_DATA } from '@/constants/defaults';
 import { useTaskOperations } from '@/hooks/use-task-operations';
 import { cn } from '@/utils/ui/ui.utils';
 import { ProjectsLoaderData } from '@/types/loaders.types';
-import { Project, ProjectInfo } from '@/types/projects.types';
+import { ProjectInfo, ProjectEntity } from '@/types/projects.types';
 import { CrudMode } from '@/types/shared.types';
-import { TaskFormData } from '@/types/tasks.types';
+import { TaskFormInput } from '@/types/tasks.types';
 import * as chrono from 'chrono-node';
 import type { ClassValue } from 'clsx';
 import { useCallback, useEffect, useState } from 'react';
@@ -19,8 +19,8 @@ import { useLoaderData } from 'react-router';
 interface TaskFormProps {
   mode: CrudMode;
   className?: ClassValue;
-  defaultFormData?: TaskFormData;
-  onSubmit?: (formData: TaskFormData, taskId?: string) => Promise<void>;
+  defaultFormData?: TaskFormInput;
+  onSubmit?: (formData: TaskFormInput, taskId?: string) => Promise<void>;
   onCancel: () => void;
 }
 
@@ -43,7 +43,7 @@ export const TaskForm = ({
     name: '',
     colorHex: '',
   });
-  const [formData, setFormData] = useState<TaskFormData>({
+  const [formData, setFormData] = useState<TaskFormInput>({
     content: '',
     due_date: null,
     projectId: null,
@@ -51,7 +51,7 @@ export const TaskForm = ({
 
   useEffect(() => {
     if (projectId) {
-      const project = projects?.documents.find(({ $id }) => projectId === $id) as Project;
+      const project = projects?.documents.find(({ $id }) => projectId === $id) as ProjectEntity;
       if (project) {
         setProjectInfo({
           name: project.name,

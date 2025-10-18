@@ -1,10 +1,10 @@
 import { projectRepository } from '@/repositories/project/project.repository';
-import { Project, ProjectFormData, ProjectsListResponse } from '@/types/projects.types';
+import { ProjectEntity, ProjectFormInput, ProjectsListResponse } from '@/types/projects.types';
 import { getUserId } from '@/utils/auth/auth.utils';
 import { generateID } from '@/utils/text/text.utils';
 
 export const projectService = {
-  getProjectById: async (projectId: string): Promise<Project> => {
+  getProjectById: async (projectId: string): Promise<ProjectEntity> => {
     try {
       const doc = await projectRepository.findById(projectId);
 
@@ -41,7 +41,7 @@ export const projectService = {
     }
   },
 
-  createProject: async (data: ProjectFormData): Promise<Project> => {
+  createProject: async (data: ProjectFormInput): Promise<ProjectEntity> => {
     try {
       const payload = {
         name: data.name,
@@ -59,7 +59,7 @@ export const projectService = {
     }
   },
 
-  updateProject: async (projectId: string, data: Omit<ProjectFormData, 'id'>): Promise<Project> => {
+  updateProject: async (projectId: string, data: Omit<ProjectFormInput, 'id'>): Promise<ProjectEntity> => {
     try {
       const payload = {
         name: data.name,

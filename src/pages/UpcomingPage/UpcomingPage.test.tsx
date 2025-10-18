@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { UpcomingPage } from './UpcomingPage';
-import type { Task } from '@/types/tasks.types';
-import type { Project } from '@/types/projects.types';
+import type { TaskEntity } from '@/types/tasks.types';
+import type { ProjectEntity } from '@/types/projects.types';
 import type { ReactNode } from 'react';
 import { LucideIcon } from 'lucide-react';
 
@@ -56,7 +56,7 @@ vi.mock('@/components/organisms/TaskCard', () => ({
     content: string;
     completed: boolean;
     dueDate: Date;
-    project: Project;
+    project: ProjectEntity;
   }) => (
     <li data-testid={`task-card-${id}`}>
       <div>{content}</div>
@@ -85,7 +85,7 @@ vi.mock('react-router', () => ({
   useLoaderData: () => mockUseLoaderData(),
 }));
 
-const mockProject: Project = {
+const mockProject: ProjectEntity = {
   $id: 'project-1',
   userId: 'user-1',
   name: 'Work Project',
@@ -99,7 +99,7 @@ const mockProject: Project = {
   $databaseId: 'database-1',
 };
 
-const mockTasks: Task[] = [
+const mockTasks: TaskEntity[] = [
   {
     id: '1',
     $id: 'task-1',
@@ -333,7 +333,7 @@ describe('UpcomingPage', () => {
     });
 
     it('should handle loader data with multiple tasks', () => {
-      const multipleTasks: Task[] = [
+      const multipleTasks: TaskEntity[] = [
         ...mockTasks,
         {
           id: 'task-3',
@@ -361,7 +361,7 @@ describe('UpcomingPage', () => {
     });
 
     it('should handle tasks without project', () => {
-      const taskWithoutProject: Task[] = [
+      const taskWithoutProject: TaskEntity[] = [
         {
           ...mockTasks[0],
           projectId: null,
@@ -435,7 +435,7 @@ describe('UpcomingPage', () => {
     });
 
     it('should handle completed tasks', () => {
-      const completedTask: Task = {
+      const completedTask: TaskEntity = {
         ...mockTasks[0],
         completed: true,
       };

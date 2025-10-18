@@ -7,15 +7,15 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/componen
 import { Separator } from '@/components/ui/separator';
 import { DEFAULT_PROJECT_FORM_DATA } from '@/constants/defaults';
 import { CrudMode } from '@/types/shared.types';
-import { ProjectBase, ProjectFormData } from '@/types/projects.types';
+import { ProjectInput, ProjectFormInput } from '@/types/projects.types';
 import { useCallback, useMemo, useState } from 'react';
 import { cn } from '@/utils/ui/ui.utils';
 
 interface ProjectFormProps {
-  onSubmit: (formData: ProjectFormData) => Promise<void>;
+  onSubmit: (formData: ProjectFormInput) => Promise<void>;
   onCancel: () => void;
   mode: CrudMode;
-  defaultFormData?: ProjectBase;
+  defaultFormData?: ProjectInput;
   formState: boolean;
 }
 
@@ -34,7 +34,7 @@ export const ProjectForm = ({
   const [taskGenPrompt, setTaskGenPrompt] = useState<string>('');
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  const formData = useMemo<ProjectFormData>(
+  const formData = useMemo<ProjectFormInput>(
     () => ({
       ...defaultFormData,
       name: projectName,

@@ -1,4 +1,4 @@
-import { Project, ProjectsListResponse } from '@/types/projects.types';
+import { ProjectEntity, ProjectsListResponse } from '@/types/projects.types';
 import { TaskCounts, TasksResponse } from '@/types/tasks.types';
 
 export interface AppLoaderData {
@@ -9,7 +9,7 @@ export interface TasksLoaderData {
   tasks: TasksResponse;
 }
 export interface ProjectDetailLoaderData {
-  project: Project;
+  project: ProjectEntity;
 }
 export interface ProjectsLoaderData {
   projects: ProjectsListResponse;

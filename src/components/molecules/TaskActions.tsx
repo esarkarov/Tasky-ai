@@ -1,10 +1,10 @@
 import { EditTaskButton } from '@/components/atoms/EditTaskButton';
 import { ConfirmationDialog } from '@/components/molecules/ConfirmationDialog';
 import { useTaskOperations } from '@/hooks/use-task-operations';
-import { Task } from '@/types/tasks.types';
+import { TaskEntity } from '@/types/tasks.types';
 
 interface TaskActionsProps {
-  task: Task;
+  task: TaskEntity;
   onEdit: () => void;
 }
 

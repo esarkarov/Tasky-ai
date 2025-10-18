@@ -2,8 +2,8 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { TodayPage } from './TodayPage';
-import type { Task } from '@/types/tasks.types';
-import type { Project } from '@/types/projects.types';
+import type { TaskEntity } from '@/types/tasks.types';
+import type { ProjectEntity } from '@/types/projects.types';
 import type { ReactNode } from 'react';
 
 vi.mock('@/components/atoms/Head', () => ({
@@ -106,7 +106,7 @@ vi.mock('react-router', () => ({
   useLoaderData: () => mockUseLoaderData(),
 }));
 
-const mockProject: Project = {
+const mockProject: ProjectEntity = {
   $id: 'project-1',
   userId: 'user-1',
   name: 'Work Project',
@@ -120,7 +120,7 @@ const mockProject: Project = {
   $databaseId: 'database-1',
 };
 
-const mockTasks: Task[] = [
+const mockTasks: TaskEntity[] = [
   {
     id: '1',
     $id: 'task-1',

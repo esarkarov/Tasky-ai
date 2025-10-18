@@ -1,5 +1,5 @@
 import { taskRepository } from '@/repositories/task/task.repository';
-import { AIGeneratedTask, Task, TaskCounts, TaskFormData, TasksResponse } from '@/types/tasks.types';
+import { AIGeneratedTask, TaskEntity, TaskCounts, TaskFormInput, TasksResponse } from '@/types/tasks.types';
 import { getUserId } from '@/utils/auth/auth.utils';
 import { generateID } from '@/utils/text/text.utils';
 import { startOfToday, startOfTomorrow } from 'date-fns';
@@ -91,7 +91,7 @@ export const taskService = {
     return { inboxTasks, todayTasks };
   },
 
-  createTasksForProject: async (projectId: string, tasks: AIGeneratedTask[]): Promise<Task[]> => {
+  createTasksForProject: async (projectId: string, tasks: AIGeneratedTask[]): Promise<TaskEntity[]> => {
     const userId = getUserId();
     try {
       const mapedTasks = tasks.map((task) => ({
@@ -111,7 +111,7 @@ export const taskService = {
     }
   },
 
-  createTask: async (data: TaskFormData): Promise<Task> => {
+  createTask: async (data: TaskFormInput): Promise<TaskEntity> => {
     const userId = getUserId();
     try {
       const payload = {
@@ -131,7 +131,7 @@ export const taskService = {
     }
   },
 
-  updateTask: async (taskId: string, data: Omit<TaskFormData, 'id'>): Promise<Task> => {
+  updateTask: async (taskId: string, data: Omit<TaskFormInput, 'id'>): Promise<TaskEntity> => {
     try {
       const doc = await taskRepository.update(taskId, data);
 

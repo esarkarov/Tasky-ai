@@ -1,5 +1,5 @@
 import { taskService } from '@/services/task/task.service';
-import type { Task } from '@/types/tasks.types';
+import type { TaskEntity } from '@/types/tasks.types';
 import { errorResponse, successResponse } from '@/utils/response/response.utils';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { taskAction } from './task.action';
@@ -35,7 +35,7 @@ describe('taskAction', () => {
     context: {},
   });
 
-  const createMockTask = (overrides: Partial<Task> = {}): Task => ({
+  const createMockTask = (overrides: Partial<TaskEntity> = {}): TaskEntity => ({
     id: '1',
     content: 'Test task',
     due_date: new Date('2023-01-01'),
