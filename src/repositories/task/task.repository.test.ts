@@ -39,8 +39,8 @@ const mockedTaskQueries = vi.mocked(taskQueries);
 const mockedGenerateID = vi.mocked(generateID);
 
 describe('taskRepository', () => {
-  const mockDatabaseId = 'test-database';
-  const mockCollectionId = 'test-tasks';
+  const mockDatabaseId = 'test-database-id';
+  const mockCollectionId = 'test-tasks-collection';
   const mockTaskId = 'task-123';
   const mockUserId = 'user-123';
   const mockTodayDate = '2023-01-01T00:00:00.000Z';

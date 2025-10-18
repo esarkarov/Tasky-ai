@@ -69,6 +69,9 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: './src/tests/setup.ts',
   },
+  define: {
+    'import.meta.env.MODE': JSON.stringify('test'),
+  },
   server: {
     port: 5174,
   },
