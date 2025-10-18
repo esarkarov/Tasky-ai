@@ -6,9 +6,17 @@ on:
   pull_request:
     branches: [main]
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: '20'
+  NPM_CACHE_DIR: ~/.npm
+
 jobs:
-  lint:
-    name: Lint & Format Check
+  setup:
+    name: Setup Dependencies
     runs-on: ubuntu-latest
 
     steps:
@@ -18,21 +26,16 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
 
       - name: Install dependencies
         run: npm ci --legacy-peer-deps
 
-      - name: Run linting
-        run: npm run lint
-
-      - name: Check prettier formatting
-        run: npm run prettier:check
-
-  typecheck:
-    name: Type Check
+  quality:
+    name: Code Quality
     runs-on: ubuntu-latest
+    needs: setup
 
     steps:
       - name: Checkout code
@@ -41,11 +44,16 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
 
       - name: Install dependencies
         run: npm ci --legacy-peer-deps
+
+      - name: Run linting and format checks
+        run: |
+          npm run lint
+          npm run prettier:check
 
       - name: Run type check
         run: npx tsc --noEmit
@@ -53,6 +61,7 @@ jobs:
   test:
     name: Run Tests
     runs-on: ubuntu-latest
+    needs: setup
 
     steps:
       - name: Checkout code
@@ -61,7 +70,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
 
       - name: Install dependencies
@@ -73,7 +82,7 @@ jobs:
   build:
     name: Build Project
     runs-on: ubuntu-latest
-    needs: [lint, typecheck, test]
+    needs: [quality, test]
 
     steps:
       - name: Checkout code
@@ -82,7 +91,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
 
       - name: Install dependencies
@@ -103,7 +112,7 @@ jobs:
   sca:
     name: SCA - Dependency Scanning
     runs-on: ubuntu-latest
-    needs: [lint, typecheck, test]
+    needs: [quality, test]
     timeout-minutes: 20
     permissions:
       security-events: write
@@ -116,7 +125,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
 
       - name: Install dependencies
@@ -129,7 +138,7 @@ jobs:
           path: '.'
           format: 'HTML'
 
-      - name: Upload OWASP Dependency-Check Report
+      - name: Upload OWASP report
         uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -140,17 +149,12 @@ jobs:
   sast:
     name: SAST - Code Analysis
     runs-on: ubuntu-latest
-    needs: [lint, typecheck, test]
+    needs: [quality, test]
     permissions:
       security-events: write
       contents: read
       actions: read
 
-    strategy:
-      fail-fast: false
-      matrix:
-        language: [javascript-typescript]
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -158,27 +162,27 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
 
       - name: Install dependencies
         run: npm ci --legacy-peer-deps
 
-      - name: Initialize CodeQL
+      - name: Initialize and run CodeQL
         uses: github/codeql-action/init@v3
         with:
-          languages: ${{ matrix.language }}
+          languages: javascript-typescript
           queries: security-extended
 
-      - name: Perform CodeQL Analysis
+      - name: Perform CodeQL analysis
         uses: github/codeql-action/analyze@v3
         with:
-          category: '/language:${{ matrix.language }}'
+          category: '/language:javascript-typescript'
 
   dast:
     name: DAST - Runtime Security Testing
     runs-on: ubuntu-latest
-    needs: [build]
+    needs: build
 
     steps:
       - name: Checkout code
@@ -187,7 +191,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
 
       - name: Download build artifacts
@@ -199,13 +203,13 @@ jobs:
       - name: Install dependencies
         run: npm ci --legacy-peer-deps
 
-      - name: Start application server
+      - name: Start application and run security scan
         run: |
           npm run dev &
           sleep 10
           echo "Application started on http://localhost:5174"
 
-      - name: Run OWASP ZAP Full Scan
+      - name: Run OWASP ZAP security scan
         uses: zaproxy/action-full-scan@v0.12.0
         with:
           target: 'http://localhost:5174'
