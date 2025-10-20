@@ -24,7 +24,7 @@ const mockedIsSameYear = vi.mocked(isSameYear);
 
 describe('date utils', () => {
   beforeEach(() => {
-    vi.resetAllMocks();
+    vi.clearAllMocks();
     vi.useFakeTimers();
   });
 
@@ -33,98 +33,124 @@ describe('date utils', () => {
   });
 
   describe('formatCustomDate', () => {
-    it('should return weekday when relative day is in WEEKDAYS', () => {
-      const mockDate = new Date('2023-01-01');
-      const mockTitleCaseDay = 'Monday';
+    type DateMockSetup = {
+      relativeDay: string;
+      titleCaseDay: string;
+      isSameYear?: boolean;
+      formattedDate?: string;
+    };
 
-      mockedFormatRelative.mockReturnValue('Monday at 12:00');
-      mockedToTitleCase.mockReturnValue(mockTitleCaseDay);
+    const setupDateMocks = ({ relativeDay, titleCaseDay, isSameYear: sameYear, formattedDate }: DateMockSetup) => {
+      const relativeFormat = relativeDay.includes('at') ? relativeDay : `${relativeDay} at 12:00`;
+      mockedFormatRelative.mockReturnValue(relativeFormat);
+      mockedToTitleCase.mockReturnValue(titleCaseDay);
 
-      const result = formatCustomDate(mockDate);
+      if (sameYear !== undefined) {
+        mockedIsSameYear.mockReturnValue(sameYear);
+      }
 
-      expect(mockedFormatRelative).toHaveBeenCalledWith(mockDate, expect.any(Date));
-      expect(mockedToTitleCase).toHaveBeenCalledWith(mockTitleCaseDay);
-      expect(result).toBe(mockTitleCaseDay);
+      if (formattedDate) {
+        mockedFormat.mockReturnValue(formattedDate);
+      }
+    };
+
+    describe('when date is a weekday', () => {
+      it('should return title-cased weekday name', () => {
+        const date = new Date('2023-01-01');
+        setupDateMocks({
+          relativeDay: 'Monday',
+          titleCaseDay: 'Monday',
+        });
+
+        const result = formatCustomDate(date);
+
+        expect(mockedFormatRelative).toHaveBeenCalledWith(date, expect.any(Date));
+        expect(mockedToTitleCase).toHaveBeenCalledWith('Monday');
+        expect(result).toBe('Monday');
+      });
     });
 
-    it('should return formatted date with month when same year and not weekday', () => {
-      const mockDate = new Date('2023-06-15');
-      const mockRelativeDay = 'Yesterday';
-      const mockFormattedDate = '15 Jun';
+    describe('when date is not a weekday', () => {
+      it('should return formatted date without year for same year', () => {
+        const date = new Date('2023-06-15');
+        setupDateMocks({
+          relativeDay: 'Yesterday',
+          titleCaseDay: 'Yesterday',
+          isSameYear: true,
+          formattedDate: '15 Jun',
+        });
 
-      mockedFormatRelative.mockReturnValue('Yesterday at 12:00');
-      mockedToTitleCase.mockReturnValue(mockRelativeDay);
-      mockedIsSameYear.mockReturnValue(true);
-      mockedFormat.mockReturnValue(mockFormattedDate);
+        const result = formatCustomDate(date);
 
-      const result = formatCustomDate(mockDate);
+        expect(mockedFormatRelative).toHaveBeenCalledWith(date, expect.any(Date));
+        expect(mockedIsSameYear).toHaveBeenCalledWith(date, expect.any(Date));
+        expect(mockedFormat).toHaveBeenCalledWith(date, 'dd MMM');
+        expect(result).toBe('15 Jun');
+      });
 
-      expect(mockedFormatRelative).toHaveBeenCalledWith(mockDate, expect.any(Date));
-      expect(mockedToTitleCase).toHaveBeenCalledWith('Yesterday');
-      expect(mockedIsSameYear).toHaveBeenCalledWith(mockDate, expect.any(Date));
-      expect(mockedFormat).toHaveBeenCalledWith(mockDate, 'dd MMM');
-      expect(result).toBe(mockFormattedDate);
+      it('should return formatted date with year for different year', () => {
+        const date = new Date('2022-06-15');
+        setupDateMocks({
+          relativeDay: 'Yesterday',
+          titleCaseDay: 'Yesterday',
+          isSameYear: false,
+          formattedDate: '15 Jun 2022',
+        });
+
+        const result = formatCustomDate(date);
+
+        expect(mockedFormatRelative).toHaveBeenCalledWith(date, expect.any(Date));
+        expect(mockedIsSameYear).toHaveBeenCalledWith(date, expect.any(Date));
+        expect(mockedFormat).toHaveBeenCalledWith(date, 'dd MMM yyyy');
+        expect(result).toBe('15 Jun 2022');
+      });
+
+      it('should handle relative format without "at" separator', () => {
+        const date = new Date('2023-01-01');
+        setupDateMocks({
+          relativeDay: 'Today',
+          titleCaseDay: 'Today',
+          isSameYear: true,
+          formattedDate: '01 Jan',
+        });
+
+        const result = formatCustomDate(date);
+
+        expect(mockedToTitleCase).toHaveBeenCalledWith('Today');
+        expect(result).toBe('01 Jan');
+      });
     });
 
-    it('should return formatted date with year when different year and not weekday', () => {
-      const mockDate = new Date('2022-06-15');
-      const mockRelativeDay = 'Yesterday';
-      const mockFormattedDate = '15 Jun 2022';
+    describe('date input types', () => {
+      const dateTypesMockData = [
+        {
+          type: 'Date object',
+          input: new Date('2023-01-01'),
+          expectedDay: 'Tuesday',
+        },
+        {
+          type: 'string',
+          input: '2023-01-01',
+          expectedDay: 'Tuesday',
+        },
+        {
+          type: 'timestamp',
+          input: 1672531200000,
+          expectedDay: 'Wednesday',
+        },
+      ];
 
-      mockedFormatRelative.mockReturnValue('Yesterday at 12:00');
-      mockedToTitleCase.mockReturnValue(mockRelativeDay);
-      mockedIsSameYear.mockReturnValue(false);
-      mockedFormat.mockReturnValue(mockFormattedDate);
+      it.each(dateTypesMockData)('should handle $type input', ({ input, expectedDay }) => {
+        setupDateMocks({
+          relativeDay: expectedDay,
+          titleCaseDay: expectedDay,
+        });
 
-      const result = formatCustomDate(mockDate);
+        const result = formatCustomDate(input);
 
-      expect(mockedFormatRelative).toHaveBeenCalledWith(mockDate, expect.any(Date));
-      expect(mockedToTitleCase).toHaveBeenCalledWith('Yesterday');
-      expect(mockedIsSameYear).toHaveBeenCalledWith(mockDate, expect.any(Date));
-      expect(mockedFormat).toHaveBeenCalledWith(mockDate, 'dd MMM yyyy');
-      expect(result).toBe(mockFormattedDate);
-    });
-
-    it('should handle string date input', () => {
-      const mockDateString = '2023-01-01';
-      const mockTitleCaseDay = 'Tuesday';
-
-      mockedFormatRelative.mockReturnValue('Tuesday at 12:00');
-      mockedToTitleCase.mockReturnValue(mockTitleCaseDay);
-
-      const result = formatCustomDate(mockDateString);
-
-      expect(mockedFormatRelative).toHaveBeenCalledWith(mockDateString, expect.any(Date));
-      expect(result).toBe(mockTitleCaseDay);
-    });
-
-    it('should handle timestamp date input', () => {
-      const mockTimestamp = 1672531200000;
-      const mockTitleCaseDay = 'Wednesday';
-
-      mockedFormatRelative.mockReturnValue('Wednesday at 12:00');
-      mockedToTitleCase.mockReturnValue(mockTitleCaseDay);
-
-      const result = formatCustomDate(mockTimestamp);
-
-      expect(mockedFormatRelative).toHaveBeenCalledWith(mockTimestamp, expect.any(Date));
-      expect(result).toBe(mockTitleCaseDay);
-    });
-
-    it('should split relative format correctly when no "at" present', () => {
-      const mockDate = new Date('2023-01-01');
-      const mockFormattedDate = '01 Jan';
-
-      mockedFormatRelative.mockReturnValue('Today');
-      mockedToTitleCase.mockReturnValue('Today');
-      mockedIsSameYear.mockReturnValue(true);
-      mockedFormat.mockReturnValue(mockFormattedDate);
-
-      const result = formatCustomDate(mockDate);
-
-      expect(mockedFormatRelative).toHaveBeenCalledWith(mockDate, expect.any(Date));
-      expect(mockedToTitleCase).toHaveBeenCalledWith('Today');
-      expect(result).toBe(mockFormattedDate);
+        expect(mockedFormatRelative).toHaveBeenCalledWith(input, expect.any(Date));
+        expect(result).toBe(expectedDay);
+      });
     });
   });
 });

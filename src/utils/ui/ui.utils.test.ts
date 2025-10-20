@@ -1,27 +1,20 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { cn, getTaskDueDateColorClass, getBadgeCount } from './ui.utils';
 import { ROUTES } from '@/constants/routes';
 import { TaskCounts } from '@/types/tasks.types';
 import clsx from 'clsx';
 import { isBefore, isToday, isTomorrow, startOfToday } from 'date-fns';
 import { twMerge } from 'tailwind-merge';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { cn, getBadgeCount, getTaskDueDateColorClass } from './ui.utils';
 
 vi.mock('clsx');
+vi.mock('tailwind-merge');
+vi.mock('date-fns');
 vi.mock('@/constants/routes', () => ({
   ROUTES: {
     INBOX: '/inbox',
     TODAY: '/today',
     UPCOMING: '/upcoming',
   },
-}));
-vi.mock('tailwind-merge', () => ({
-  twMerge: vi.fn(),
-}));
-vi.mock('date-fns', () => ({
-  isBefore: vi.fn(),
-  isToday: vi.fn(),
-  isTomorrow: vi.fn(),
-  startOfToday: vi.fn(),
 }));
 
 const mockedClsx = vi.mocked(clsx);
@@ -34,164 +27,150 @@ const mockedStartOfToday = vi.mocked(startOfToday);
 describe('ui utils', () => {
   beforeEach(() => {
     vi.resetAllMocks();
-    vi.useFakeTimers();
-  });
-
-  afterEach(() => {
-    vi.useRealTimers();
   });
 
   describe('cn', () => {
     it('should combine class names using clsx and twMerge', () => {
       const classNames = ['class1', 'class2'];
-      const mockClsxResult = 'class1 class2';
-      const mockTwMergeResult = 'merged-class1 merged-class2';
+      const clsxResult = 'class1 class2';
+      const expectedResult = 'merged-class1 merged-class2';
 
-      mockedClsx.mockReturnValue(mockClsxResult);
-      mockedTwMerge.mockReturnValue(mockTwMergeResult);
+      mockedClsx.mockReturnValue(clsxResult);
+      mockedTwMerge.mockReturnValue(expectedResult);
 
       const result = cn(...classNames);
 
       expect(mockedClsx).toHaveBeenCalledWith(classNames);
-      expect(mockedTwMerge).toHaveBeenCalledWith(mockClsxResult);
-      expect(result).toBe(mockTwMergeResult);
+      expect(mockedTwMerge).toHaveBeenCalledWith(clsxResult);
+      expect(result).toBe(expectedResult);
     });
   });
 
   describe('getTaskDueDateColorClass', () => {
+    const MOCK_TODAY = new Date('2023-01-15');
+    const OVERDUE_DATE = new Date('2023-01-14');
+    const TODAY_DATE = new Date('2023-01-15');
+    const TOMORROW_DATE = new Date('2023-01-16');
+    const FUTURE_DATE = new Date('2023-01-17');
+
     beforeEach(() => {
-      const mockToday = new Date('2023-01-15');
-      vi.setSystemTime(mockToday);
-      mockedStartOfToday.mockReturnValue(mockToday);
+      vi.useFakeTimers();
+      vi.setSystemTime(MOCK_TODAY);
+      mockedStartOfToday.mockReturnValue(MOCK_TODAY);
     });
 
-    it('should return undefined when dueDate is null', () => {
-      const dueDate = null;
-      const completed = false;
-
-      const result = getTaskDueDateColorClass(dueDate, completed);
-
-      expect(result).toBeUndefined();
+    afterEach(() => {
+      vi.useRealTimers();
     });
 
-    it('should return undefined when completed is undefined', () => {
-      const dueDate = new Date('2023-01-14');
-      const completed = undefined;
+    const setupDateMocks = (isBeforeValue: boolean, isTodayValue: boolean, isTomorrowValue: boolean) => {
+      mockedIsBefore.mockReturnValue(isBeforeValue);
+      mockedIsToday.mockReturnValue(isTodayValue);
+      mockedIsTomorrow.mockReturnValue(isTomorrowValue);
+    };
 
-      const result = getTaskDueDateColorClass(dueDate, completed);
+    describe('when dueDate or completed is null/undefined', () => {
+      it('should return undefined when dueDate is null', () => {
+        const dueDate = null;
+        const completed = false;
 
-      expect(result).toBeUndefined();
+        const result = getTaskDueDateColorClass(dueDate, completed);
+
+        expect(result).toBeUndefined();
+      });
+
+      it('should return undefined when completed is undefined', () => {
+        const dueDate = OVERDUE_DATE;
+        const completed = undefined;
+
+        const result = getTaskDueDateColorClass(dueDate, completed);
+
+        expect(result).toBeUndefined();
+      });
     });
 
-    it('should return red color for overdue incomplete tasks', () => {
-      const dueDate = new Date('2023-01-14');
-      const completed = false;
-      mockedIsBefore.mockReturnValue(true);
-      mockedIsToday.mockReturnValue(false);
-      mockedIsTomorrow.mockReturnValue(false);
+    describe('when task is incomplete', () => {
+      it('should return red color for overdue tasks', () => {
+        setupDateMocks(true, false, false);
 
-      const result = getTaskDueDateColorClass(dueDate, completed);
+        const result = getTaskDueDateColorClass(OVERDUE_DATE, false);
 
-      expect(mockedIsBefore).toHaveBeenCalledWith(dueDate, expect.any(Date));
-      expect(result).toBe('text-red-500');
+        expect(mockedIsBefore).toHaveBeenCalledWith(OVERDUE_DATE, MOCK_TODAY);
+        expect(result).toBe('text-red-500');
+      });
+
+      it('should return emerald color for tasks due today', () => {
+        setupDateMocks(false, true, false);
+
+        const result = getTaskDueDateColorClass(TODAY_DATE, false);
+
+        expect(mockedIsToday).toHaveBeenCalledWith(TODAY_DATE);
+        expect(result).toBe('text-emerald-500');
+      });
+
+      it('should return amber color for tasks due tomorrow', () => {
+        setupDateMocks(false, false, true);
+
+        const result = getTaskDueDateColorClass(TOMORROW_DATE, false);
+
+        expect(mockedIsTomorrow).toHaveBeenCalledWith(TOMORROW_DATE);
+        expect(result).toBe('text-amber-500');
+      });
+
+      it('should return undefined for tasks due beyond tomorrow', () => {
+        setupDateMocks(false, false, false);
+
+        const result = getTaskDueDateColorClass(FUTURE_DATE, false);
+
+        expect(result).toBeUndefined();
+      });
     });
 
-    it('should return emerald color for tasks due today', () => {
-      const dueDate = new Date('2023-01-15');
-      const completed = false;
-      mockedIsBefore.mockReturnValue(false);
-      mockedIsToday.mockReturnValue(true);
-      mockedIsTomorrow.mockReturnValue(false);
+    describe('when task is completed', () => {
+      it('should return undefined for tasks due tomorrow', () => {
+        setupDateMocks(false, false, true);
 
-      const result = getTaskDueDateColorClass(dueDate, completed);
+        const result = getTaskDueDateColorClass(TOMORROW_DATE, true);
 
-      expect(mockedIsToday).toHaveBeenCalledWith(dueDate);
-      expect(result).toBe('text-emerald-500');
-    });
-
-    it('should return amber color for tasks due tomorrow and incomplete', () => {
-      const dueDate = new Date('2023-01-16');
-      const completed = false;
-      mockedIsBefore.mockReturnValue(false);
-      mockedIsToday.mockReturnValue(false);
-      mockedIsTomorrow.mockReturnValue(true);
-
-      const result = getTaskDueDateColorClass(dueDate, completed);
-
-      expect(mockedIsTomorrow).toHaveBeenCalledWith(dueDate);
-      expect(result).toBe('text-amber-500');
-    });
-
-    it('should not return amber color for completed tasks due tomorrow', () => {
-      const dueDate = new Date('2023-01-16');
-      const completed = true;
-      mockedIsBefore.mockReturnValue(false);
-      mockedIsToday.mockReturnValue(false);
-      mockedIsTomorrow.mockReturnValue(true);
-
-      const result = getTaskDueDateColorClass(dueDate, completed);
-
-      expect(result).toBeUndefined();
-    });
-
-    it('should return undefined for future tasks beyond tomorrow', () => {
-      const dueDate = new Date('2023-01-17');
-      const completed = false;
-      mockedIsBefore.mockReturnValue(false);
-      mockedIsToday.mockReturnValue(false);
-      mockedIsTomorrow.mockReturnValue(false);
-
-      const result = getTaskDueDateColorClass(dueDate, completed);
-
-      expect(result).toBeUndefined();
+        expect(result).toBeUndefined();
+      });
     });
   });
 
   describe('getBadgeCount', () => {
-    it('should return inbox tasks count for inbox route', () => {
-      const href = ROUTES.INBOX;
-      const taskCounts: TaskCounts = {
-        inboxTasks: 5,
-        todayTasks: 3,
-      };
+    const createTaskCounts = (inboxTasks: number, todayTasks: number): TaskCounts => ({
+      inboxTasks,
+      todayTasks,
+    });
 
-      const result = getBadgeCount(href, taskCounts);
+    it('should return inbox tasks count for inbox route', () => {
+      const taskCounts = createTaskCounts(5, 3);
+
+      const result = getBadgeCount(ROUTES.INBOX, taskCounts);
 
       expect(result).toBe(5);
     });
 
     it('should return today tasks count for today route', () => {
-      const href = ROUTES.TODAY;
-      const taskCounts: TaskCounts = {
-        inboxTasks: 5,
-        todayTasks: 3,
-      };
+      const taskCounts = createTaskCounts(5, 3);
 
-      const result = getBadgeCount(href, taskCounts);
+      const result = getBadgeCount(ROUTES.TODAY, taskCounts);
 
       expect(result).toBe(3);
     });
 
-    it('should return undefined for other routes', () => {
-      const href = ROUTES.UPCOMING;
-      const taskCounts: TaskCounts = {
-        inboxTasks: 5,
-        todayTasks: 3,
-      };
+    it('should return undefined for routes without badge counts', () => {
+      const taskCounts = createTaskCounts(5, 3);
 
-      const result = getBadgeCount(href, taskCounts);
+      const result = getBadgeCount(ROUTES.UPCOMING, taskCounts);
 
       expect(result).toBeUndefined();
     });
 
-    it('should handle zero counts correctly', () => {
-      const href = ROUTES.INBOX;
-      const taskCounts: TaskCounts = {
-        inboxTasks: 0,
-        todayTasks: 0,
-      };
+    it('should return zero when count is zero', () => {
+      const taskCounts = createTaskCounts(0, 0);
 
-      const result = getBadgeCount(href, taskCounts);
+      const result = getBadgeCount(ROUTES.INBOX, taskCounts);
 
       expect(result).toBe(0);
     });

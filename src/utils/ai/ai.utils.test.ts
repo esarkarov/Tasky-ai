@@ -2,8 +2,11 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { generateContents } from '@/utils/ai/ai.utils';
 
 describe('ai utils', () => {
+  const MOCK_DATE = new Date('2023-01-01T00:00:00.000Z');
+
   beforeEach(() => {
     vi.useFakeTimers();
+    vi.setSystemTime(MOCK_DATE);
   });
 
   afterEach(() => {
@@ -11,58 +14,74 @@ describe('ai utils', () => {
   });
 
   describe('generateContents', () => {
-    it('should generate contents with provided prompt and current date', () => {
-      const mockDate = new Date('2023-01-01T00:00:00.000Z');
-      vi.setSystemTime(mockDate);
-      const prompt = 'Build a todo app';
+    const REQUIRED_SCHEMA_FIELDS = ['Task Schema:', 'content: string;', 'due_date: Date | null;'];
+    const REQUIRED_INSTRUCTIONS = [
+      'Generate and return a list of tasks',
+      'Ensure tasks align with the provided prompt',
+      "Set the 'due_date' relative to today's date",
+      'Return an array of tasks matching the schema',
+      'Output: Array<Task>',
+    ];
 
-      const result = generateContents(prompt);
+    const expectContainsAll = (result: string, items: string[]) => {
+      items.forEach((item) => {
+        expect(result).toContain(item);
+      });
+    };
 
-      expect(result).toContain('Build a todo app');
-      expect(result).toContain(mockDate.toString());
-      expect(result).toContain('Task Schema:');
-      expect(result).toContain('content: string;');
-      expect(result).toContain('due_date: Date | null;');
-      expect(result).toContain('Array<Task>');
+    describe('prompt handling', () => {
+      const promptMockData = [
+        {
+          description: 'standard prompt',
+          prompt: 'Build a todo app',
+          expectedSubstrings: ['Build a todo app'],
+        },
+        {
+          description: 'empty prompt',
+          prompt: '',
+          expectedSubstrings: ['Prompt: '],
+        },
+        {
+          description: 'prompt with special characters',
+          prompt: 'Task with "quotes" and {braces}',
+          expectedSubstrings: ['Task with "quotes" and {braces}'],
+        },
+      ];
+
+      it.each(promptMockData)('should handle $description', ({ prompt, expectedSubstrings }) => {
+        const result = generateContents(prompt);
+
+        expectContainsAll(result, expectedSubstrings);
+        expect(result).toContain(MOCK_DATE.toString());
+      });
     });
 
-    it('should generate contents with empty prompt', () => {
-      const mockDate = new Date('2023-01-01T00:00:00.000Z');
-      vi.setSystemTime(mockDate);
-      const prompt = '';
+    describe('schema and instructions', () => {
+      it('should include all required schema fields', () => {
+        const prompt = 'test prompt';
 
-      const result = generateContents(prompt);
+        const result = generateContents(prompt);
 
-      expect(result).toContain('Prompt: ');
-      expect(result).toContain(mockDate.toString());
+        expectContainsAll(result, REQUIRED_SCHEMA_FIELDS);
+      });
+
+      it('should include all required instructions', () => {
+        const prompt = 'test prompt';
+
+        const result = generateContents(prompt);
+
+        expectContainsAll(result, REQUIRED_INSTRUCTIONS);
+      });
     });
 
-    it('should generate contents with special characters in prompt', () => {
-      const mockDate = new Date('2023-01-01T00:00:00.000Z');
-      vi.setSystemTime(mockDate);
-      const prompt = 'Task with "quotes" and {braces}';
+    describe('date inclusion', () => {
+      it('should include current date in generated content', () => {
+        const prompt = 'Build a todo app';
 
-      const result = generateContents(prompt);
+        const result = generateContents(prompt);
 
-      expect(result).toContain('Task with "quotes" and {braces}');
-      expect(result).toContain(mockDate.toString());
-    });
-
-    it('should include all required schema fields and instructions', () => {
-      const mockDate = new Date('2023-01-01T00:00:00.000Z');
-      vi.setSystemTime(mockDate);
-      const prompt = 'test prompt';
-
-      const result = generateContents(prompt);
-
-      expect(result).toContain('Generate and return a list of tasks');
-      expect(result).toContain('Task Schema:');
-      expect(result).toContain('content: string;');
-      expect(result).toContain('due_date: Date | null;');
-      expect(result).toContain('Ensure tasks align with the provided prompt');
-      expect(result).toContain("Set the 'due_date' relative to today's date");
-      expect(result).toContain('Return an array of tasks matching the schema');
-      expect(result).toContain('Output: Array<Task>');
+        expect(result).toContain(MOCK_DATE.toString());
+      });
     });
   });
 });

@@ -3,120 +3,101 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 vi.stubGlobal('Response', vi.fn());
 
+const mockedResponse = vi.mocked(Response);
+
 describe('response utils', () => {
+  const JSON_HEADERS = { 'Content-Type': 'application/json' };
+
   beforeEach(() => {
-    vi.resetAllMocks();
+    vi.clearAllMocks();
   });
 
+  const expectResponseCalledWith = (data: unknown, status: number) => {
+    expect(mockedResponse).toHaveBeenCalledWith(JSON.stringify(data), {
+      status,
+      headers: JSON_HEADERS,
+    });
+  };
+
   describe('jsonResponse', () => {
-    it('should create response with JSON data and status', () => {
-      const data = { message: 'test' };
-      const status = 200;
+    const responseMockData = [
+      {
+        description: 'object data',
+        data: { message: 'test' },
+        status: 200,
+      },
+      {
+        description: 'array data',
+        data: [1, 2, 3],
+        status: 201,
+      },
+      {
+        description: 'null data',
+        data: null,
+        status: 204,
+      },
+    ];
 
+    it.each(responseMockData)('should create response with $description and status code', ({ data, status }) => {
       jsonResponse(data, status);
 
-      expect(Response).toHaveBeenCalledWith(JSON.stringify(data), {
-        status,
-        headers: { 'Content-Type': 'application/json' },
-      });
-    });
-
-    it('should handle different data types', () => {
-      const data = [1, 2, 3];
-      const status = 201;
-
-      jsonResponse(data, status);
-
-      expect(Response).toHaveBeenCalledWith(JSON.stringify(data), {
-        status,
-        headers: { 'Content-Type': 'application/json' },
-      });
-    });
-
-    it('should handle null data', () => {
-      const data = null;
-      const status = 204;
-
-      jsonResponse(data, status);
-
-      expect(Response).toHaveBeenCalledWith(JSON.stringify(data), {
-        status,
-        headers: { 'Content-Type': 'application/json' },
-      });
+      expectResponseCalledWith(data, status);
     });
   });
 
   describe('errorResponse', () => {
-    it('should create error response with message and status', () => {
-      const message = 'Not found';
-      const status = 404;
+    const httpErrorMockData = [
+      { message: 'Not found', status: 404 },
+      { message: 'Internal server error', status: 500 },
+      { message: 'Bad request', status: 400 },
+    ];
 
-      errorResponse(message, status);
+    it.each(httpErrorMockData)(
+      'should create error response with message "$message" and status $status',
+      ({ message, status }) => {
+        const expectedData = { success: false, message };
 
-      expect(Response).toHaveBeenCalledWith(JSON.stringify({ success: false, message }), {
-        status,
-        headers: { 'Content-Type': 'application/json' },
-      });
-    });
+        errorResponse(message, status);
 
-    it('should handle different error status codes', () => {
-      const message = 'Internal server error';
-      const status = 500;
-
-      errorResponse(message, status);
-
-      expect(Response).toHaveBeenCalledWith(JSON.stringify({ success: false, message }), {
-        status,
-        headers: { 'Content-Type': 'application/json' },
-      });
-    });
+        expectResponseCalledWith(expectedData, status);
+      }
+    );
   });
 
   describe('successResponse', () => {
-    it('should create success response with message and default status', () => {
-      const message = 'Operation successful';
+    const DEFAULT_SUCCESS_STATUS = 200;
 
-      successResponse(message);
+    describe('with message only', () => {
+      it('should create response with default status', () => {
+        const message = 'Operation successful';
+        const expectedData = { success: true, message };
 
-      expect(Response).toHaveBeenCalledWith(JSON.stringify({ success: true, message }), {
-        status: 200,
-        headers: { 'Content-Type': 'application/json' },
+        successResponse(message);
+
+        expectResponseCalledWith(expectedData, DEFAULT_SUCCESS_STATUS);
       });
     });
 
-    it('should create success response with message, data, and custom status', () => {
-      const message = 'Data retrieved';
-      const data = { items: [1, 2, 3], total: 3 };
-      const status = 201;
+    describe('with message and data', () => {
+      it('should merge data into response with default status', () => {
+        const message = 'Success with data';
+        const data = { id: 123, name: 'admin' };
+        const expectedData = { success: true, message, ...data };
 
-      successResponse(message, data, status);
+        successResponse(message, data);
 
-      expect(Response).toHaveBeenCalledWith(JSON.stringify({ success: true, message, ...data }), {
-        status,
-        headers: { 'Content-Type': 'application/json' },
+        expectResponseCalledWith(expectedData, DEFAULT_SUCCESS_STATUS);
       });
-    });
 
-    it('should create success response without additional data', () => {
-      const message = 'Success without data';
+      it('should merge data into response with custom status', () => {
+        const message = 'Data retrieved';
+        const data = { items: [1, 2, 3], total: 3 };
+        const status = 201;
+        const expectedData = { success: true, message, ...data };
 
-      successResponse(message);
+        successResponse(message, data, status);
 
-      expect(Response).toHaveBeenCalledWith(JSON.stringify({ success: true, message }), {
-        status: 200,
-        headers: { 'Content-Type': 'application/json' },
-      });
-    });
-
-    it('should merge data correctly when provided', () => {
-      const message = 'Success with data';
-      const data = { userId: 123, role: 'admin' };
-
-      successResponse(message, data);
-
-      expect(Response).toHaveBeenCalledWith(JSON.stringify({ success: true, message, userId: 123, role: 'admin' }), {
-        status: 200,
-        headers: { 'Content-Type': 'application/json' },
+        expectResponseCalledWith(expectedData, status);
       });
     });
   });

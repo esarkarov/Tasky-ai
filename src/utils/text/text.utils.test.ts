@@ -7,49 +7,41 @@ describe('text utils', () => {
   });
 
   describe('toTitleCase', () => {
-    it('should capitalize the first letter of a string', () => {
-      const input = 'hello world';
+    const capitalizeStringMockData = [
+      { input: 'hello world', expected: 'Hello world', description: 'multi-word string' },
+      { input: 'a', expected: 'A', description: 'single character' },
+      { input: '', expected: '', description: 'empty string' },
+    ];
 
+    it.each(capitalizeStringMockData)('should handle $description correctly', ({ input, expected }) => {
       const result = toTitleCase(input);
 
-      expect(result).toBe('Hello world');
-    });
-
-    it('should handle single character string', () => {
-      const input = 'a';
-
-      const result = toTitleCase(input);
-
-      expect(result).toBe('A');
-    });
-
-    it('should handle empty string', () => {
-      const input = '';
-
-      const result = toTitleCase(input);
-
-      expect(result).toBe('');
+      expect(result).toBe(expected);
     });
   });
 
   describe('truncateString', () => {
-    it('should truncate string when longer than max length', () => {
-      const input = 'This is a very long string that needs truncation';
-      const maxLength = 20;
+    const ELLIPSIS = '...';
 
-      const result = truncateString(input, maxLength);
+    describe('when string exceeds max length', () => {
+      it('should truncate and append ellipsis', () => {
+        const input = 'This is a very long string that needs truncation';
+        const maxLength = 20;
 
-      expect(result).toBe('This is a very long...');
-      expect(result.length).toBe(22);
+        const result = truncateString(input, maxLength);
+
+        expect(result).toBe('This is a very long...');
+        expect(result.length).toBe(19 + ELLIPSIS.length);
+      });
     });
 
-    it('should return original string when shorter than max length', () => {
+    it('should return original string when shorter', () => {
       const input = 'Short string';
       const maxLength = 20;
 
       const result = truncateString(input, maxLength);
 
-      expect(result).toBe('Short string');
+      expect(result).toBe(input);
     });
 
     it('should return original string when equal to max length', () => {
@@ -58,61 +50,68 @@ describe('text utils', () => {
 
       const result = truncateString(input, maxLength);
 
-      expect(result).toBe('Exactly twenty chars');
+      expect(result).toBe(input);
+      expect(result.length).toBe(maxLength);
     });
 
-    it('should handle empty string', () => {
-      const input = '';
-      const maxLength = 10;
+    describe('edge cases', () => {
+      it('should handle empty string', () => {
+        const input = '';
+        const maxLength = 10;
 
-      const result = truncateString(input, maxLength);
+        const result = truncateString(input, maxLength);
 
-      expect(result).toBe('');
-    });
+        expect(result).toBe('');
+      });
 
-    it('should handle max length of 1', () => {
-      const input = 'Hello';
-      const maxLength = 1;
+      it('should handle max length of 1', () => {
+        const input = 'Hello';
+        const maxLength = 1;
 
-      const result = truncateString(input, maxLength);
+        const result = truncateString(input, maxLength);
 
-      expect(result).toBe('...');
-    });
+        expect(result).toBe(ELLIPSIS);
+      });
 
-    it('should handle max length of 0', () => {
-      const input = 'Hello';
-      const maxLength = 0;
+      it('should handle max length of 0', () => {
+        const input = 'Hello';
+        const maxLength = 0;
 
-      const result = truncateString(input, maxLength);
+        const result = truncateString(input, maxLength);
 
-      expect(result).toBe('Hell...');
+        expect(result).toBe('Hell...');
+      });
     });
   });
 
   describe('generateID', () => {
+    const MOCK_TIMESTAMP = 1672531200000;
+    const ID_PATTERN = /^[a-z0-9]+$/;
+    let randomSpy: ReturnType<typeof vi.spyOn>;
+
     beforeEach(() => {
       vi.useFakeTimers();
+      randomSpy = vi.spyOn(Math, 'random');
     });
 
     afterEach(() => {
       vi.useRealTimers();
+      randomSpy.mockRestore();
     });
 
-    it('should generate a unique ID string', () => {
-      const mockTimestamp = 1672531200000;
-      vi.setSystemTime(mockTimestamp);
-      const mockRandomValue = 0.123456789;
-      vi.spyOn(Math, 'random').mockReturnValue(mockRandomValue);
+    it('should generate a valid alphanumeric ID', () => {
+      vi.setSystemTime(MOCK_TIMESTAMP);
+      randomSpy.mockReturnValue(0.123456789);
 
       const result = generateID();
 
-      expect(result).toMatch(/^[a-z0-9]+$/);
-      expect(Math.random).toHaveBeenCalled();
+      expect(result).toMatch(ID_PATTERN);
+      expect(randomSpy).toHaveBeenCalled();
     });
 
-    it('should generate different IDs on subsequent calls', () => {
+    it('should generate unique IDs for different random values', () => {
       let callCount = 0;
-      vi.spyOn(Math, 'random').mockImplementation(() => {
+      randomSpy.mockImplementation(() => {
         callCount++;
         return callCount * 0.1;
       });
@@ -123,14 +122,14 @@ describe('text utils', () => {
       expect(id1).not.toBe(id2);
     });
 
-    it('should include timestamp in the ID', () => {
-      const mockTimestamp = 1672531200000;
-      vi.setSystemTime(mockTimestamp);
-      vi.spyOn(Math, 'random').mockReturnValue(0.5);
+    it('should incorporate timestamp in base36 format', () => {
+      vi.setSystemTime(MOCK_TIMESTAMP);
+      randomSpy.mockReturnValue(0.5);
+      const expectedTimestampPart = MOCK_TIMESTAMP.toString(36);
 
       const result = generateID();
 
-      expect(result).toContain(Date.now().toString(36));
+      expect(result).toContain(expectedTimestampPart);
     });
   });
 });
