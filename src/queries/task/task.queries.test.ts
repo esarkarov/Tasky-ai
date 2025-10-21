@@ -20,270 +20,208 @@ vi.mock('appwrite', () => ({
 const mockedQuery = vi.mocked(Query);
 
 describe('taskQueries', () => {
+  const MOCK_USER_ID = 'user-123';
+  const MOCK_TODAY_DATE = '2023-01-01';
+  const MOCK_TOMORROW_DATE = '2023-01-02';
+
+  const setupQueryMocks = () => {
+    mockedQuery.select.mockReturnValue('select-id');
+    mockedQuery.equal.mockReturnValue('equal-query');
+    mockedQuery.isNull.mockReturnValue('is-null');
+    mockedQuery.isNotNull.mockReturnValue('is-not-null');
+    mockedQuery.greaterThanEqual.mockReturnValue('greater-than-equal');
+    mockedQuery.lessThan.mockReturnValue('less-than');
+    mockedQuery.and.mockReturnValue('and-query');
+    mockedQuery.orderAsc.mockReturnValue('order-asc');
+    mockedQuery.orderDesc.mockReturnValue('order-desc');
+    mockedQuery.limit.mockReturnValue('limit-query');
+  };
+
   beforeEach(() => {
-    vi.resetAllMocks();
+    vi.clearAllMocks();
   });
 
-  describe('selectIdOnly', () => {
-    it('should return query to select only ID fields', () => {
-      const mockSelectQuery = 'select-query';
-      mockedQuery.select.mockReturnValue(mockSelectQuery);
+  describe('individual query methods', () => {
+    it('should create select query for ID only', () => {
+      const mockQuery = 'select-query';
+      mockedQuery.select.mockReturnValue(mockQuery);
 
       const result = taskQueries.selectIdOnly();
 
       expect(mockedQuery.select).toHaveBeenCalledWith(['$id']);
-      expect(result).toBe(mockSelectQuery);
+      expect(result).toBe(mockQuery);
     });
-  });
 
-  describe('byUserId', () => {
-    it('should return query to filter by user ID', () => {
-      const userId = 'user-123';
-      const mockEqualQuery = 'equal-user';
-      mockedQuery.equal.mockReturnValue(mockEqualQuery);
+    it('should create equal query for user ID', () => {
+      const mockQuery = 'equal-user';
+      mockedQuery.equal.mockReturnValue(mockQuery);
 
-      const result = taskQueries.byUserId(userId);
+      const result = taskQueries.byUserId(MOCK_USER_ID);
 
-      expect(mockedQuery.equal).toHaveBeenCalledWith('userId', userId);
-      expect(result).toBe(mockEqualQuery);
+      expect(mockedQuery.equal).toHaveBeenCalledWith('userId', MOCK_USER_ID);
+      expect(result).toBe(mockQuery);
     });
-  });
 
-  describe('completed', () => {
-    it('should return query to filter by completion status', () => {
+    it('should create equal query for completion status', () => {
       const isCompleted = true;
-      const mockEqualQuery = 'equal-completed';
-      mockedQuery.equal.mockReturnValue(mockEqualQuery);
+      const mockQuery = 'equal-completed';
+      mockedQuery.equal.mockReturnValue(mockQuery);
 
       const result = taskQueries.completed(isCompleted);
 
       expect(mockedQuery.equal).toHaveBeenCalledWith('completed', isCompleted);
-      expect(result).toBe(mockEqualQuery);
+      expect(result).toBe(mockQuery);
     });
-  });
 
-  describe('nullProject', () => {
-    it('should return query to filter tasks with null projectId', () => {
-      const mockIsNullQuery = 'is-null-project';
-      mockedQuery.isNull.mockReturnValue(mockIsNullQuery);
+    it('should create isNull query for null projectId', () => {
+      const mockQuery = 'is-null-project';
+      mockedQuery.isNull.mockReturnValue(mockQuery);
 
       const result = taskQueries.nullProject();
 
       expect(mockedQuery.isNull).toHaveBeenCalledWith('projectId');
-      expect(result).toBe(mockIsNullQuery);
+      expect(result).toBe(mockQuery);
     });
-  });
 
-  describe('notNullDueDate', () => {
-    it('should return query to filter tasks with non-null due_date', () => {
-      const mockIsNotNullQuery = 'is-not-null-due-date';
-      mockedQuery.isNotNull.mockReturnValue(mockIsNotNullQuery);
+    it('should create isNotNull query for due_date', () => {
+      const mockQuery = 'is-not-null-due-date';
+      mockedQuery.isNotNull.mockReturnValue(mockQuery);
 
       const result = taskQueries.notNullDueDate();
 
       expect(mockedQuery.isNotNull).toHaveBeenCalledWith('due_date');
-      expect(result).toBe(mockIsNotNullQuery);
+      expect(result).toBe(mockQuery);
     });
-  });
 
-  describe('dueDateRange', () => {
-    it('should return query to filter tasks within due date range', () => {
+    it('should create and query for due date range', () => {
       const startDate = '2023-01-01';
       const endDate = '2023-01-02';
-      const mockGreaterThanQuery = 'greater-than';
-      const mockLessThanQuery = 'less-than';
-      const mockAndQuery = 'and-query';
-
-      mockedQuery.greaterThanEqual.mockReturnValue(mockGreaterThanQuery);
-      mockedQuery.lessThan.mockReturnValue(mockLessThanQuery);
-      mockedQuery.and.mockReturnValue(mockAndQuery);
+      const mockGreaterThan = 'greater-than';
+      const mockLessThan = 'less-than';
+      const mockAnd = 'and-query';
+      mockedQuery.greaterThanEqual.mockReturnValue(mockGreaterThan);
+      mockedQuery.lessThan.mockReturnValue(mockLessThan);
+      mockedQuery.and.mockReturnValue(mockAnd);
 
       const result = taskQueries.dueDateRange(startDate, endDate);
 
       expect(mockedQuery.greaterThanEqual).toHaveBeenCalledWith('due_date', startDate);
       expect(mockedQuery.lessThan).toHaveBeenCalledWith('due_date', endDate);
-      expect(mockedQuery.and).toHaveBeenCalledWith([mockGreaterThanQuery, mockLessThanQuery]);
-      expect(result).toBe(mockAndQuery);
+      expect(mockedQuery.and).toHaveBeenCalledWith([mockGreaterThan, mockLessThan]);
+      expect(result).toBe(mockAnd);
     });
-  });
 
-  describe('dueDateFrom', () => {
-    it('should return query to filter tasks with due date from specified date', () => {
+    it('should create greaterThanEqual query for due date from', () => {
       const date = '2023-01-01';
-      const mockGreaterThanQuery = 'greater-than-equal';
-      mockedQuery.greaterThanEqual.mockReturnValue(mockGreaterThanQuery);
+      const mockQuery = 'greater-than-equal';
+      mockedQuery.greaterThanEqual.mockReturnValue(mockQuery);
 
       const result = taskQueries.dueDateFrom(date);
 
       expect(mockedQuery.greaterThanEqual).toHaveBeenCalledWith('due_date', date);
-      expect(result).toBe(mockGreaterThanQuery);
+      expect(result).toBe(mockQuery);
     });
-  });
 
-  describe('orderByDueDateAsc', () => {
-    it('should return query to order by due date ascending', () => {
-      const mockOrderQuery = 'order-asc';
-      mockedQuery.orderAsc.mockReturnValue(mockOrderQuery);
+    it('should create orderAsc query for due_date', () => {
+      const mockQuery = 'order-asc';
+      mockedQuery.orderAsc.mockReturnValue(mockQuery);
 
       const result = taskQueries.orderByDueDateAsc();
 
       expect(mockedQuery.orderAsc).toHaveBeenCalledWith('due_date');
-      expect(result).toBe(mockOrderQuery);
+      expect(result).toBe(mockQuery);
     });
-  });
 
-  describe('orderByUpdatedDesc', () => {
-    it('should return query to order by updated date descending', () => {
-      const mockOrderQuery = 'order-desc';
-      mockedQuery.orderDesc.mockReturnValue(mockOrderQuery);
+    it('should create orderDesc query for $updatedAt', () => {
+      const mockQuery = 'order-desc';
+      mockedQuery.orderDesc.mockReturnValue(mockQuery);
 
       const result = taskQueries.orderByUpdatedDesc();
 
       expect(mockedQuery.orderDesc).toHaveBeenCalledWith('$updatedAt');
-      expect(result).toBe(mockOrderQuery);
+      expect(result).toBe(mockQuery);
     });
-  });
 
-  describe('limit', () => {
-    it('should return query to limit results', () => {
+    it('should create limit query', () => {
       const count = 10;
-      const mockLimitQuery = 'limit-query';
-      mockedQuery.limit.mockReturnValue(mockLimitQuery);
+      const mockQuery = 'limit-query';
+      mockedQuery.limit.mockReturnValue(mockQuery);
 
       const result = taskQueries.limit(count);
 
       expect(mockedQuery.limit).toHaveBeenCalledWith(count);
-      expect(result).toBe(mockLimitQuery);
+      expect(result).toBe(mockQuery);
     });
   });
 
-  describe('todayTasks', () => {
-    it('should return array of queries for today tasks', () => {
-      const userId = 'user-123';
-      const todayDate = '2023-01-01';
-      const tomorrowDate = '2023-01-02';
-
-      const mockByUserId = 'by-user';
-      const mockCompleted = 'completed-false';
-      const mockDueDateRange = 'due-date-range';
-
-      mockedQuery.equal.mockReturnValueOnce(mockByUserId).mockReturnValueOnce(mockCompleted);
-      mockedQuery.and.mockReturnValue(mockDueDateRange);
-
-      const result = taskQueries.todayTasks(todayDate, tomorrowDate, userId);
-
-      expect(result).toEqual([mockByUserId, mockCompleted, mockDueDateRange]);
-      expect(mockedQuery.equal).toHaveBeenNthCalledWith(1, 'userId', userId);
-      expect(mockedQuery.equal).toHaveBeenNthCalledWith(2, 'completed', false);
+  describe('composite query methods', () => {
+    beforeEach(() => {
+      setupQueryMocks();
     });
-  });
 
-  describe('todayCount', () => {
-    it('should return array of queries for today task count', () => {
-      const userId = 'user-123';
-      const todayDate = '2023-01-01';
-      const tomorrowDate = '2023-01-02';
+    describe('todayTasks', () => {
+      it('should return queries for today incomplete tasks', () => {
+        const result = taskQueries.todayTasks(MOCK_TODAY_DATE, MOCK_TOMORROW_DATE, MOCK_USER_ID);
 
-      const mockSelectId = 'select-id';
-      const mockByUserId = 'by-user';
-      const mockCompleted = 'completed-false';
-      const mockDueDateRange = 'due-date-range';
-      const mockLimit = 'limit-1';
-
-      mockedQuery.select.mockReturnValue(mockSelectId);
-      mockedQuery.equal.mockReturnValueOnce(mockByUserId).mockReturnValueOnce(mockCompleted);
-      mockedQuery.and.mockReturnValue(mockDueDateRange);
-      mockedQuery.limit.mockReturnValue(mockLimit);
-
-      const result = taskQueries.todayCount(todayDate, tomorrowDate, userId);
-
-      expect(result).toEqual([mockSelectId, mockByUserId, mockCompleted, mockDueDateRange, mockLimit]);
-      expect(mockedQuery.limit).toHaveBeenCalledWith(1);
+        expect(result).toEqual(['equal-query', 'equal-query', 'and-query']);
+        expect(mockedQuery.equal).toHaveBeenCalledWith('userId', MOCK_USER_ID);
+        expect(mockedQuery.equal).toHaveBeenCalledWith('completed', false);
+      });
     });
-  });
 
-  describe('inboxTasks', () => {
-    it('should return array of queries for inbox tasks', () => {
-      const userId = 'user-123';
+    describe('todayCount', () => {
+      it('should return queries for today task count', () => {
+        const result = taskQueries.todayCount(MOCK_TODAY_DATE, MOCK_TOMORROW_DATE, MOCK_USER_ID);
 
-      const mockByUserId = 'by-user';
-      const mockCompleted = 'completed-false';
-      const mockNullProject = 'null-project';
-
-      mockedQuery.equal.mockReturnValueOnce(mockByUserId).mockReturnValueOnce(mockCompleted);
-      mockedQuery.isNull.mockReturnValue(mockNullProject);
-
-      const result = taskQueries.inboxTasks(userId);
-
-      expect(result).toEqual([mockByUserId, mockCompleted, mockNullProject]);
-      expect(mockedQuery.equal).toHaveBeenNthCalledWith(1, 'userId', userId);
-      expect(mockedQuery.equal).toHaveBeenNthCalledWith(2, 'completed', false);
-      expect(mockedQuery.isNull).toHaveBeenCalledWith('projectId');
+        expect(result).toEqual(['select-id', 'equal-query', 'equal-query', 'and-query', 'limit-query']);
+        expect(mockedQuery.select).toHaveBeenCalledWith(['$id']);
+        expect(mockedQuery.limit).toHaveBeenCalledWith(1);
+      });
     });
-  });
 
-  describe('inboxCount', () => {
-    it('should return array of queries for inbox task count', () => {
-      const userId = 'user-123';
+    describe('inboxTasks', () => {
+      it('should return queries for inbox incomplete tasks', () => {
+        const result = taskQueries.inboxTasks(MOCK_USER_ID);
 
-      const mockSelectId = 'select-id';
-      const mockByUserId = 'by-user';
-      const mockCompleted = 'completed-false';
-      const mockNullProject = 'null-project';
-      const mockLimit = 'limit-1';
-
-      mockedQuery.select.mockReturnValue(mockSelectId);
-      mockedQuery.equal.mockReturnValueOnce(mockByUserId).mockReturnValueOnce(mockCompleted);
-      mockedQuery.isNull.mockReturnValue(mockNullProject);
-      mockedQuery.limit.mockReturnValue(mockLimit);
-
-      const result = taskQueries.inboxCount(userId);
-
-      expect(result).toEqual([mockSelectId, mockByUserId, mockCompleted, mockNullProject, mockLimit]);
+        expect(result).toEqual(['equal-query', 'equal-query', 'is-null']);
+        expect(mockedQuery.equal).toHaveBeenCalledWith('userId', MOCK_USER_ID);
+        expect(mockedQuery.equal).toHaveBeenCalledWith('completed', false);
+        expect(mockedQuery.isNull).toHaveBeenCalledWith('projectId');
+      });
     });
-  });
 
-  describe('completedTasks', () => {
-    it('should return array of queries for completed tasks', () => {
-      const userId = 'user-123';
+    describe('inboxCount', () => {
+      it('should return queries for inbox task count', () => {
+        const result = taskQueries.inboxCount(MOCK_USER_ID);
 
-      const mockByUserId = 'by-user';
-      const mockCompleted = 'completed-true';
-      const mockOrderDesc = 'order-desc';
-
-      mockedQuery.equal.mockReturnValueOnce(mockByUserId).mockReturnValueOnce(mockCompleted);
-      mockedQuery.orderDesc.mockReturnValue(mockOrderDesc);
-
-      const result = taskQueries.completedTasks(userId);
-
-      expect(result).toEqual([mockByUserId, mockCompleted, mockOrderDesc]);
-      expect(mockedQuery.equal).toHaveBeenNthCalledWith(1, 'userId', userId);
-      expect(mockedQuery.equal).toHaveBeenNthCalledWith(2, 'completed', true);
-      expect(mockedQuery.orderDesc).toHaveBeenCalledWith('$updatedAt');
+        expect(result).toEqual(['select-id', 'equal-query', 'equal-query', 'is-null', 'limit-query']);
+        expect(mockedQuery.select).toHaveBeenCalledWith(['$id']);
+        expect(mockedQuery.limit).toHaveBeenCalledWith(1);
+      });
     });
-  });
 
-  describe('upcomingTasks', () => {
-    it('should return array of queries for upcoming tasks', () => {
-      const userId = 'user-123';
-      const todayDate = '2023-01-01';
+    describe('completedTasks', () => {
+      it('should return queries for completed tasks', () => {
+        const result = taskQueries.completedTasks(MOCK_USER_ID);
 
-      const mockByUserId = 'by-user';
-      const mockCompleted = 'completed-false';
-      const mockNotNullDueDate = 'not-null-due-date';
-      const mockDueDateFrom = 'due-date-from';
-      const mockOrderAsc = 'order-asc';
+        expect(result).toEqual(['equal-query', 'equal-query', 'order-desc']);
+        expect(mockedQuery.equal).toHaveBeenCalledWith('userId', MOCK_USER_ID);
+        expect(mockedQuery.equal).toHaveBeenCalledWith('completed', true);
+        expect(mockedQuery.orderDesc).toHaveBeenCalledWith('$updatedAt');
+      });
+    });
 
-      mockedQuery.equal.mockReturnValueOnce(mockByUserId).mockReturnValueOnce(mockCompleted);
-      mockedQuery.isNotNull.mockReturnValue(mockNotNullDueDate);
-      mockedQuery.greaterThanEqual.mockReturnValue(mockDueDateFrom);
-      mockedQuery.orderAsc.mockReturnValue(mockOrderAsc);
+    describe('upcomingTasks', () => {
+      it('should return queries for upcoming incomplete tasks', () => {
+        const result = taskQueries.upcomingTasks(MOCK_TODAY_DATE, MOCK_USER_ID);
 
-      const result = taskQueries.upcomingTasks(todayDate, userId);
-
-      expect(result).toEqual([mockByUserId, mockCompleted, mockNotNullDueDate, mockDueDateFrom, mockOrderAsc]);
-      expect(mockedQuery.greaterThanEqual).toHaveBeenCalledWith('due_date', todayDate);
-      expect(mockedQuery.orderAsc).toHaveBeenCalledWith('due_date');
+        expect(result).toEqual(['equal-query', 'equal-query', 'is-not-null', 'greater-than-equal', 'order-asc']);
+        expect(mockedQuery.equal).toHaveBeenCalledWith('userId', MOCK_USER_ID);
+        expect(mockedQuery.equal).toHaveBeenCalledWith('completed', false);
+        expect(mockedQuery.isNotNull).toHaveBeenCalledWith('due_date');
+        expect(mockedQuery.greaterThanEqual).toHaveBeenCalledWith('due_date', MOCK_TODAY_DATE);
+        expect(mockedQuery.orderAsc).toHaveBeenCalledWith('due_date');
+      });
     });
   });
 });

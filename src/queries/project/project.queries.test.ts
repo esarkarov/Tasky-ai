@@ -15,166 +15,122 @@ vi.mock('appwrite', () => ({
 const mockedQuery = vi.mocked(Query);
 
 describe('projectQueries', () => {
+  const MOCK_USER_ID = 'user-123';
+  const PROJECT_LIST_FIELDS = ['$id', 'name', 'color_name', 'color_hex', '$createdAt'];
+
+  const setupQueryMocks = () => {
+    mockedQuery.select.mockReturnValue('select-fields');
+    mockedQuery.equal.mockReturnValue('by-user');
+    mockedQuery.orderDesc.mockReturnValue('order-desc');
+    mockedQuery.contains.mockReturnValue('search-query');
+    mockedQuery.limit.mockReturnValue('limit-query');
+  };
+
   beforeEach(() => {
-    vi.resetAllMocks();
+    vi.clearAllMocks();
   });
 
-  describe('selectListFields', () => {
-    it('should return query to select project list fields', () => {
-      const mockSelectQuery = 'select-query';
-      mockedQuery.select.mockReturnValue(mockSelectQuery);
+  describe('individual query methods', () => {
+    it('should create select query for list fields', () => {
+      const mockQuery = 'select-query';
+      mockedQuery.select.mockReturnValue(mockQuery);
 
       const result = projectQueries.selectListFields();
 
-      expect(mockedQuery.select).toHaveBeenCalledWith(['$id', 'name', 'color_name', 'color_hex', '$createdAt']);
-      expect(result).toBe(mockSelectQuery);
+      expect(mockedQuery.select).toHaveBeenCalledWith(PROJECT_LIST_FIELDS);
+      expect(result).toBe(mockQuery);
     });
-  });
 
-  describe('byUserId', () => {
-    it('should return query to filter by user ID', () => {
-      const userId = 'user-123';
-      const mockEqualQuery = 'equal-user';
-      mockedQuery.equal.mockReturnValue(mockEqualQuery);
+    it('should create equal query for user ID', () => {
+      const mockQuery = 'equal-user';
+      mockedQuery.equal.mockReturnValue(mockQuery);
 
-      const result = projectQueries.byUserId(userId);
+      const result = projectQueries.byUserId(MOCK_USER_ID);
 
-      expect(mockedQuery.equal).toHaveBeenCalledWith('userId', userId);
-      expect(result).toBe(mockEqualQuery);
+      expect(mockedQuery.equal).toHaveBeenCalledWith('userId', MOCK_USER_ID);
+      expect(result).toBe(mockQuery);
     });
-  });
 
-  describe('searchByName', () => {
-    it('should return query to search by project name', () => {
+    it('should create contains query for name search', () => {
       const searchTerm = 'test project';
-      const mockContainsQuery = 'contains-query';
-      mockedQuery.contains.mockReturnValue(mockContainsQuery);
+      const mockQuery = 'contains-query';
+      mockedQuery.contains.mockReturnValue(mockQuery);
 
       const result = projectQueries.searchByName(searchTerm);
 
       expect(mockedQuery.contains).toHaveBeenCalledWith('name', searchTerm);
-      expect(result).toBe(mockContainsQuery);
+      expect(result).toBe(mockQuery);
     });
-  });
 
-  describe('orderByCreatedDesc', () => {
-    it('should return query to order by creation date descending', () => {
-      const mockOrderQuery = 'order-desc';
-      mockedQuery.orderDesc.mockReturnValue(mockOrderQuery);
+    it('should create orderDesc query for creation date', () => {
+      const mockQuery = 'order-desc';
+      mockedQuery.orderDesc.mockReturnValue(mockQuery);
 
       const result = projectQueries.orderByCreatedDesc();
 
       expect(mockedQuery.orderDesc).toHaveBeenCalledWith('$createdAt');
-      expect(result).toBe(mockOrderQuery);
+      expect(result).toBe(mockQuery);
     });
-  });
 
-  describe('limit', () => {
-    it('should return query to limit results', () => {
+    it('should create limit query', () => {
       const count = 5;
-      const mockLimitQuery = 'limit-query';
-      mockedQuery.limit.mockReturnValue(mockLimitQuery);
+      const mockQuery = 'limit-query';
+      mockedQuery.limit.mockReturnValue(mockQuery);
 
       const result = projectQueries.limit(count);
 
       expect(mockedQuery.limit).toHaveBeenCalledWith(count);
-      expect(result).toBe(mockLimitQuery);
+      expect(result).toBe(mockQuery);
     });
   });
 
   describe('userProjects', () => {
-    it('should return base queries for user projects without options', () => {
-      const userId = 'user-123';
-      const mockSelect = 'select-fields';
-      const mockByUser = 'by-user';
-      const mockOrder = 'order-desc';
+    beforeEach(() => {
+      setupQueryMocks();
+    });
 
-      mockedQuery.select.mockReturnValue(mockSelect);
-      mockedQuery.equal.mockReturnValue(mockByUser);
-      mockedQuery.orderDesc.mockReturnValue(mockOrder);
+    it('should return base queries without options', () => {
+      const result = projectQueries.userProjects(MOCK_USER_ID);
 
-      const result = projectQueries.userProjects(userId);
-
-      expect(result).toEqual([mockSelect, mockByUser, mockOrder]);
-      expect(mockedQuery.select).toHaveBeenCalledWith(['$id', 'name', 'color_name', 'color_hex', '$createdAt']);
-      expect(mockedQuery.equal).toHaveBeenCalledWith('userId', userId);
+      expect(result).toEqual(['select-fields', 'by-user', 'order-desc']);
+      expect(mockedQuery.select).toHaveBeenCalledWith(PROJECT_LIST_FIELDS);
+      expect(mockedQuery.equal).toHaveBeenCalledWith('userId', MOCK_USER_ID);
       expect(mockedQuery.orderDesc).toHaveBeenCalledWith('$createdAt');
     });
 
-    it('should include search query when search option is provided', () => {
-      const userId = 'user-123';
+    it('should include search query when search term provided', () => {
       const searchTerm = 'test';
-      const mockSelect = 'select-fields';
-      const mockByUser = 'by-user';
-      const mockOrder = 'order-desc';
-      const mockSearch = 'search-query';
 
-      mockedQuery.select.mockReturnValue(mockSelect);
-      mockedQuery.equal.mockReturnValue(mockByUser);
-      mockedQuery.orderDesc.mockReturnValue(mockOrder);
-      mockedQuery.contains.mockReturnValue(mockSearch);
+      const result = projectQueries.userProjects(MOCK_USER_ID, { search: searchTerm });
 
-      const result = projectQueries.userProjects(userId, { search: searchTerm });
-
-      expect(result).toEqual([mockSelect, mockByUser, mockOrder, mockSearch]);
+      expect(result).toEqual(['select-fields', 'by-user', 'order-desc', 'search-query']);
       expect(mockedQuery.contains).toHaveBeenCalledWith('name', searchTerm);
     });
 
-    it('should include limit query when limit option is provided', () => {
-      const userId = 'user-123';
+    it('should include limit query when limit provided', () => {
       const limit = 10;
-      const mockSelect = 'select-fields';
-      const mockByUser = 'by-user';
-      const mockOrder = 'order-desc';
-      const mockLimit = 'limit-query';
 
-      mockedQuery.select.mockReturnValue(mockSelect);
-      mockedQuery.equal.mockReturnValue(mockByUser);
-      mockedQuery.orderDesc.mockReturnValue(mockOrder);
-      mockedQuery.limit.mockReturnValue(mockLimit);
+      const result = projectQueries.userProjects(MOCK_USER_ID, { limit });
 
-      const result = projectQueries.userProjects(userId, { limit });
-
-      expect(result).toEqual([mockSelect, mockByUser, mockOrder, mockLimit]);
+      expect(result).toEqual(['select-fields', 'by-user', 'order-desc', 'limit-query']);
       expect(mockedQuery.limit).toHaveBeenCalledWith(limit);
     });
 
-    it('should include both search and limit queries when both options are provided', () => {
-      const userId = 'user-123';
+    it('should include both search and limit queries when both provided', () => {
       const searchTerm = 'test';
       const limit = 5;
-      const mockSelect = 'select-fields';
-      const mockByUser = 'by-user';
-      const mockOrder = 'order-desc';
-      const mockSearch = 'search-query';
-      const mockLimit = 'limit-query';
 
-      mockedQuery.select.mockReturnValue(mockSelect);
-      mockedQuery.equal.mockReturnValue(mockByUser);
-      mockedQuery.orderDesc.mockReturnValue(mockOrder);
-      mockedQuery.contains.mockReturnValue(mockSearch);
-      mockedQuery.limit.mockReturnValue(mockLimit);
+      const result = projectQueries.userProjects(MOCK_USER_ID, { search: searchTerm, limit });
 
-      const result = projectQueries.userProjects(userId, { search: searchTerm, limit });
-
-      expect(result).toEqual([mockSelect, mockByUser, mockOrder, mockSearch, mockLimit]);
+      expect(result).toEqual(['select-fields', 'by-user', 'order-desc', 'search-query', 'limit-query']);
       expect(mockedQuery.contains).toHaveBeenCalledWith('name', searchTerm);
       expect(mockedQuery.limit).toHaveBeenCalledWith(limit);
     });
 
-    it('should not include search query when search term is empty string', () => {
-      const userId = 'user-123';
-      const mockSelect = 'select-fields';
-      const mockByUser = 'by-user';
-      const mockOrder = 'order-desc';
+    it('should exclude search query when search term is empty', () => {
+      const result = projectQueries.userProjects(MOCK_USER_ID, { search: '' });
 
-      mockedQuery.select.mockReturnValue(mockSelect);
-      mockedQuery.equal.mockReturnValue(mockByUser);
-      mockedQuery.orderDesc.mockReturnValue(mockOrder);
-
-      const result = projectQueries.userProjects(userId, { search: '' });
-
-      expect(result).toEqual([mockSelect, mockByUser, mockOrder]);
+      expect(result).toEqual(['select-fields', 'by-user', 'order-desc']);
       expect(mockedQuery.contains).not.toHaveBeenCalled();
     });
   });
