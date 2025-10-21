@@ -20,64 +20,59 @@ const mockedGenAI = vi.mocked(genAI);
 const mockedGenerateContent = vi.mocked(mockedGenAI.models.generateContent);
 
 describe('aiRepository', () => {
+  const MOCK_CONTENTS = 'Test prompt content';
+
+  const createMockResponse = (overrides?: Partial<GenerateContentResponse>): GenerateContentResponse => ({
+    text: '{"result": "test response"}',
+    data: '',
+    functionCalls: [],
+    executableCode: '',
+    codeExecutionResult: '',
+    ...overrides,
+  });
+
+  const expectGenerateContentCalledWith = (contents: string) => {
+    expect(mockedGenerateContent).toHaveBeenCalledWith({
+      model: DEFAULT_GEMINI_MODEL,
+      contents,
+      config: {
+        thinkingConfig: { thinkingBudget: 0 },
+        responseMimeType: 'application/json',
+      },
+    });
+  };
+
   beforeEach(() => {
-    vi.resetAllMocks();
+    vi.clearAllMocks();
   });
 
   describe('generateContent', () => {
-    const mockContents = 'Test prompt content';
-    const mockResponse: GenerateContentResponse = {
-      text: '{"result": "test response"}',
-      data: '',
-      functionCalls: [],
-      executableCode: '',
-      codeExecutionResult: '',
-    };
-
     it('should generate content successfully with correct parameters', async () => {
+      const mockResponse = createMockResponse();
       mockedGenerateContent.mockResolvedValue(mockResponse);
 
-      const result = await aiRepository.generateContent(mockContents);
+      const result = await aiRepository.generateContent(MOCK_CONTENTS);
 
-      expect(mockedGenerateContent).toHaveBeenCalledWith({
-        model: DEFAULT_GEMINI_MODEL,
-        contents: mockContents,
-        config: {
-          thinkingConfig: { thinkingBudget: 0 },
-          responseMimeType: 'application/json',
-        },
-      });
+      expectGenerateContentCalledWith(MOCK_CONTENTS);
       expect(result).toEqual(mockResponse);
     });
 
-    it('should propagate errors when generateContent fails', async () => {
-      mockedGenerateContent.mockRejectedValue(new Error('API error'));
-
-      await expect(aiRepository.generateContent(mockContents)).rejects.toThrow('API error');
-      expect(mockedGenerateContent).toHaveBeenCalledWith({
-        model: DEFAULT_GEMINI_MODEL,
-        contents: mockContents,
-        config: {
-          thinkingConfig: { thinkingBudget: 0 },
-          responseMimeType: 'application/json',
-        },
-      });
-    });
-
-    it('should call with empty contents string when provided', async () => {
+    it('should handle empty contents string', async () => {
       const emptyContents = '';
+      const mockResponse = createMockResponse();
       mockedGenerateContent.mockResolvedValue(mockResponse);
 
       await aiRepository.generateContent(emptyContents);
 
-      expect(mockedGenerateContent).toHaveBeenCalledWith({
-        model: DEFAULT_GEMINI_MODEL,
-        contents: emptyContents,
-        config: {
-          thinkingConfig: { thinkingBudget: 0 },
-          responseMimeType: 'application/json',
-        },
-      });
+      expectGenerateContentCalledWith(emptyContents);
+    });
+
+    it('should propagate errors when API fails', async () => {
+      const apiError = new Error('API error');
+      mockedGenerateContent.mockRejectedValue(apiError);
+
+      await expect(aiRepository.generateContent(MOCK_CONTENTS)).rejects.toThrow('API error');
+      expectGenerateContentCalledWith(MOCK_CONTENTS);
     });
   });
 });

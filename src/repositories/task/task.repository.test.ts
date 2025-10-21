@@ -1,10 +1,10 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { taskRepository } from './task.repository';
-import { databases } from '@/lib/appwrite';
 import { env } from '@/config/env.config';
+import { databases } from '@/lib/appwrite';
 import { taskQueries } from '@/queries/task/task.queries';
+import { TaskCreateInput, TaskEntity, TasksResponse, TaskUpdateInput } from '@/types/tasks.types';
 import { generateID } from '@/utils/text/text.utils';
-import { TaskEntity, TasksResponse, TaskCreateInput, TaskUpdateInput } from '@/types/tasks.types';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { taskRepository } from './task.repository';
 
 vi.mock('@/config/env.config');
 
@@ -34,20 +34,22 @@ vi.mock('@/utils/text/text.utils', () => ({
 }));
 
 const mockedDatabases = vi.mocked(databases);
-const mockedEnv = vi.mocked(env);
 const mockedTaskQueries = vi.mocked(taskQueries);
 const mockedGenerateID = vi.mocked(generateID);
 
 describe('taskRepository', () => {
-  const mockDatabaseId = 'test-database-id';
-  const mockCollectionId = 'test-tasks-collection';
-  const mockTaskId = 'task-123';
-  const mockUserId = 'user-123';
-  const mockTodayDate = '2023-01-01T00:00:00.000Z';
-  const mockTomorrowDate = '2023-01-02T00:00:00.000Z';
-  const mockTask: TaskEntity = {
-    $id: mockTaskId,
-    id: mockTaskId,
+  const MOCK_DATABASE_ID = 'test-database-id';
+  const MOCK_COLLECTION_ID = 'test-tasks-collection';
+  const MOCK_TASK_ID = 'task-123';
+  const MOCK_USER_ID = 'user-123';
+  const MOCK_PROJECT_ID = 'project-123';
+  const MOCK_TODAY_DATE = '2023-01-01T00:00:00.000Z';
+  const MOCK_TOMORROW_DATE = '2023-01-02T00:00:00.000Z';
+  const MOCK_QUERIES = ['query1'];
+
+  const createMockTask = (overrides?: Partial<TaskEntity>): TaskEntity => ({
+    $id: MOCK_TASK_ID,
+    id: MOCK_TASK_ID,
     content: 'Test Task',
     due_date: new Date(),
     completed: false,
@@ -57,227 +59,242 @@ describe('taskRepository', () => {
     $permissions: [],
     $databaseId: '',
     $collectionId: '',
-  };
-  const mockTasksResponse: TasksResponse = {
-    documents: [mockTask],
-    total: 1,
-  };
+    ...overrides,
+  });
+
+  const createMockTasksResponse = (tasks: TaskEntity[] = [createMockTask()], total?: number): TasksResponse => ({
+    documents: tasks,
+    total: total ?? tasks.length,
+  });
 
   beforeEach(() => {
-    vi.resetAllMocks();
-    mockedEnv.appwriteDatabaseId = mockDatabaseId;
-    mockedEnv.appwriteTasksCollectionId = mockCollectionId;
+    vi.clearAllMocks();
+    env.appwriteDatabaseId = MOCK_DATABASE_ID;
+    env.appwriteTasksCollectionId = MOCK_COLLECTION_ID;
   });
 
-  describe('getTodayCountByUserId', () => {
-    it('should return today task count successfully', async () => {
-      const mockQueries = ['query1'];
-      mockedTaskQueries.todayCount.mockReturnValue(mockQueries);
-      mockedDatabases.listDocuments.mockResolvedValue({ total: 5, documents: [] });
+  describe('count methods', () => {
+    describe('getTodayCountByUserId', () => {
+      it('should return today task count', async () => {
+        const expectedCount = 5;
+        mockedTaskQueries.todayCount.mockReturnValue(MOCK_QUERIES);
+        mockedDatabases.listDocuments.mockResolvedValue(createMockTasksResponse([], expectedCount));
 
-      const result = await taskRepository.getTodayCountByUserId(mockTodayDate, mockTomorrowDate, mockUserId);
+        const result = await taskRepository.getTodayCountByUserId(MOCK_TODAY_DATE, MOCK_TOMORROW_DATE, MOCK_USER_ID);
 
-      expect(mockedTaskQueries.todayCount).toHaveBeenCalledWith(mockTodayDate, mockTomorrowDate, mockUserId);
-      expect(mockedDatabases.listDocuments).toHaveBeenCalledWith(mockDatabaseId, mockCollectionId, mockQueries);
-      expect(result).toBe(5);
+        expect(mockedTaskQueries.todayCount).toHaveBeenCalledWith(MOCK_TODAY_DATE, MOCK_TOMORROW_DATE, MOCK_USER_ID);
+        expect(mockedDatabases.listDocuments).toHaveBeenCalledWith(MOCK_DATABASE_ID, MOCK_COLLECTION_ID, MOCK_QUERIES);
+        expect(result).toBe(expectedCount);
+      });
+
+      it('should propagate error when query fails', async () => {
+        mockedTaskQueries.todayCount.mockReturnValue([]);
+        mockedDatabases.listDocuments.mockRejectedValue(new Error('Query failed'));
+
+        await expect(
+          taskRepository.getTodayCountByUserId(MOCK_TODAY_DATE, MOCK_TOMORROW_DATE, MOCK_USER_ID)
+        ).rejects.toThrow('Query failed');
+      });
     });
 
-    it('should propagate error when listDocuments fails', async () => {
-      mockedTaskQueries.todayCount.mockReturnValue([]);
-      mockedDatabases.listDocuments.mockRejectedValue(new Error('Query failed'));
+    describe('getInboxCountByUserId', () => {
+      it('should return inbox task count', async () => {
+        const expectedCount = 3;
+        mockedTaskQueries.inboxCount.mockReturnValue(MOCK_QUERIES);
+        mockedDatabases.listDocuments.mockResolvedValue(createMockTasksResponse([], expectedCount));
 
-      await expect(taskRepository.getTodayCountByUserId(mockTodayDate, mockTomorrowDate, mockUserId)).rejects.toThrow(
-        'Query failed'
-      );
-    });
-  });
+        const result = await taskRepository.getInboxCountByUserId(MOCK_USER_ID);
 
-  describe('getInboxCountByUserId', () => {
-    it('should return inbox task count successfully', async () => {
-      const mockQueries = ['query1'];
-      mockedTaskQueries.inboxCount.mockReturnValue(mockQueries);
-      mockedDatabases.listDocuments.mockResolvedValue({ total: 3, documents: [] });
+        expect(mockedTaskQueries.inboxCount).toHaveBeenCalledWith(MOCK_USER_ID);
+        expect(mockedDatabases.listDocuments).toHaveBeenCalledWith(MOCK_DATABASE_ID, MOCK_COLLECTION_ID, MOCK_QUERIES);
+        expect(result).toBe(expectedCount);
+      });
 
-      const result = await taskRepository.getInboxCountByUserId(mockUserId);
+      it('should propagate error when query fails', async () => {
+        mockedTaskQueries.inboxCount.mockReturnValue([]);
+        mockedDatabases.listDocuments.mockRejectedValue(new Error('Query failed'));
 
-      expect(mockedTaskQueries.inboxCount).toHaveBeenCalledWith(mockUserId);
-      expect(mockedDatabases.listDocuments).toHaveBeenCalledWith(mockDatabaseId, mockCollectionId, mockQueries);
-      expect(result).toBe(3);
-    });
-
-    it('should propagate error when listDocuments fails', async () => {
-      mockedTaskQueries.inboxCount.mockReturnValue([]);
-      const mockError = new Error('Query failed');
-      mockedDatabases.listDocuments.mockRejectedValue(mockError);
-
-      await expect(taskRepository.getInboxCountByUserId(mockUserId)).rejects.toThrow('Query failed');
-    });
-  });
-
-  describe('getCompleted', () => {
-    it('should return completed tasks successfully', async () => {
-      const mockQueries = ['query1'];
-      mockedTaskQueries.completedTasks.mockReturnValue(mockQueries);
-      mockedDatabases.listDocuments.mockResolvedValue(mockTasksResponse);
-
-      const result = await taskRepository.getCompleted(mockUserId);
-
-      expect(mockedTaskQueries.completedTasks).toHaveBeenCalledWith(mockUserId);
-      expect(mockedDatabases.listDocuments).toHaveBeenCalledWith(mockDatabaseId, mockCollectionId, mockQueries);
-      expect(result).toEqual(mockTasksResponse);
-    });
-
-    it('should propagate error when listDocuments fails', async () => {
-      mockedTaskQueries.completedTasks.mockReturnValue([]);
-      mockedDatabases.listDocuments.mockRejectedValue(new Error('Query failed'));
-
-      await expect(taskRepository.getCompleted(mockUserId)).rejects.toThrow('Query failed');
+        await expect(taskRepository.getInboxCountByUserId(MOCK_USER_ID)).rejects.toThrow('Query failed');
+      });
     });
   });
 
-  describe('getInbox', () => {
-    it('should return inbox tasks successfully', async () => {
-      const mockQueries = ['query1'];
-      mockedTaskQueries.inboxTasks.mockReturnValue(mockQueries);
-      mockedDatabases.listDocuments.mockResolvedValue(mockTasksResponse);
+  describe('get methods', () => {
+    describe('getCompleted', () => {
+      it('should return completed tasks', async () => {
+        const mockResponse = createMockTasksResponse();
+        mockedTaskQueries.completedTasks.mockReturnValue(MOCK_QUERIES);
+        mockedDatabases.listDocuments.mockResolvedValue(mockResponse);
 
-      const result = await taskRepository.getInbox(mockUserId);
+        const result = await taskRepository.getCompleted(MOCK_USER_ID);
 
-      expect(mockedTaskQueries.inboxTasks).toHaveBeenCalledWith(mockUserId);
-      expect(mockedDatabases.listDocuments).toHaveBeenCalledWith(mockDatabaseId, mockCollectionId, mockQueries);
-      expect(result).toEqual(mockTasksResponse);
+        expect(mockedTaskQueries.completedTasks).toHaveBeenCalledWith(MOCK_USER_ID);
+        expect(mockedDatabases.listDocuments).toHaveBeenCalledWith(MOCK_DATABASE_ID, MOCK_COLLECTION_ID, MOCK_QUERIES);
+        expect(result).toEqual(mockResponse);
+      });
+
+      it('should propagate error when query fails', async () => {
+        mockedTaskQueries.completedTasks.mockReturnValue([]);
+        mockedDatabases.listDocuments.mockRejectedValue(new Error('Query failed'));
+
+        await expect(taskRepository.getCompleted(MOCK_USER_ID)).rejects.toThrow('Query failed');
+      });
     });
-  });
 
-  describe('getToday', () => {
-    it('should return today tasks successfully', async () => {
-      const mockQueries = ['query1'];
-      mockedTaskQueries.todayTasks.mockReturnValue(mockQueries);
-      mockedDatabases.listDocuments.mockResolvedValue(mockTasksResponse);
+    describe('getInbox', () => {
+      it('should return inbox tasks', async () => {
+        const mockResponse = createMockTasksResponse();
+        mockedTaskQueries.inboxTasks.mockReturnValue(MOCK_QUERIES);
+        mockedDatabases.listDocuments.mockResolvedValue(mockResponse);
 
-      const result = await taskRepository.getToday(mockTodayDate, mockTomorrowDate, mockUserId);
+        const result = await taskRepository.getInbox(MOCK_USER_ID);
 
-      expect(mockedTaskQueries.todayTasks).toHaveBeenCalledWith(mockTodayDate, mockTomorrowDate, mockUserId);
-      expect(mockedDatabases.listDocuments).toHaveBeenCalledWith(mockDatabaseId, mockCollectionId, mockQueries);
-      expect(result).toEqual(mockTasksResponse);
+        expect(mockedTaskQueries.inboxTasks).toHaveBeenCalledWith(MOCK_USER_ID);
+        expect(mockedDatabases.listDocuments).toHaveBeenCalledWith(MOCK_DATABASE_ID, MOCK_COLLECTION_ID, MOCK_QUERIES);
+        expect(result).toEqual(mockResponse);
+      });
     });
-  });
 
-  describe('getUpcoming', () => {
-    it('should return upcoming tasks successfully', async () => {
-      const mockQueries = ['query1'];
-      mockedTaskQueries.upcomingTasks.mockReturnValue(mockQueries);
-      mockedDatabases.listDocuments.mockResolvedValue(mockTasksResponse);
+    describe('getToday', () => {
+      it('should return today tasks', async () => {
+        const mockResponse = createMockTasksResponse();
+        mockedTaskQueries.todayTasks.mockReturnValue(MOCK_QUERIES);
+        mockedDatabases.listDocuments.mockResolvedValue(mockResponse);
 
-      const result = await taskRepository.getUpcoming(mockTodayDate, mockUserId);
+        const result = await taskRepository.getToday(MOCK_TODAY_DATE, MOCK_TOMORROW_DATE, MOCK_USER_ID);
 
-      expect(mockedTaskQueries.upcomingTasks).toHaveBeenCalledWith(mockTodayDate, mockUserId);
-      expect(mockedDatabases.listDocuments).toHaveBeenCalledWith(mockDatabaseId, mockCollectionId, mockQueries);
-      expect(result).toEqual(mockTasksResponse);
+        expect(mockedTaskQueries.todayTasks).toHaveBeenCalledWith(MOCK_TODAY_DATE, MOCK_TOMORROW_DATE, MOCK_USER_ID);
+        expect(mockedDatabases.listDocuments).toHaveBeenCalledWith(MOCK_DATABASE_ID, MOCK_COLLECTION_ID, MOCK_QUERIES);
+        expect(result).toEqual(mockResponse);
+      });
+    });
+
+    describe('getUpcoming', () => {
+      it('should return upcoming tasks', async () => {
+        const mockResponse = createMockTasksResponse();
+        mockedTaskQueries.upcomingTasks.mockReturnValue(MOCK_QUERIES);
+        mockedDatabases.listDocuments.mockResolvedValue(mockResponse);
+
+        const result = await taskRepository.getUpcoming(MOCK_TODAY_DATE, MOCK_USER_ID);
+
+        expect(mockedTaskQueries.upcomingTasks).toHaveBeenCalledWith(MOCK_TODAY_DATE, MOCK_USER_ID);
+        expect(mockedDatabases.listDocuments).toHaveBeenCalledWith(MOCK_DATABASE_ID, MOCK_COLLECTION_ID, MOCK_QUERIES);
+        expect(result).toEqual(mockResponse);
+      });
     });
   });
 
   describe('createMany', () => {
-    const mockTasksData: Array<TaskCreateInput & { id?: string }> = [
-      { content: 'Task 1', due_date: new Date(), completed: false, projectId: null, userId: mockUserId },
+    const createMockTasksData = () => [
+      { content: 'Task 1', due_date: new Date(), completed: false, projectId: null, userId: MOCK_USER_ID },
       {
         content: 'Task 2',
         due_date: null,
         completed: true,
-        projectId: 'project-123',
-        userId: mockUserId,
+        projectId: MOCK_PROJECT_ID,
+        userId: MOCK_USER_ID,
         id: 'custom-id',
       },
     ];
 
-    it('should create multiple tasks with generated IDs when no IDs provided', async () => {
+    it('should create multiple tasks with generated and custom IDs', async () => {
+      const tasksData = createMockTasksData();
       const mockGeneratedId = 'generated-id';
+      const mockTask = createMockTask();
       mockedGenerateID.mockReturnValue(mockGeneratedId);
       mockedDatabases.createDocument.mockResolvedValue(mockTask);
 
-      const result = await taskRepository.createMany(mockTasksData);
+      const result = await taskRepository.createMany(tasksData);
 
       expect(mockedGenerateID).toHaveBeenCalled();
       expect(mockedDatabases.createDocument).toHaveBeenCalledTimes(2);
       expect(mockedDatabases.createDocument).toHaveBeenCalledWith(
-        mockDatabaseId,
-        mockCollectionId,
+        MOCK_DATABASE_ID,
+        MOCK_COLLECTION_ID,
         mockGeneratedId,
         expect.objectContaining({ content: 'Task 1' })
       );
       expect(mockedDatabases.createDocument).toHaveBeenCalledWith(
-        mockDatabaseId,
-        mockCollectionId,
+        MOCK_DATABASE_ID,
+        MOCK_COLLECTION_ID,
         'custom-id',
         expect.objectContaining({ content: 'Task 2' })
       );
       expect(result).toEqual([mockTask, mockTask]);
     });
 
-    it('should propagate error when any create fails', async () => {
+    it('should propagate error when creation fails', async () => {
+      const tasksData = createMockTasksData();
       mockedGenerateID.mockReturnValue('generated-id');
       mockedDatabases.createDocument.mockRejectedValue(new Error('Create failed'));
 
-      await expect(taskRepository.createMany(mockTasksData)).rejects.toThrow('Create failed');
+      await expect(taskRepository.createMany(tasksData)).rejects.toThrow('Create failed');
     });
   });
 
   describe('create', () => {
-    const mockCreateData: TaskCreateInput = {
+    const createMockCreateData = (overrides?: Partial<TaskCreateInput>): TaskCreateInput => ({
       content: 'New Task',
       due_date: new Date(),
       completed: false,
       projectId: null,
-      userId: mockUserId,
-    };
+      userId: MOCK_USER_ID,
+      ...overrides,
+    });
 
     it('should create task successfully', async () => {
+      const createData = createMockCreateData();
+      const mockTask = createMockTask();
       mockedDatabases.createDocument.mockResolvedValue(mockTask);
 
-      const result = await taskRepository.create(mockTaskId, mockCreateData);
+      const result = await taskRepository.create(MOCK_TASK_ID, createData);
 
       expect(mockedDatabases.createDocument).toHaveBeenCalledWith(
-        mockDatabaseId,
-        mockCollectionId,
-        mockTaskId,
-        mockCreateData
+        MOCK_DATABASE_ID,
+        MOCK_COLLECTION_ID,
+        MOCK_TASK_ID,
+        createData
       );
       expect(result).toEqual(mockTask);
     });
 
-    it('should propagate error when createDocument fails', async () => {
+    it('should propagate error when creation fails', async () => {
+      const createData = createMockCreateData();
       mockedDatabases.createDocument.mockRejectedValue(new Error('Create failed'));
 
-      await expect(taskRepository.create(mockTaskId, mockCreateData)).rejects.toThrow('Create failed');
+      await expect(taskRepository.create(MOCK_TASK_ID, createData)).rejects.toThrow('Create failed');
     });
   });
 
   describe('update', () => {
-    const mockUpdateData: TaskUpdateInput = {
+    const createMockUpdateData = (overrides?: Partial<TaskUpdateInput>): TaskUpdateInput => ({
       content: 'Updated Task',
       due_date: new Date(),
-      projectId: 'project-123',
-    };
+      projectId: MOCK_PROJECT_ID,
+      ...overrides,
+    });
 
     it('should update task successfully', async () => {
-      const updatedTask = { ...mockTask, ...mockUpdateData };
+      const updateData = createMockUpdateData();
+      const updatedTask = createMockTask(updateData as TaskEntity);
       mockedDatabases.updateDocument.mockResolvedValue(updatedTask);
 
-      const result = await taskRepository.update(mockTaskId, mockUpdateData);
+      const result = await taskRepository.update(MOCK_TASK_ID, updateData);
 
       expect(mockedDatabases.updateDocument).toHaveBeenCalledWith(
-        mockDatabaseId,
-        mockCollectionId,
-        mockTaskId,
-        mockUpdateData
+        MOCK_DATABASE_ID,
+        MOCK_COLLECTION_ID,
+        MOCK_TASK_ID,
+        updateData
       );
       expect(result).toEqual(updatedTask);
     });
 
-    it('should propagate error when updateDocument fails', async () => {
+    it('should propagate error when update fails', async () => {
+      const updateData = createMockUpdateData();
       mockedDatabases.updateDocument.mockRejectedValue(new Error('Update failed'));
 
-      await expect(taskRepository.update(mockTaskId, mockUpdateData)).rejects.toThrow('Update failed');
+      await expect(taskRepository.update(MOCK_TASK_ID, updateData)).rejects.toThrow('Update failed');
     });
   });
 
@@ -285,15 +302,15 @@ describe('taskRepository', () => {
     it('should delete task successfully', async () => {
       mockedDatabases.deleteDocument.mockResolvedValue({});
 
-      await taskRepository.delete(mockTaskId);
+      await taskRepository.delete(MOCK_TASK_ID);
 
-      expect(mockedDatabases.deleteDocument).toHaveBeenCalledWith(mockDatabaseId, mockCollectionId, mockTaskId);
+      expect(mockedDatabases.deleteDocument).toHaveBeenCalledWith(MOCK_DATABASE_ID, MOCK_COLLECTION_ID, MOCK_TASK_ID);
     });
 
-    it('should propagate error when deleteDocument fails', async () => {
+    it('should propagate error when deletion fails', async () => {
       mockedDatabases.deleteDocument.mockRejectedValue(new Error('Delete failed'));
 
-      await expect(taskRepository.delete(mockTaskId)).rejects.toThrow('Delete failed');
+      await expect(taskRepository.delete(MOCK_TASK_ID)).rejects.toThrow('Delete failed');
     });
   });
 });
