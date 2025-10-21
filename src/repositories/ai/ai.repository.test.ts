@@ -68,8 +68,7 @@ describe('aiRepository', () => {
     });
 
     it('should propagate errors when API fails', async () => {
-      const apiError = new Error('API error');
-      mockedGenerateContent.mockRejectedValue(apiError);
+      mockedGenerateContent.mockRejectedValue(new Error('API error'));
 
       await expect(aiRepository.generateContent(MOCK_CONTENTS)).rejects.toThrow('API error');
       expectGenerateContentCalledWith(MOCK_CONTENTS);

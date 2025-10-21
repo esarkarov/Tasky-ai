@@ -46,17 +46,30 @@ const mockedSuccessResponse = vi.mocked(successResponse);
 const mockedRedirect = vi.mocked(redirect);
 
 describe('projectAction', () => {
+  const MOCK_PROJECT_ID = 'project-1';
+  const MOCK_USER_ID = 'user-123';
+  const BASE_URL = 'http://localhost';
+
   const createActionArgs = (request: Request) => ({
     request,
     params: {},
     context: {},
   });
-  const createMockProject = (overrides: Partial<ProjectEntity> = {}): ProjectEntity => ({
-    $id: 'project-1',
+
+  const createMockRequest = (method: string, body?: object) => {
+    const options: RequestInit = { method };
+    if (body) {
+      options.body = JSON.stringify(body);
+    }
+    return new Request(BASE_URL, options);
+  };
+
+  const createMockProject = (overrides?: Partial<ProjectEntity>): ProjectEntity => ({
+    $id: MOCK_PROJECT_ID,
     name: 'Test Project',
     description: null,
     color: null,
-    userId: 'user-123',
+    userId: MOCK_USER_ID,
     color_name: 'slate',
     color_hex: '#6D8196',
     tasks: [],
@@ -68,129 +81,110 @@ describe('projectAction', () => {
     ...overrides,
   });
 
+  const createMockAITasks = (): AIGeneratedTask[] => [
+    {
+      content: 'Task 1 content',
+      due_date: new Date('2023-01-01'),
+      completed: false,
+    },
+    {
+      content: 'Task 2 content',
+      due_date: new Date('2025-02-02'),
+      completed: true,
+    },
+  ];
+
   beforeEach(() => {
-    vi.resetAllMocks();
+    vi.clearAllMocks();
+    mockedRedirect.mockReturnValue({} as Response);
+    mockedErrorResponse.mockReturnValue({} as Response);
+    mockedSuccessResponse.mockReturnValue({} as Response);
   });
 
   describe('POST request', () => {
-    it('should create a project successfully without AI tasks', async () => {
-      const mockProjectData = { name: 'Test Project' };
-      const mockProject = createMockProject();
-      const mockRequest = new Request('http://localhost', {
-        method: 'POST',
-        body: JSON.stringify(mockProjectData),
+    describe('without AI task generation', () => {
+      it('should create project successfully', async () => {
+        const projectData = { name: 'Test Project' };
+        const mockProject = createMockProject();
+        const mockRequest = createMockRequest('POST', projectData);
+        mockedProjectService.createProject.mockResolvedValue(mockProject);
+
+        await projectAction(createActionArgs(mockRequest));
+
+        expect(mockedProjectService.createProject).toHaveBeenCalledWith(projectData);
+        expect(mockedAiService.generateProjectTasks).not.toHaveBeenCalled();
+        expect(mockedRedirect).toHaveBeenCalledWith(ROUTES.PROJECT(MOCK_PROJECT_ID));
       });
 
-      mockedProjectService.createProject.mockResolvedValue(mockProject);
-      mockedRedirect.mockReturnValue({} as Response);
+      it('should not generate AI tasks when prompt is empty', async () => {
+        const projectData = {
+          name: 'Test Project',
+          ai_task_gen: true,
+          task_gen_prompt: '',
+        };
+        const mockProject = createMockProject();
+        const mockRequest = createMockRequest('POST', projectData);
+        mockedProjectService.createProject.mockResolvedValue(mockProject);
 
-      await projectAction(createActionArgs(mockRequest));
+        await projectAction(createActionArgs(mockRequest));
 
-      expect(mockedProjectService.createProject).toHaveBeenCalledWith(mockProjectData);
-      expect(mockedAiService.generateProjectTasks).not.toHaveBeenCalled();
-      expect(mockedRedirect).toHaveBeenCalledWith(ROUTES.PROJECT('project-1'));
+        expect(mockedProjectService.createProject).toHaveBeenCalledWith(projectData);
+        expect(mockedAiService.generateProjectTasks).not.toHaveBeenCalled();
+        expect(mockedRedirect).toHaveBeenCalledWith(ROUTES.PROJECT(MOCK_PROJECT_ID));
+      });
     });
 
-    it('should create a project with AI tasks when enabled', async () => {
-      const mockProjectData = {
-        name: 'Test Project',
-        ai_task_gen: true,
-        task_gen_prompt: 'Create tasks',
-      };
-      const mockProject = createMockProject();
-      const mockAiTasks: AIGeneratedTask[] = [
-        {
-          content: 'Task 1 content',
-          due_date: new Date('2023-01-01'),
-          completed: false,
-        },
-        {
-          content: 'Task 2 content',
-          due_date: new Date('2025-02-02'),
-          completed: true,
-        },
-      ];
-      const mockRequest = new Request('http://localhost', {
-        method: 'POST',
-        body: JSON.stringify(mockProjectData),
+    describe('with AI task generation', () => {
+      it('should create project and generate AI tasks', async () => {
+        const projectData = {
+          name: 'Test Project',
+          ai_task_gen: true,
+          task_gen_prompt: 'Create tasks',
+        };
+        const mockProject = createMockProject();
+        const mockAiTasks = createMockAITasks();
+        const mockRequest = createMockRequest('POST', projectData);
+        mockedProjectService.createProject.mockResolvedValue(mockProject);
+        mockedAiService.generateProjectTasks.mockResolvedValue(mockAiTasks);
+
+        await projectAction(createActionArgs(mockRequest));
+
+        expect(mockedProjectService.createProject).toHaveBeenCalledWith(projectData);
+        expect(mockedAiService.generateProjectTasks).toHaveBeenCalledWith('Create tasks');
+        expect(mockedTaskService.createTasksForProject).toHaveBeenCalledWith(MOCK_PROJECT_ID, mockAiTasks);
+        expect(mockedRedirect).toHaveBeenCalledWith(ROUTES.PROJECT(MOCK_PROJECT_ID));
       });
-
-      mockedProjectService.createProject.mockResolvedValue(mockProject);
-      mockedAiService.generateProjectTasks.mockResolvedValue(mockAiTasks);
-      mockedRedirect.mockReturnValue({} as Response);
-
-      await projectAction(createActionArgs(mockRequest));
-
-      expect(mockedProjectService.createProject).toHaveBeenCalledWith(mockProjectData);
-      expect(mockedAiService.generateProjectTasks).toHaveBeenCalledWith('Create tasks');
-      expect(mockedTaskService.createTasksForProject).toHaveBeenCalledWith('project-1', mockAiTasks);
-      expect(mockedRedirect).toHaveBeenCalledWith(ROUTES.PROJECT('project-1'));
     });
 
-    it('should not create AI tasks when prompt is empty', async () => {
-      const mockProjectData = {
-        name: 'Test Project',
-        ai_task_gen: true,
-        task_gen_prompt: '',
-      };
-      const mockProject = createMockProject();
-      const mockRequest = new Request('http://localhost', {
-        method: 'POST',
-        body: JSON.stringify(mockProjectData),
+    describe('validation', () => {
+      it('should return error when name is missing', async () => {
+        const projectData = { name: '' };
+        const mockRequest = createMockRequest('POST', projectData);
+
+        await projectAction(createActionArgs(mockRequest));
+
+        expect(mockedErrorResponse).toHaveBeenCalledWith('Project name is required', 400);
+        expect(mockedProjectService.createProject).not.toHaveBeenCalled();
       });
-
-      mockedProjectService.createProject.mockResolvedValue(mockProject);
-      mockedRedirect.mockReturnValue({} as Response);
-
-      await projectAction(createActionArgs(mockRequest));
-
-      expect(mockedProjectService.createProject).toHaveBeenCalledWith(mockProjectData);
-      expect(mockedAiService.generateProjectTasks).not.toHaveBeenCalled();
-      expect(mockedRedirect).toHaveBeenCalledWith(ROUTES.PROJECT('project-1'));
-    });
-
-    it('should return error when name is missing', async () => {
-      const mockProjectData = { name: '' };
-      const mockRequest = new Request('http://localhost', {
-        method: 'POST',
-        body: JSON.stringify(mockProjectData),
-      });
-
-      mockedErrorResponse.mockReturnValue({} as Response);
-
-      await projectAction(createActionArgs(mockRequest));
-
-      expect(mockedErrorResponse).toHaveBeenCalledWith('Project name is required', 400);
-      expect(mockedProjectService.createProject).not.toHaveBeenCalled();
     });
   });
 
   describe('PUT request', () => {
-    it('should update a project successfully', async () => {
-      const mockProjectData = { id: 'project-1', name: 'Updated Project' };
+    it('should update project successfully', async () => {
+      const projectData = { id: MOCK_PROJECT_ID, name: 'Updated Project' };
       const mockProject = createMockProject({ name: 'Updated Project' });
-      const mockRequest = new Request('http://localhost', {
-        method: 'PUT',
-        body: JSON.stringify(mockProjectData),
-      });
-
+      const mockRequest = createMockRequest('PUT', projectData);
       mockedProjectService.updateProject.mockResolvedValue(mockProject);
-      mockedSuccessResponse.mockReturnValue({} as Response);
 
       await projectAction(createActionArgs(mockRequest));
 
-      expect(mockedProjectService.updateProject).toHaveBeenCalledWith('project-1', { name: 'Updated Project' });
+      expect(mockedProjectService.updateProject).toHaveBeenCalledWith(MOCK_PROJECT_ID, { name: 'Updated Project' });
       expect(mockedSuccessResponse).toHaveBeenCalledWith('Project updated successfully', { project: mockProject });
     });
 
     it('should return error when ID is missing', async () => {
-      const mockProjectData = { name: 'Updated Project' };
-      const mockRequest = new Request('http://localhost', {
-        method: 'PUT',
-        body: JSON.stringify(mockProjectData),
-      });
-
-      mockedErrorResponse.mockReturnValue({} as Response);
+      const projectData = { name: 'Updated Project' };
+      const mockRequest = createMockRequest('PUT', projectData);
 
       await projectAction(createActionArgs(mockRequest));
 
@@ -200,30 +194,20 @@ describe('projectAction', () => {
   });
 
   describe('DELETE request', () => {
-    it('should delete a project successfully', async () => {
-      const mockProjectData = { id: 'project-1' };
-      const mockRequest = new Request('http://localhost', {
-        method: 'DELETE',
-        body: JSON.stringify(mockProjectData),
-      });
-
+    it('should delete project successfully', async () => {
+      const projectData = { id: MOCK_PROJECT_ID };
+      const mockRequest = createMockRequest('DELETE', projectData);
       mockedProjectService.deleteProject.mockResolvedValue();
-      mockedSuccessResponse.mockReturnValue({} as Response);
 
       await projectAction(createActionArgs(mockRequest));
 
-      expect(mockedProjectService.deleteProject).toHaveBeenCalledWith('project-1');
+      expect(mockedProjectService.deleteProject).toHaveBeenCalledWith(MOCK_PROJECT_ID);
       expect(mockedSuccessResponse).toHaveBeenCalledWith('Project deleted successfully');
     });
 
     it('should return error when ID is missing', async () => {
-      const mockProjectData = {};
-      const mockRequest = new Request('http://localhost', {
-        method: 'DELETE',
-        body: JSON.stringify(mockProjectData),
-      });
-
-      mockedErrorResponse.mockReturnValue({} as Response);
+      const projectData = {};
+      const mockRequest = createMockRequest('DELETE', projectData);
 
       await projectAction(createActionArgs(mockRequest));
 
@@ -232,13 +216,9 @@ describe('projectAction', () => {
     });
   });
 
-  describe('Invalid method', () => {
-    it('should return method not allowed for unsupported HTTP method', async () => {
-      const mockRequest = new Request('http://localhost', {
-        method: 'PATCH',
-      });
-
-      mockedErrorResponse.mockReturnValue({} as Response);
+  describe('unsupported methods', () => {
+    it('should return method not allowed for PATCH request', async () => {
+      const mockRequest = createMockRequest('PATCH');
 
       await projectAction(createActionArgs(mockRequest));
 
@@ -246,32 +226,21 @@ describe('projectAction', () => {
     });
   });
 
-  describe('Error handling', () => {
-    it('should return error response when service throws error', async () => {
-      const mockProjectData = { name: 'Test Project' };
-      const mockRequest = new Request('http://localhost', {
-        method: 'POST',
-        body: JSON.stringify(mockProjectData),
-      });
-
-      const mockError = new Error('Database error');
-      mockedProjectService.createProject.mockRejectedValue(mockError);
-      mockedErrorResponse.mockReturnValue({} as Response);
+  describe('error handling', () => {
+    it('should return error response when service throws Error', async () => {
+      const projectData = { name: 'Test Project' };
+      const mockRequest = createMockRequest('POST', projectData);
+      mockedProjectService.createProject.mockRejectedValue(new Error('Database error'));
 
       await projectAction(createActionArgs(mockRequest));
 
       expect(mockedErrorResponse).toHaveBeenCalledWith('Database error', 500);
     });
 
-    it('should return generic error message for non-Error objects', async () => {
-      const mockProjectData = { name: 'Test Project' };
-      const mockRequest = new Request('http://localhost', {
-        method: 'POST',
-        body: JSON.stringify(mockProjectData),
-      });
-
+    it('should return generic error for non-Error objects', async () => {
+      const projectData = { name: 'Test Project' };
+      const mockRequest = createMockRequest('POST', projectData);
       mockedProjectService.createProject.mockRejectedValue('String error');
-      mockedErrorResponse.mockReturnValue({} as Response);
 
       await projectAction(createActionArgs(mockRequest));
 

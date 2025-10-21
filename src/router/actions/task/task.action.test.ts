@@ -29,19 +29,30 @@ const mockedErrorResponse = vi.mocked(errorResponse);
 const mockedSuccessResponse = vi.mocked(successResponse);
 
 describe('taskAction', () => {
+  const MOCK_TASK_ID = '1';
+  const BASE_URL = 'http://localhost';
+
   const createActionArgs = (request: Request) => ({
     request,
     params: {},
     context: {},
   });
 
-  const createMockTask = (overrides: Partial<TaskEntity> = {}): TaskEntity => ({
-    id: '1',
+  const createMockRequest = (method: string, body?: object) => {
+    const options: RequestInit = { method };
+    if (body) {
+      options.body = JSON.stringify(body);
+    }
+    return new Request(BASE_URL, options);
+  };
+
+  const createMockTask = (overrides?: Partial<TaskEntity>): TaskEntity => ({
+    id: MOCK_TASK_ID,
     content: 'Test task',
     due_date: new Date('2023-01-01'),
     completed: false,
     projectId: null,
-    $id: '1',
+    $id: MOCK_TASK_ID,
     $createdAt: '2023-01-01T00:00:00.000Z',
     $updatedAt: '2023-01-01T00:00:00.000Z',
     $collectionId: 'tasks',
@@ -51,35 +62,27 @@ describe('taskAction', () => {
   });
 
   beforeEach(() => {
-    vi.resetAllMocks();
+    vi.clearAllMocks();
+    mockedErrorResponse.mockReturnValue(new Response());
+    mockedSuccessResponse.mockReturnValue(new Response());
   });
 
   describe('POST request', () => {
-    it('should create a task successfully', async () => {
-      const mockTaskData = { content: 'Test task' };
+    it('should create task successfully', async () => {
+      const taskData = { content: 'Test task' };
       const mockTask = createMockTask();
-      const mockRequest = new Request('http://localhost', {
-        method: 'POST',
-        body: JSON.stringify(mockTaskData),
-      });
-
+      const mockRequest = createMockRequest('POST', taskData);
       mockedTaskService.createTask.mockResolvedValue(mockTask);
-      mockedSuccessResponse.mockReturnValue(new Response());
 
       await taskAction(createActionArgs(mockRequest));
 
-      expect(mockedTaskService.createTask).toHaveBeenCalledWith(mockTaskData);
+      expect(mockedTaskService.createTask).toHaveBeenCalledWith(taskData);
       expect(mockedSuccessResponse).toHaveBeenCalledWith('Task created successfully', { task: mockTask }, 201);
     });
 
     it('should return error when content is missing', async () => {
-      const mockTaskData = { content: '' };
-      const mockRequest = new Request('http://localhost', {
-        method: 'POST',
-        body: JSON.stringify(mockTaskData),
-      });
-
-      mockedErrorResponse.mockReturnValue(new Response());
+      const taskData = { content: '' };
+      const mockRequest = createMockRequest('POST', taskData);
 
       await taskAction(createActionArgs(mockRequest));
 
@@ -89,31 +92,21 @@ describe('taskAction', () => {
   });
 
   describe('PUT request', () => {
-    it('should update a task successfully', async () => {
-      const mockTaskData = { id: '1', content: 'Updated task' };
+    it('should update task successfully', async () => {
+      const taskData = { id: MOCK_TASK_ID, content: 'Updated task' };
       const mockTask = createMockTask({ content: 'Updated task' });
-      const mockRequest = new Request('http://localhost', {
-        method: 'PUT',
-        body: JSON.stringify(mockTaskData),
-      });
-
+      const mockRequest = createMockRequest('PUT', taskData);
       mockedTaskService.updateTask.mockResolvedValue(mockTask);
-      mockedSuccessResponse.mockReturnValue(new Response());
 
       await taskAction(createActionArgs(mockRequest));
 
-      expect(mockedTaskService.updateTask).toHaveBeenCalledWith('1', { content: 'Updated task' });
+      expect(mockedTaskService.updateTask).toHaveBeenCalledWith(MOCK_TASK_ID, { content: 'Updated task' });
       expect(mockedSuccessResponse).toHaveBeenCalledWith('Task updated successfully', { task: mockTask });
     });
 
     it('should return error when ID is missing', async () => {
-      const mockTaskData = { content: 'Updated task' };
-      const mockRequest = new Request('http://localhost', {
-        method: 'PUT',
-        body: JSON.stringify(mockTaskData),
-      });
-
-      mockedErrorResponse.mockReturnValue(new Response());
+      const taskData = { content: 'Updated task' };
+      const mockRequest = createMockRequest('PUT', taskData);
 
       await taskAction(createActionArgs(mockRequest));
 
@@ -123,30 +116,20 @@ describe('taskAction', () => {
   });
 
   describe('DELETE request', () => {
-    it('should delete a task successfully', async () => {
-      const mockTaskData = { id: '1' };
-      const mockRequest = new Request('http://localhost', {
-        method: 'DELETE',
-        body: JSON.stringify(mockTaskData),
-      });
-
+    it('should delete task successfully', async () => {
+      const taskData = { id: MOCK_TASK_ID };
+      const mockRequest = createMockRequest('DELETE', taskData);
       mockedTaskService.deleteTask.mockResolvedValue();
-      mockedSuccessResponse.mockReturnValue(new Response());
 
       await taskAction(createActionArgs(mockRequest));
 
-      expect(mockedTaskService.deleteTask).toHaveBeenCalledWith('1');
+      expect(mockedTaskService.deleteTask).toHaveBeenCalledWith(MOCK_TASK_ID);
       expect(mockedSuccessResponse).toHaveBeenCalledWith('Task deleted successfully');
     });
 
     it('should return error when ID is missing', async () => {
-      const mockTaskData = {};
-      const mockRequest = new Request('http://localhost', {
-        method: 'DELETE',
-        body: JSON.stringify(mockTaskData),
-      });
-
-      mockedErrorResponse.mockReturnValue(new Response());
+      const taskData = {};
+      const mockRequest = createMockRequest('DELETE', taskData);
 
       await taskAction(createActionArgs(mockRequest));
 
@@ -155,13 +138,9 @@ describe('taskAction', () => {
     });
   });
 
-  describe('Invalid method', () => {
-    it('should return method not allowed for unsupported HTTP method', async () => {
-      const mockRequest = new Request('http://localhost', {
-        method: 'PATCH',
-      });
-
-      mockedErrorResponse.mockReturnValue(new Response());
+  describe('unsupported methods', () => {
+    it('should return method not allowed for PATCH request', async () => {
+      const mockRequest = createMockRequest('PATCH');
 
       await taskAction(createActionArgs(mockRequest));
 
@@ -169,32 +148,21 @@ describe('taskAction', () => {
     });
   });
 
-  describe('Error handling', () => {
-    it('should return error response when service throws error', async () => {
-      const mockTaskData = { content: 'Test task' };
-      const mockRequest = new Request('http://localhost', {
-        method: 'POST',
-        body: JSON.stringify(mockTaskData),
-      });
-
-      const mockError = new Error('Database error');
-      mockedTaskService.createTask.mockRejectedValue(mockError);
-      mockedErrorResponse.mockReturnValue(new Response());
+  describe('error handling', () => {
+    it('should return error response when service throws Error', async () => {
+      const taskData = { content: 'Test task' };
+      const mockRequest = createMockRequest('POST', taskData);
+      mockedTaskService.createTask.mockRejectedValue(new Error('Database error'));
 
       await taskAction(createActionArgs(mockRequest));
 
       expect(mockedErrorResponse).toHaveBeenCalledWith('Database error', 500);
     });
 
-    it('should return generic error message for non-Error objects', async () => {
-      const mockTaskData = { content: 'Test task' };
-      const mockRequest = new Request('http://localhost', {
-        method: 'POST',
-        body: JSON.stringify(mockTaskData),
-      });
-
+    it('should return generic error for non-Error objects', async () => {
+      const taskData = { content: 'Test task' };
+      const mockRequest = createMockRequest('POST', taskData);
       mockedTaskService.createTask.mockRejectedValue('String error');
-      mockedErrorResponse.mockReturnValue(new Response());
 
       await taskAction(createActionArgs(mockRequest));
 
