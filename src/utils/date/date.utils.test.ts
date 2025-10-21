@@ -122,7 +122,7 @@ describe('date utils', () => {
     });
 
     describe('date input types', () => {
-      const dateTypesMockData = [
+      const mockDateTypes = [
         {
           type: 'Date object',
           input: new Date('2023-01-01'),
@@ -140,7 +140,7 @@ describe('date utils', () => {
         },
       ];
 
-      it.each(dateTypesMockData)('should handle $type input', ({ input, expectedDay }) => {
+      it.each(mockDateTypes)('should handle $type input', ({ input, expectedDay }) => {
         setupDateMocks({
           relativeDay: expectedDay,
           titleCaseDay: expectedDay,

@@ -7,13 +7,13 @@ describe('text utils', () => {
   });
 
   describe('toTitleCase', () => {
-    const capitalizeStringMockData = [
+    const mockCapitalizeStringCases = [
       { input: 'hello world', expected: 'Hello world', description: 'multi-word string' },
       { input: 'a', expected: 'A', description: 'single character' },
       { input: '', expected: '', description: 'empty string' },
     ];
 
-    it.each(capitalizeStringMockData)('should handle $description correctly', ({ input, expected }) => {
+    it.each(mockCapitalizeStringCases)('should handle $description correctly', ({ input, expected }) => {
       const result = toTitleCase(input);
 
       expect(result).toBe(expected);

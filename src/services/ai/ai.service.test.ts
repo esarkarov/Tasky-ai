@@ -17,8 +17,10 @@ const mockedAiRepository = vi.mocked(aiRepository);
 const mockedGenerateContents = vi.mocked(generateContents);
 
 describe('aiService', () => {
-  const mockPrompt = 'Create a project for building a website';
-  const mockTasks: AIGeneratedTask[] = [
+  const MOCK_PROMPT = 'Create a project for building a website';
+  const MOCK_GENERATED_CONTENTS = 'generated-contents';
+
+  const createMockTasks = (): AIGeneratedTask[] => [
     {
       content: 'Setup React project',
       due_date: null,
@@ -30,7 +32,8 @@ describe('aiService', () => {
       completed: false,
     },
   ];
-  const createMockGenerateContentResponse = (text: string) => ({
+
+  const createMockResponse = (text: string) => ({
     text,
     data: '',
     functionCalls: [],
@@ -39,81 +42,70 @@ describe('aiService', () => {
   });
 
   beforeEach(() => {
-    vi.resetAllMocks();
+    vi.clearAllMocks();
   });
 
   describe('generateProjectTasks', () => {
-    it('should return empty array when prompt is empty', async () => {
-      const emptyPrompt = '';
+    describe('when prompt is invalid', () => {
+      const mockInvalidPrompts = [
+        { description: 'empty string', prompt: '' },
+        { description: 'only whitespace', prompt: '   ' },
+      ];
 
-      const result = await aiService.generateProjectTasks(emptyPrompt);
+      it.each(mockInvalidPrompts)('should return empty array when prompt is $description', async ({ prompt }) => {
+        const result = await aiService.generateProjectTasks(prompt);
 
-      expect(result).toEqual([]);
-      expect(mockedGenerateContents).not.toHaveBeenCalled();
-      expect(mockedAiRepository.generateContent).not.toHaveBeenCalled();
+        expect(result).toEqual([]);
+        expect(mockedGenerateContents).not.toHaveBeenCalled();
+        expect(mockedAiRepository.generateContent).not.toHaveBeenCalled();
+      });
     });
 
-    it('should return empty array when prompt is only whitespace', async () => {
-      const whitespacePrompt = '   ';
+    describe('when prompt is valid', () => {
+      it('should generate tasks successfully', async () => {
+        const mockTasks = createMockTasks();
+        const mockResponse = createMockResponse(JSON.stringify(mockTasks));
+        mockedGenerateContents.mockReturnValue(MOCK_GENERATED_CONTENTS);
+        mockedAiRepository.generateContent.mockResolvedValue(mockResponse);
 
-      const result = await aiService.generateProjectTasks(whitespacePrompt);
+        const result = await aiService.generateProjectTasks(MOCK_PROMPT);
 
-      expect(result).toEqual([]);
-      expect(mockedGenerateContents).not.toHaveBeenCalled();
-      expect(mockedAiRepository.generateContent).not.toHaveBeenCalled();
+        expect(mockedGenerateContents).toHaveBeenCalledWith(MOCK_PROMPT);
+        expect(mockedAiRepository.generateContent).toHaveBeenCalledWith(MOCK_GENERATED_CONTENTS);
+        expect(result).toEqual(mockTasks);
+      });
     });
 
-    it('should generate tasks successfully with valid prompt', async () => {
-      const mockGeneratedContent = createMockGenerateContentResponse(JSON.stringify(mockTasks));
-      const mockGeneratedContentsResult = 'generated-contents';
+    describe('when AI response is invalid', () => {
+      const mockInvalidResponses = [
+        { description: 'empty string', responseText: '' },
+        { description: 'only whitespace', responseText: '   ' },
+        { description: 'invalid JSON', responseText: 'invalid-json' },
+      ];
 
-      mockedGenerateContents.mockReturnValue(mockGeneratedContentsResult);
-      mockedAiRepository.generateContent.mockResolvedValue(mockGeneratedContent);
+      it.each(mockInvalidResponses)(
+        'should return empty array when response text is $description',
+        async ({ responseText }) => {
+          const mockResponse = createMockResponse(responseText);
+          mockedGenerateContents.mockReturnValue(MOCK_GENERATED_CONTENTS);
+          mockedAiRepository.generateContent.mockResolvedValue(mockResponse);
 
-      const result = await aiService.generateProjectTasks(mockPrompt);
+          const result = await aiService.generateProjectTasks(MOCK_PROMPT);
 
-      expect(mockedGenerateContents).toHaveBeenCalledWith(mockPrompt);
-      expect(mockedAiRepository.generateContent).toHaveBeenCalledWith(mockGeneratedContentsResult);
-      expect(result).toEqual(mockTasks);
+          expect(result).toEqual([]);
+        }
+      );
     });
 
-    it('should return empty array when AI response text is empty', async () => {
-      const mockGeneratedContent = createMockGenerateContentResponse('');
-      mockedGenerateContents.mockReturnValue('generated-contents');
-      mockedAiRepository.generateContent.mockResolvedValue(mockGeneratedContent);
+    describe('when repository fails', () => {
+      it('should return empty array', async () => {
+        mockedGenerateContents.mockReturnValue(MOCK_GENERATED_CONTENTS);
+        mockedAiRepository.generateContent.mockRejectedValue(new Error('API error'));
 
-      const result = await aiService.generateProjectTasks(mockPrompt);
+        const result = await aiService.generateProjectTasks(MOCK_PROMPT);
 
-      expect(result).toEqual([]);
-    });
-
-    it('should return empty array when AI response text is only whitespace', async () => {
-      const mockGeneratedContent = createMockGenerateContentResponse('   ');
-      mockedGenerateContents.mockReturnValue('generated-contents');
-      mockedAiRepository.generateContent.mockResolvedValue(mockGeneratedContent);
-
-      const result = await aiService.generateProjectTasks(mockPrompt);
-
-      expect(result).toEqual([]);
-    });
-
-    it('should return empty array when JSON parsing fails', async () => {
-      const mockGeneratedContent = createMockGenerateContentResponse('invalid-json');
-      mockedGenerateContents.mockReturnValue('generated-contents');
-      mockedAiRepository.generateContent.mockResolvedValue(mockGeneratedContent);
-
-      const result = await aiService.generateProjectTasks(mockPrompt);
-
-      expect(result).toEqual([]);
-    });
-
-    it('should return empty array when repository throws error', async () => {
-      mockedGenerateContents.mockReturnValue('generated-contents');
-      mockedAiRepository.generateContent.mockRejectedValue(new Error('API error'));
-
-      const result = await aiService.generateProjectTasks(mockPrompt);
-
-      expect(result).toEqual([]);
+        expect(result).toEqual([]);
+      });
     });
   });
 });

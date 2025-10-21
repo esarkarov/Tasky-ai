@@ -38,20 +38,15 @@ const mockedStartOfToday = vi.mocked(startOfToday);
 const mockedStartOfTomorrow = vi.mocked(startOfTomorrow);
 
 describe('taskService', () => {
-  beforeEach(() => {
-    vi.resetAllMocks();
-    mockedGetUserId.mockReturnValue(mockUserId);
-    mockedStartOfToday.mockReturnValue(new Date(mockTodayDate));
-    mockedStartOfTomorrow.mockReturnValue(new Date(mockTomorrowDate));
-  });
+  const MOCK_USER_ID = 'user-123';
+  const MOCK_TASK_ID = 'task-123';
+  const MOCK_PROJECT_ID = 'project-123';
+  const MOCK_TODAY_DATE = '2023-01-01T00:00:00.000Z';
+  const MOCK_TOMORROW_DATE = '2023-01-02T00:00:00.000Z';
 
-  const mockUserId = 'user-123';
-  const mockTaskId = 'task-123';
-  const mockTodayDate = '2023-01-01T00:00:00.000Z';
-  const mockTomorrowDate = '2023-01-02T00:00:00.000Z';
-  const mockTask: TaskEntity = {
-    $id: mockTaskId,
-    id: mockTaskId,
+  const createMockTask = (overrides?: Partial<TaskEntity>): TaskEntity => ({
+    $id: MOCK_TASK_ID,
+    id: MOCK_TASK_ID,
     content: 'Test Task',
     due_date: new Date(),
     completed: false,
@@ -61,270 +56,292 @@ describe('taskService', () => {
     $permissions: [],
     $databaseId: '',
     $collectionId: '',
-  };
-
-  const mockTasksResponse: TasksResponse = {
-    documents: [mockTask],
-    total: 1,
-  };
-
-  describe('getUpcomingTasks', () => {
-    it('should return upcoming tasks successfully', async () => {
-      mockedTaskRepository.getUpcoming.mockResolvedValue(mockTasksResponse);
-
-      const result = await taskService.getUpcomingTasks();
-
-      expect(mockedGetUserId).toHaveBeenCalled();
-      expect(mockedStartOfToday).toHaveBeenCalled();
-      expect(mockedTaskRepository.getUpcoming).toHaveBeenCalledWith(mockTodayDate, mockUserId);
-      expect(result).toEqual(mockTasksResponse);
-    });
-
-    it('should throw error when repository fails', async () => {
-      mockedTaskRepository.getUpcoming.mockRejectedValue(new Error('Database error'));
-
-      await expect(taskService.getUpcomingTasks()).rejects.toThrow('Failed to load upcoming tasks. Please try again.');
-    });
+    ...overrides,
   });
 
-  describe('getTodayTasks', () => {
-    it('should return today tasks successfully', async () => {
-      mockedTaskRepository.getToday.mockResolvedValue(mockTasksResponse);
-
-      const result = await taskService.getTodayTasks();
-
-      expect(mockedGetUserId).toHaveBeenCalled();
-      expect(mockedStartOfToday).toHaveBeenCalled();
-      expect(mockedStartOfTomorrow).toHaveBeenCalled();
-      expect(mockedTaskRepository.getToday).toHaveBeenCalledWith(mockTodayDate, mockTomorrowDate, mockUserId);
-      expect(result).toEqual(mockTasksResponse);
-    });
-
-    it('should throw error when repository fails', async () => {
-      mockedTaskRepository.getToday.mockRejectedValue(new Error('Database error'));
-
-      await expect(taskService.getTodayTasks()).rejects.toThrow("Failed to load today's tasks. Please try again.");
-    });
+  const createMockTasksResponse = (tasks: TaskEntity[] = [createMockTask()]): TasksResponse => ({
+    documents: tasks,
+    total: tasks.length,
   });
 
-  describe('getInboxTasks', () => {
-    it('should return inbox tasks successfully', async () => {
-      mockedTaskRepository.getInbox.mockResolvedValue(mockTasksResponse);
-
-      const result = await taskService.getInboxTasks();
-
-      expect(mockedGetUserId).toHaveBeenCalled();
-      expect(mockedTaskRepository.getInbox).toHaveBeenCalledWith(mockUserId);
-      expect(result).toEqual(mockTasksResponse);
-    });
-
-    it('should throw error when repository fails', async () => {
-      mockedTaskRepository.getInbox.mockRejectedValue(new Error('Database error'));
-
-      await expect(taskService.getInboxTasks()).rejects.toThrow("Failed to load inbox's tasks. Please try again.");
-    });
+  beforeEach(() => {
+    vi.clearAllMocks();
+    mockedGetUserId.mockReturnValue(MOCK_USER_ID);
+    mockedStartOfToday.mockReturnValue(new Date(MOCK_TODAY_DATE));
+    mockedStartOfTomorrow.mockReturnValue(new Date(MOCK_TOMORROW_DATE));
   });
 
-  describe('getCompletedTasks', () => {
-    it('should return completed tasks successfully', async () => {
-      mockedTaskRepository.getCompleted.mockResolvedValue(mockTasksResponse);
+  describe('get methods', () => {
+    const testGetMethod = async (
+      method: 'getUpcomingTasks' | 'getTodayTasks' | 'getInboxTasks' | 'getCompletedTasks',
+      repositoryMethod: 'getUpcoming' | 'getToday' | 'getInbox' | 'getCompleted',
+      repositoryArgs: (string | Date)[],
+      errorMessage: string,
+      usesToday: boolean,
+      usesTomorrow: boolean
+    ) => {
+      describe(method, () => {
+        it('should return tasks successfully', async () => {
+          const mockResponse = createMockTasksResponse();
+          mockedTaskRepository[repositoryMethod].mockResolvedValue(mockResponse);
 
-      const result = await taskService.getCompletedTasks();
+          const result = await taskService[method]();
 
-      expect(mockedGetUserId).toHaveBeenCalled();
-      expect(mockedTaskRepository.getCompleted).toHaveBeenCalledWith(mockUserId);
-      expect(result).toEqual(mockTasksResponse);
-    });
+          expect(mockedGetUserId).toHaveBeenCalled();
+          if (usesToday) expect(mockedStartOfToday).toHaveBeenCalled();
+          if (usesTomorrow) expect(mockedStartOfTomorrow).toHaveBeenCalled();
+          expect(mockedTaskRepository[repositoryMethod]).toHaveBeenCalledWith(...repositoryArgs);
+          expect(result).toEqual(mockResponse);
+        });
 
-    it('should throw error when repository fails', async () => {
-      mockedTaskRepository.getCompleted.mockRejectedValue(new Error('Database error'));
+        it('should throw error when repository fails', async () => {
+          mockedTaskRepository[repositoryMethod].mockRejectedValue(new Error('Database error'));
 
-      await expect(taskService.getCompletedTasks()).rejects.toThrow(
-        'Failed to load completed tasks. Please try again.'
-      );
-    });
+          await expect(taskService[method]()).rejects.toThrow(errorMessage);
+        });
+      });
+    };
+
+    testGetMethod(
+      'getUpcomingTasks',
+      'getUpcoming',
+      [MOCK_TODAY_DATE, MOCK_USER_ID],
+      'Failed to load upcoming tasks. Please try again.',
+      true,
+      false
+    );
+
+    testGetMethod(
+      'getTodayTasks',
+      'getToday',
+      [MOCK_TODAY_DATE, MOCK_TOMORROW_DATE, MOCK_USER_ID],
+      "Failed to load today's tasks. Please try again.",
+      true,
+      true
+    );
+
+    testGetMethod(
+      'getInboxTasks',
+      'getInbox',
+      [MOCK_USER_ID],
+      "Failed to load inbox's tasks. Please try again.",
+      false,
+      false
+    );
+
+    testGetMethod(
+      'getCompletedTasks',
+      'getCompleted',
+      [MOCK_USER_ID],
+      'Failed to load completed tasks. Please try again.',
+      false,
+      false
+    );
   });
 
-  describe('getInboxTaskCount', () => {
-    it('should return inbox task count successfully', async () => {
-      mockedTaskRepository.getInboxCountByUserId.mockResolvedValue(5);
+  describe('count methods', () => {
+    describe('getInboxTaskCount', () => {
+      it('should return inbox task count successfully', async () => {
+        const expectedCount = 5;
+        mockedTaskRepository.getInboxCountByUserId.mockResolvedValue(expectedCount);
 
-      const result = await taskService.getInboxTaskCount();
+        const result = await taskService.getInboxTaskCount();
 
-      expect(mockedGetUserId).toHaveBeenCalled();
-      expect(mockedTaskRepository.getInboxCountByUserId).toHaveBeenCalledWith(mockUserId);
-      expect(result).toBe(5);
+        expect(mockedGetUserId).toHaveBeenCalled();
+        expect(mockedTaskRepository.getInboxCountByUserId).toHaveBeenCalledWith(MOCK_USER_ID);
+        expect(result).toBe(expectedCount);
+      });
+
+      it('should throw error when repository fails', async () => {
+        mockedTaskRepository.getInboxCountByUserId.mockRejectedValue(new Error('Database error'));
+
+        await expect(taskService.getInboxTaskCount()).rejects.toThrow('Failed to load inbox task count');
+      });
     });
 
-    it('should throw error when repository fails', async () => {
-      mockedTaskRepository.getInboxCountByUserId.mockRejectedValue(new Error('Database error'));
+    describe('getTodayTaskCount', () => {
+      it('should return today task count successfully', async () => {
+        const expectedCount = 3;
+        mockedTaskRepository.getTodayCountByUserId.mockResolvedValue(expectedCount);
 
-      await expect(taskService.getInboxTaskCount()).rejects.toThrow('Failed to load inbox task count');
-    });
-  });
+        const result = await taskService.getTodayTaskCount();
 
-  describe('getTodayTaskCount', () => {
-    it('should return today task count successfully', async () => {
-      mockedTaskRepository.getTodayCountByUserId.mockResolvedValue(3);
+        expect(mockedGetUserId).toHaveBeenCalled();
+        expect(mockedStartOfToday).toHaveBeenCalled();
+        expect(mockedStartOfTomorrow).toHaveBeenCalled();
+        expect(mockedTaskRepository.getTodayCountByUserId).toHaveBeenCalledWith(
+          MOCK_TODAY_DATE,
+          MOCK_TOMORROW_DATE,
+          MOCK_USER_ID
+        );
+        expect(result).toBe(expectedCount);
+      });
 
-      const result = await taskService.getTodayTaskCount();
+      it('should throw error when repository fails', async () => {
+        mockedTaskRepository.getTodayCountByUserId.mockRejectedValue(new Error('Database error'));
 
-      expect(mockedGetUserId).toHaveBeenCalled();
-      expect(mockedStartOfToday).toHaveBeenCalled();
-      expect(mockedStartOfTomorrow).toHaveBeenCalled();
-      expect(mockedTaskRepository.getTodayCountByUserId).toHaveBeenCalledWith(
-        mockTodayDate,
-        mockTomorrowDate,
-        mockUserId
-      );
-      expect(result).toBe(3);
-    });
-
-    it('should throw error when repository fails', async () => {
-      mockedTaskRepository.getTodayCountByUserId.mockRejectedValue(new Error('Database error'));
-
-      await expect(taskService.getTodayTaskCount()).rejects.toThrow('Failed to load today task count');
-    });
-  });
-
-  describe('getTaskCounts', () => {
-    it('should return both inbox and today task counts successfully', async () => {
-      mockedTaskRepository.getInboxCountByUserId.mockResolvedValue(5);
-      mockedTaskRepository.getTodayCountByUserId.mockResolvedValue(3);
-
-      const result = await taskService.getTaskCounts();
-
-      expect(result).toEqual({ inboxTasks: 5, todayTasks: 3 });
+        await expect(taskService.getTodayTaskCount()).rejects.toThrow('Failed to load today task count');
+      });
     });
 
-    it('should propagate error when inbox count fails', async () => {
-      mockedTaskRepository.getInboxCountByUserId.mockRejectedValue(new Error('Inbox error'));
-      mockedTaskRepository.getTodayCountByUserId.mockResolvedValue(3);
+    describe('getTaskCounts', () => {
+      const mockErrorTestCases = [
+        {
+          scenario: 'inbox count fails',
+          setupMocks: (mockedRepo: typeof mockedTaskRepository) => {
+            mockedRepo.getInboxCountByUserId.mockRejectedValue(new Error('Inbox error'));
+            mockedRepo.getTodayCountByUserId.mockResolvedValue(3);
+          },
+          expectedError: 'Failed to load inbox task count',
+        },
+        {
+          scenario: 'today count fails',
+          setupMocks: (mockedRepo: typeof mockedTaskRepository) => {
+            mockedRepo.getInboxCountByUserId.mockResolvedValue(5);
+            mockedRepo.getTodayCountByUserId.mockRejectedValue(new Error('Today error'));
+          },
+          expectedError: 'Failed to load today task count',
+        },
+      ];
 
-      await expect(taskService.getTaskCounts()).rejects.toThrow('Failed to load inbox task count');
-    });
+      it('should return both inbox and today task counts successfully', async () => {
+        const inboxCount = 5;
+        const todayCount = 3;
+        mockedTaskRepository.getInboxCountByUserId.mockResolvedValue(inboxCount);
+        mockedTaskRepository.getTodayCountByUserId.mockResolvedValue(todayCount);
 
-    it('should propagate error when today count fails', async () => {
-      mockedTaskRepository.getInboxCountByUserId.mockResolvedValue(5);
-      mockedTaskRepository.getTodayCountByUserId.mockRejectedValue(new Error('Today error'));
+        const result = await taskService.getTaskCounts();
 
-      await expect(taskService.getTaskCounts()).rejects.toThrow('Failed to load today task count');
+        expect(result).toEqual({ inboxTasks: inboxCount, todayTasks: todayCount });
+      });
+
+      it.each(mockErrorTestCases)('should propagate error when $scenario', async ({ setupMocks, expectedError }) => {
+        setupMocks(mockedTaskRepository);
+
+        await expect(taskService.getTaskCounts()).rejects.toThrow(expectedError);
+      });
     });
   });
 
   describe('createTasksForProject', () => {
-    const mockProjectId = 'project-123';
-    const mockAITasks: AIGeneratedTask[] = [
+    const createMockAITasks = (): AIGeneratedTask[] => [
       { content: 'Task 1 content', due_date: new Date(), completed: false },
       { content: 'Task 2 content', due_date: null, completed: true },
     ];
 
     it('should create multiple tasks for project successfully', async () => {
-      const mockCreatedTasks = [mockTask, { ...mockTask, id: 'task-456' }];
-      mockedTaskRepository.createMany.mockResolvedValue(mockCreatedTasks);
-
-      const result = await taskService.createTasksForProject(mockProjectId, mockAITasks);
-
-      expect(mockedGetUserId).toHaveBeenCalled();
-      expect(mockedTaskRepository.createMany).toHaveBeenCalledWith([
+      const mockAITasks = createMockAITasks();
+      const mockCreatedTasks = [createMockTask(), createMockTask({ id: 'task-456' })];
+      const mockGeneratedTasks = [
         {
           content: 'Task 1 content',
           due_date: mockAITasks[0].due_date,
           completed: false,
-          projectId: mockProjectId,
-          userId: mockUserId,
+          projectId: MOCK_PROJECT_ID,
+          userId: MOCK_USER_ID,
         },
         {
           content: 'Task 2 content',
           due_date: null,
           completed: true,
-          projectId: mockProjectId,
-          userId: mockUserId,
+          projectId: MOCK_PROJECT_ID,
+          userId: MOCK_USER_ID,
         },
-      ]);
+      ];
+      mockedTaskRepository.createMany.mockResolvedValue(mockCreatedTasks);
+
+      const result = await taskService.createTasksForProject(MOCK_PROJECT_ID, mockAITasks);
+
+      expect(mockedGetUserId).toHaveBeenCalled();
+      expect(mockedTaskRepository.createMany).toHaveBeenCalledWith(mockGeneratedTasks);
       expect(result).toEqual(mockCreatedTasks);
     });
 
     it('should throw error when repository fails', async () => {
+      const mockAITasks = createMockAITasks();
       mockedTaskRepository.createMany.mockRejectedValue(new Error('Database error'));
 
-      await expect(taskService.createTasksForProject(mockProjectId, mockAITasks)).rejects.toThrow(
+      await expect(taskService.createTasksForProject(MOCK_PROJECT_ID, mockAITasks)).rejects.toThrow(
         'Failed to create project tasks'
       );
     });
   });
 
   describe('createTask', () => {
-    const mockGeneratedId = 'generated-task-id';
-    const mockFormData: TaskFormInput = {
+    const MOCK_GENERATED_ID = 'generated-task-id';
+    const createMockFormData = (overrides?: Partial<TaskFormInput>): TaskFormInput => ({
       content: 'New Task',
       due_date: new Date(),
-      projectId: 'project-123',
-    };
+      projectId: MOCK_PROJECT_ID,
+      ...overrides,
+    });
 
-    it('should create task successfully', async () => {
-      mockedGenerateID.mockReturnValue(mockGeneratedId);
+    it('should create task successfully with default completed status', async () => {
+      const formData = createMockFormData();
+      const mockTask = createMockTask();
+      mockedGenerateID.mockReturnValue(MOCK_GENERATED_ID);
       mockedTaskRepository.create.mockResolvedValue(mockTask);
 
-      const result = await taskService.createTask(mockFormData);
+      const result = await taskService.createTask(formData);
 
       expect(mockedGetUserId).toHaveBeenCalled();
       expect(mockedGenerateID).toHaveBeenCalled();
-      expect(mockedTaskRepository.create).toHaveBeenCalledWith(mockGeneratedId, {
-        content: mockFormData.content,
-        due_date: mockFormData.due_date,
+      expect(mockedTaskRepository.create).toHaveBeenCalledWith(MOCK_GENERATED_ID, {
+        content: formData.content,
+        due_date: formData.due_date,
         completed: false,
-        projectId: mockFormData.projectId,
-        userId: mockUserId,
+        projectId: formData.projectId,
+        userId: MOCK_USER_ID,
       });
       expect(result).toEqual(mockTask);
     });
 
-    it('should use provided completed status when available', async () => {
-      const formDataWithCompleted = { ...mockFormData, completed: true };
-      mockedGenerateID.mockReturnValue(mockGeneratedId);
+    it('should create task with provided completed status', async () => {
+      const formData = createMockFormData({ completed: true });
+      const mockTask = createMockTask();
+      mockedGenerateID.mockReturnValue(MOCK_GENERATED_ID);
       mockedTaskRepository.create.mockResolvedValue(mockTask);
 
-      await taskService.createTask(formDataWithCompleted);
+      await taskService.createTask(formData);
 
-      expect(mockedTaskRepository.create).toHaveBeenCalledWith(mockGeneratedId, {
-        content: mockFormData.content,
-        due_date: mockFormData.due_date,
-        completed: true,
-        projectId: mockFormData.projectId,
-        userId: mockUserId,
-      });
+      expect(mockedTaskRepository.create).toHaveBeenCalledWith(
+        MOCK_GENERATED_ID,
+        expect.objectContaining({ completed: true })
+      );
     });
 
     it('should throw error when repository fails', async () => {
-      mockedGenerateID.mockReturnValue(mockGeneratedId);
+      const formData = createMockFormData();
+      mockedGenerateID.mockReturnValue(MOCK_GENERATED_ID);
       mockedTaskRepository.create.mockRejectedValue(new Error('Database error'));
 
-      await expect(taskService.createTask(mockFormData)).rejects.toThrow('Failed to create task');
+      await expect(taskService.createTask(formData)).rejects.toThrow('Failed to create task');
     });
   });
 
   describe('updateTask', () => {
-    const mockUpdateData = {
+    const createUpdateData = () => ({
       content: 'Updated Task',
       due_date: new Date(),
       projectId: null,
-    };
+    });
 
     it('should update task successfully', async () => {
-      const updatedTask = { ...mockTask, ...mockUpdateData };
+      const updateData = createUpdateData();
+      const updatedTask = createMockTask(updateData);
       mockedTaskRepository.update.mockResolvedValue(updatedTask);
 
-      const result = await taskService.updateTask(mockTaskId, mockUpdateData);
+      const result = await taskService.updateTask(MOCK_TASK_ID, updateData);
 
-      expect(mockedTaskRepository.update).toHaveBeenCalledWith(mockTaskId, mockUpdateData);
+      expect(mockedTaskRepository.update).toHaveBeenCalledWith(MOCK_TASK_ID, updateData);
       expect(result).toEqual(updatedTask);
     });
 
     it('should throw error when repository fails', async () => {
+      const updateData = createUpdateData();
       mockedTaskRepository.update.mockRejectedValue(new Error('Database error'));
 
-      await expect(taskService.updateTask(mockTaskId, mockUpdateData)).rejects.toThrow('Failed to update task');
+      await expect(taskService.updateTask(MOCK_TASK_ID, updateData)).rejects.toThrow('Failed to update task');
     });
   });
 
@@ -332,15 +349,15 @@ describe('taskService', () => {
     it('should delete task successfully', async () => {
       mockedTaskRepository.delete.mockResolvedValue({});
 
-      await taskService.deleteTask(mockTaskId);
+      await taskService.deleteTask(MOCK_TASK_ID);
 
-      expect(mockedTaskRepository.delete).toHaveBeenCalledWith(mockTaskId);
+      expect(mockedTaskRepository.delete).toHaveBeenCalledWith(MOCK_TASK_ID);
     });
 
     it('should throw error when repository fails', async () => {
       mockedTaskRepository.delete.mockRejectedValue(new Error('Database error'));
 
-      await expect(taskService.deleteTask(mockTaskId)).rejects.toThrow('Failed to delete task');
+      await expect(taskService.deleteTask(MOCK_TASK_ID)).rejects.toThrow('Failed to delete task');
     });
   });
 });

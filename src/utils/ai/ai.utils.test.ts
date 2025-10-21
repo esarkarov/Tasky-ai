@@ -30,7 +30,7 @@ describe('ai utils', () => {
     };
 
     describe('prompt handling', () => {
-      const promptMockData = [
+      const mockPrompts = [
         {
           description: 'standard prompt',
           prompt: 'Build a todo app',
@@ -48,7 +48,7 @@ describe('ai utils', () => {
         },
       ];
 
-      it.each(promptMockData)('should handle $description', ({ prompt, expectedSubstrings }) => {
+      it.each(mockPrompts)('should handle $description', ({ prompt, expectedSubstrings }) => {
         const result = generateContents(prompt);
 
         expectContainsAll(result, expectedSubstrings);

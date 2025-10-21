@@ -122,7 +122,7 @@ describe('operation utils', () => {
 
   describe('buildTaskSuccessDescription', () => {
     const DEFAULT_MAX_LENGTH = 50;
-    const truncateMessageMockData = [
+    const mockTruncateMessages = [
       {
         description: 'default max length',
         content: 'This is a very long task description that should be truncated',
@@ -153,7 +153,7 @@ describe('operation utils', () => {
       mockedTruncateString.mockReturnValue(truncatedResult);
     };
 
-    it.each(truncateMessageMockData)(
+    it.each(mockTruncateMessages)(
       'should build description with $description',
       ({ content, prefix, maxLength, expectedMaxLength, truncatedContent }) => {
         setupTruncateMock(truncatedContent);
@@ -169,7 +169,7 @@ describe('operation utils', () => {
   });
 
   describe('buildProjectSuccessDescription', () => {
-    const projectMessageMockData = [
+    const mockProjectMessages = [
       {
         scenario: 'created project without AI tasks',
         projectName: 'My Awesome Project',
@@ -199,7 +199,7 @@ describe('operation utils', () => {
       mockedTruncateString.mockReturnValue(truncatedName);
     };
 
-    it.each(projectMessageMockData)(
+    it.each(mockProjectMessages)(
       'should build description for $scenario',
       ({ projectName, truncatedName, hasAITasks, method, expected }) => {
         setupTruncateMock(truncatedName);
@@ -213,7 +213,7 @@ describe('operation utils', () => {
   });
 
   describe('buildSearchUrl', () => {
-    const searchQueyyMockData = [
+    const mockSearchQueries = [
       {
         description: 'simple search query',
         baseUrl: '/tasks',
@@ -235,7 +235,7 @@ describe('operation utils', () => {
       expect(result).toBe(baseUrl);
     });
 
-    it.each(searchQueyyMockData)('should build URL with $description', ({ baseUrl, searchValue, expectedEncoded }) => {
+    it.each(mockSearchQueries)('should build URL with $description', ({ baseUrl, searchValue, expectedEncoded }) => {
       const result = buildSearchUrl(baseUrl, searchValue);
 
       expect(result).toBe(`${baseUrl}?q=${encodeURIComponent(searchValue)}`);

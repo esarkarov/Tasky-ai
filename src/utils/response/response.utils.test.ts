@@ -20,7 +20,7 @@ describe('response utils', () => {
   };
 
   describe('jsonResponse', () => {
-    const responseMockData = [
+    const mockResponses = [
       {
         description: 'object data',
         data: { message: 'test' },
@@ -38,7 +38,7 @@ describe('response utils', () => {
       },
     ];
 
-    it.each(responseMockData)('should create response with $description and status code', ({ data, status }) => {
+    it.each(mockResponses)('should create response with $description and status code', ({ data, status }) => {
       jsonResponse(data, status);
 
       expectResponseCalledWith(data, status);
@@ -46,13 +46,13 @@ describe('response utils', () => {
   });
 
   describe('errorResponse', () => {
-    const httpErrorMockData = [
+    const mockHttpErrors = [
       { message: 'Not found', status: 404 },
       { message: 'Internal server error', status: 500 },
       { message: 'Bad request', status: 400 },
     ];
 
-    it.each(httpErrorMockData)(
+    it.each(mockHttpErrors)(
       'should create error response with message "$message" and status $status',
       ({ message, status }) => {
         const expectedData = { success: false, message };

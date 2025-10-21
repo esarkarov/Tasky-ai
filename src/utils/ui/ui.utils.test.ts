@@ -8,7 +8,12 @@ import { cn, getBadgeCount, getTaskDueDateColorClass } from './ui.utils';
 
 vi.mock('clsx');
 vi.mock('tailwind-merge');
-vi.mock('date-fns');
+vi.mock('date-fns', () => ({
+  isBefore: vi.fn(),
+  isToday: vi.fn(),
+  isTomorrow: vi.fn(),
+  startOfToday: vi.fn(),
+}));
 vi.mock('@/constants/routes', () => ({
   ROUTES: {
     INBOX: '/inbox',
