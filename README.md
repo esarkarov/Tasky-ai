@@ -13,7 +13,6 @@ It combines **Clerk authentication**, **Appwrite persistence**, and **Google Gem
 - [Usage](#usage)
 - [Folder Structure & Architecture](#folder-structure--architecture)
 - [Core Services & Modules](#core-services--modules)
-- [License](#license)
 - [Author](#author)
 
 ---
@@ -32,13 +31,13 @@ It combines **Clerk authentication**, **Appwrite persistence**, and **Google Gem
 
 | Category                 | Technologies                                                |
 | ------------------------ | ----------------------------------------------------------- |
-| **Framework**            | React 19, TypeScript, Vite 7                                |
-| **Authentication**       | Clerk React SDK, Clerk Themes                               |
+| **Framework**            | React + TypeScript                                          |
+| **Authentication**       | Clerk React SDK                                             |
 | **Backend-as-a-Service** | Appwrite SDK                                                |
-| **AI Integration**       | Google Gemini (`@google/genai`)                             |
-| **Styling**              | Tailwind CSS, Radix UI, Tailwind Merge, tailwindcss-animate |
-| **Testing**              | Vitest, React Testing Library, jsdom                        |
-| **Tooling**              | ESLint, Prettier, TypeScript ESLint, React Compiler         |
+| **AI Integration**       | Google Gemini                                               |
+| **Styling**              | Tailwind CSS, Shadcn UI                                     |
+| **Testing & Quality**    | Vitest, React Testing Library, Playwright, ESLint, Prettier |
+| **CI/CD & Tooling**      | Npm, GitHub, GitHub Actions, Vite                           |
 
 ---
 
@@ -86,7 +85,7 @@ The app will be available at [http://localhost:5173](http://localhost:5173).
 
 ## 🧪 Usage
 
-### Run the unit test suite
+### Run the test suite
 
 ```bash
 npm run test
@@ -149,14 +148,7 @@ src/
 
 ---
 
-## 📄 License
-
-This project is licensed under the **MIT License**.  
-See the [LICENSE](LICENSE) file for details.
-
----
-
 ## 👨‍💻 Author
 
 Developed by **Elvin Sarkarov**  
-📎 [GitHub @ElvinWeb](https://github.com/ElvinWeb)
+📎 [GitHub @ElvinWeb](https://github.com/esarkarov)
