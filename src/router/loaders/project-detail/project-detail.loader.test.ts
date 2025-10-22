@@ -2,29 +2,32 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { projectDetailLoader } from './project-detail.loader';
 import { projectService } from '@/services/project/project.service';
 import type { ProjectEntity } from '@/types/projects.types';
-import type { ProjectDetailLoaderData } from '@/types/loaders.types';
+import { ProjectDetailLoaderData } from '@/types/loaders.types';
 
-vi.mock('@/services/project/project.service');
+vi.mock('@/services/project/project.service', () => ({
+  projectService: {
+    getProjectById: vi.fn(),
+  },
+}));
 
 const mockedProjectService = vi.mocked(projectService);
 
 describe('projectDetailLoader', () => {
-  beforeEach(() => {
-    vi.resetAllMocks();
-  });
+  const MOCK_PROJECT_ID = 'project-123';
+  const MOCK_USER_ID = 'user-123';
 
-  const createLoaderArgs = (params: { projectId?: string } = {}) => ({
-    params,
+  const createLoaderArgs = (projectId?: string) => ({
+    params: { projectId },
     request: new Request('http://localhost'),
     context: {},
   });
 
-  const createMockProject = (overrides: Partial<ProjectEntity> = {}): ProjectEntity => ({
-    $id: 'project-123',
+  const createMockProject = (overrides?: Partial<ProjectEntity>): ProjectEntity => ({
+    $id: MOCK_PROJECT_ID,
     name: 'Test Project',
     description: 'Test description',
     color: 'blue',
-    userId: 'user-123',
+    userId: MOCK_USER_ID,
     color_name: 'blue',
     color_hex: '#0000FF',
     tasks: [],
@@ -36,77 +39,66 @@ describe('projectDetailLoader', () => {
     ...overrides,
   });
 
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
   describe('when project exists', () => {
-    it('should return project data with correct project ID', async () => {
+    it('should return project data', async () => {
       const mockProject = createMockProject();
       mockedProjectService.getProjectById.mockResolvedValue(mockProject);
 
-      const result = await projectDetailLoader(createLoaderArgs({ projectId: 'project-123' }));
+      const result = await projectDetailLoader(createLoaderArgs(MOCK_PROJECT_ID));
 
-      expect(mockedProjectService.getProjectById).toHaveBeenCalledWith('project-123');
+      expect(mockedProjectService.getProjectById).toHaveBeenCalledWith(MOCK_PROJECT_ID);
       expect(result).toEqual({ project: mockProject });
     });
 
-    it('should handle different project IDs correctly', async () => {
-      const mockProject = createMockProject({ $id: 'different-project' });
+    it('should handle different project IDs', async () => {
+      const differentProjectId = 'different-project';
+      const mockProject = createMockProject({ $id: differentProjectId });
       mockedProjectService.getProjectById.mockResolvedValue(mockProject);
 
-      const result = await projectDetailLoader(createLoaderArgs({ projectId: 'different-project' }));
+      const result = await projectDetailLoader(createLoaderArgs(differentProjectId));
 
-      expect(mockedProjectService.getProjectById).toHaveBeenCalledWith('different-project');
+      expect(mockedProjectService.getProjectById).toHaveBeenCalledWith(differentProjectId);
       expect(result).toEqual({ project: mockProject });
     });
-  });
 
-  describe('when project service throws error', () => {
-    it('should propagate "not found" errors', async () => {
-      mockedProjectService.getProjectById.mockRejectedValue(new Error('Project not found'));
-
-      await expect(projectDetailLoader(createLoaderArgs({ projectId: 'invalid-id' }))).rejects.toThrow(
-        'Project not found'
-      );
-
-      expect(mockedProjectService.getProjectById).toHaveBeenCalledWith('invalid-id');
-    });
-
-    it('should propagate permission errors', async () => {
-      mockedProjectService.getProjectById.mockRejectedValue(new Error('Access denied'));
-
-      await expect(projectDetailLoader(createLoaderArgs({ projectId: 'restricted-project' }))).rejects.toThrow(
-        'Access denied'
-      );
-    });
-  });
-
-  describe('when projectId is missing from params', () => {
-    it('should throw an error when params is empty', async () => {
-      mockedProjectService.getProjectById.mockRejectedValue(new Error('Project ID is required'));
-
-      await expect(projectDetailLoader(createLoaderArgs())).rejects.toThrow('Project ID is required');
-    });
-
-    it('should throw an error when projectId is undefined', async () => {
-      mockedProjectService.getProjectById.mockRejectedValue(new Error('Project ID is required'));
-
-      await expect(projectDetailLoader(createLoaderArgs({ projectId: undefined }))).rejects.toThrow(
-        'Project ID is required'
-      );
-    });
-  });
-
-  describe('data structure validation', () => {
-    it('should return correct ProjectDetailLoaderData structure', async () => {
+    it('should return correct data structure with project details', async () => {
       const mockProject = createMockProject();
       mockedProjectService.getProjectById.mockResolvedValue(mockProject);
 
-      const result = (await projectDetailLoader(
-        createLoaderArgs({ projectId: 'project-123' })
-      )) as ProjectDetailLoaderData;
+      const result = (await projectDetailLoader(createLoaderArgs(MOCK_PROJECT_ID))) as ProjectDetailLoaderData;
 
       expect(result).toHaveProperty('project');
       expect(result.project).toEqual(mockProject);
-      expect(result.project.$id).toBe('project-123');
+      expect(result.project.$id).toBe(MOCK_PROJECT_ID);
       expect(result.project.name).toBe('Test Project');
+    });
+  });
+
+  describe('error handling', () => {
+    const mockProjectPermissions = [
+      { scenario: 'not found', error: 'Project not found', projectId: 'invalid-id' },
+      { scenario: 'permission denied', error: 'Access denied', projectId: 'restricted-project' },
+    ];
+    const mockMissingProjectId = [
+      { scenario: 'undefined', projectId: undefined },
+      { scenario: 'not provided', projectId: undefined as string | undefined },
+    ];
+
+    it.each(mockProjectPermissions)('should propagate $scenario errors', async ({ error, projectId }) => {
+      mockedProjectService.getProjectById.mockRejectedValue(new Error(error));
+
+      await expect(projectDetailLoader(createLoaderArgs(projectId))).rejects.toThrow(error);
+      expect(mockedProjectService.getProjectById).toHaveBeenCalledWith(projectId);
+    });
+
+    it.each(mockMissingProjectId)('should throw error when projectId is $scenario', async ({ projectId }) => {
+      mockedProjectService.getProjectById.mockRejectedValue(new Error('Project ID is required'));
+
+      await expect(projectDetailLoader(createLoaderArgs(projectId))).rejects.toThrow('Project ID is required');
     });
   });
 });

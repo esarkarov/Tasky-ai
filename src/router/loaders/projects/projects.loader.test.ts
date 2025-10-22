@@ -4,40 +4,46 @@ import { projectService } from '@/services/project/project.service';
 import type { ProjectsListResponse } from '@/types/projects.types';
 import type { ProjectsLoaderData } from '@/types/loaders.types';
 
-vi.mock('@/services/project/project.service');
+vi.mock('@/services/project/project.service', () => ({
+  projectService: {
+    getUserProjects: vi.fn(),
+  },
+}));
 
 const mockedProjectService = vi.mocked(projectService);
+
+const createLoaderArgs = (url: string = 'http://localhost') => ({
+  request: new Request(url),
+  params: {},
+  context: {},
+});
+
+const createMockProjects = (overrides?: Partial<ProjectsListResponse>): ProjectsListResponse => ({
+  total: 1,
+  documents: [
+    {
+      $id: 'project-1',
+      $collectionId: 'projects',
+      $databaseId: '34sdfd',
+      $permissions: [],
+      $updatedAt: '2025-10-11T12:26:15.675+00:00',
+      $createdAt: '2025-10-11T12:26:15.675+00:00',
+      name: 'React performance optimization',
+      color_name: 'Slate',
+      color_hex: '#64748b',
+    },
+  ],
+  ...overrides,
+});
 
 describe('projectsLoader', () => {
   beforeEach(() => {
     vi.resetAllMocks();
   });
 
-  const createLoaderArgs = (url: string = 'http://localhost') => ({
-    request: new Request(url),
-    params: {},
-    context: {},
-  });
-
-  describe('search query handling', () => {
-    it('should return projects with search query', async () => {
-      const mockProjects: ProjectsListResponse = {
-        total: 1,
-        documents: [
-          {
-            $id: 'project-1',
-            $collectionId: 'projects',
-            $databaseId: '34sdfd',
-            $permissions: [],
-            $updatedAt: '2025-10-11T12:26:15.675+00:00',
-            name: 'React performance optimization',
-            color_name: 'Slate',
-            color_hex: '#64748b',
-            $createdAt: '2025-10-11T12:26:15.675+00:00',
-          },
-        ],
-      };
-
+  describe('with search queries', () => {
+    it('returns projects when search query is present', async () => {
+      const mockProjects = createMockProjects();
       mockedProjectService.getUserProjects.mockResolvedValue(mockProjects);
 
       const result = (await projectsLoader(createLoaderArgs('http://localhost?q=test'))) as ProjectsLoaderData;
@@ -46,24 +52,8 @@ describe('projectsLoader', () => {
       expect(result).toEqual({ projects: mockProjects });
     });
 
-    it('should handle empty search query', async () => {
-      const mockProjects: ProjectsListResponse = {
-        total: 2,
-        documents: [
-          {
-            $id: 'project-1',
-            $collectionId: 'projects',
-            $databaseId: '34sdfd',
-            $permissions: [],
-            $updatedAt: '2025-10-11T12:26:15.675+00:00',
-            name: 'React Fiber Tree',
-            color_name: 'Slate',
-            color_hex: '#64748b',
-            $createdAt: '2025-10-11T12:26:15.675+00:00',
-          },
-        ],
-      };
-
+    it('handles empty search query', async () => {
+      const mockProjects = createMockProjects({ total: 2 });
       mockedProjectService.getUserProjects.mockResolvedValue(mockProjects);
 
       const result = (await projectsLoader(createLoaderArgs())) as ProjectsLoaderData;
@@ -72,12 +62,8 @@ describe('projectsLoader', () => {
       expect(result).toEqual({ projects: mockProjects });
     });
 
-    it('should handle search query with special characters', async () => {
-      const mockProjects: ProjectsListResponse = {
-        total: 1,
-        documents: [],
-      };
-
+    it('handles special characters in query', async () => {
+      const mockProjects = createMockProjects({ documents: [] });
       mockedProjectService.getUserProjects.mockResolvedValue(mockProjects);
 
       const result = (await projectsLoader(createLoaderArgs('http://localhost?q=react+node'))) as ProjectsLoaderData;
@@ -86,12 +72,8 @@ describe('projectsLoader', () => {
       expect(result).toEqual({ projects: mockProjects });
     });
 
-    it('should handle multiple query parameters', async () => {
-      const mockProjects: ProjectsListResponse = {
-        total: 1,
-        documents: [],
-      };
-
+    it('handles multiple query parameters', async () => {
+      const mockProjects = createMockProjects({ documents: [] });
       mockedProjectService.getUserProjects.mockResolvedValue(mockProjects);
 
       const result = (await projectsLoader(
@@ -102,12 +84,8 @@ describe('projectsLoader', () => {
       expect(result).toEqual({ projects: mockProjects });
     });
 
-    it('should handle URL with hash and query parameters', async () => {
-      const mockProjects: ProjectsListResponse = {
-        total: 1,
-        documents: [],
-      };
-
+    it('handles URL with hash and query', async () => {
+      const mockProjects = createMockProjects({ documents: [] });
       mockedProjectService.getUserProjects.mockResolvedValue(mockProjects);
 
       const result = (await projectsLoader(
@@ -120,12 +98,8 @@ describe('projectsLoader', () => {
   });
 
   describe('when no projects exist', () => {
-    it('should return empty projects array', async () => {
-      const mockProjects: ProjectsListResponse = {
-        total: 0,
-        documents: [],
-      };
-
+    it('returns an empty project list', async () => {
+      const mockProjects = createMockProjects({ total: 0, documents: [] });
       mockedProjectService.getUserProjects.mockResolvedValue(mockProjects);
 
       const result = (await projectsLoader(createLoaderArgs())) as ProjectsLoaderData;
@@ -137,42 +111,23 @@ describe('projectsLoader', () => {
   });
 
   describe('error handling', () => {
-    it('should propagate service errors', async () => {
+    it('throws when service fails', async () => {
       mockedProjectService.getUserProjects.mockRejectedValue(new Error('Service error'));
 
       await expect(projectsLoader(createLoaderArgs())).rejects.toThrow('Service error');
-
       expect(mockedProjectService.getUserProjects).toHaveBeenCalledWith('');
     });
   });
 
-  describe('data structure validation', () => {
-    it('should return correct ProjectsLoaderData structure', async () => {
-      const mockProjects: ProjectsListResponse = {
-        total: 1,
-        documents: [
-          {
-            $id: 'project-1',
-            $collectionId: 'projects',
-            $databaseId: '34sdfd',
-            $permissions: [],
-            $updatedAt: '2025-10-11T12:26:15.675+00:00',
-            name: 'Test Project',
-            color_name: 'Slate',
-            color_hex: '#64748b',
-            $createdAt: '2025-10-11T12:26:15.675+00:00',
-          },
-        ],
-      };
-
+  describe('data validation', () => {
+    it('returns valid ProjectsLoaderData structure', async () => {
+      const mockProjects = createMockProjects();
       mockedProjectService.getUserProjects.mockResolvedValue(mockProjects);
 
       const result = (await projectsLoader(createLoaderArgs())) as ProjectsLoaderData;
 
       expect(result).toHaveProperty('projects');
-      expect(result.projects).toHaveProperty('total');
-      expect(result.projects).toHaveProperty('documents');
-      expect(result.projects.total).toBe(1);
+      expect(result.projects).toHaveProperty('total', 1);
       expect(result.projects.documents).toHaveLength(1);
     });
   });
