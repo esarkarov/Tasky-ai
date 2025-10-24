@@ -56,7 +56,7 @@ It combines **Clerk authentication**, **Appwrite persistence**, and **Google Gem
 | **AI Integration**       | Google Gemini                                               |
 | **Styling**              | Tailwind CSS, Shadcn UI                                     |
 | **Testing & Quality**    | Vitest, React Testing Library, Playwright, ESLint, Prettier |
-| **CI/CD & Tooling**      | Npm, GitHub, GitHub Actions, Vite                           |
+| **CI/CD & Tooling**      | Pnpm, GitHub, GitHub Actions, Vite                          |
 
 ---
 
@@ -72,7 +72,7 @@ cd Tasky-ai
 ### 2. Install dependencies
 
 ```bash
-npm install
+pnpm install
 ```
 
 ### 3. Configure environment variables
@@ -95,7 +95,7 @@ These values are validated at runtime to prevent misconfiguration.
 ### 4. Start the development server
 
 ```bash
-npm run dev
+pnpm run dev
 ```
 
 The app will be available at [http://localhost:5173](http://localhost:5173).
@@ -107,20 +107,20 @@ The app will be available at [http://localhost:5173](http://localhost:5173).
 ### Run the test suite
 
 ```bash
-npm run test
+pnpm run test
 ```
 
 ### Build for production
 
 ```bash
-npm run build
+pnpm run build
 ```
 
 ### Lint & format source
 
 ```bash
-npm run lint
-npm run prettier:check
+pnpm run lint
+pnpm run prettier:check
 ```
 
 Additional scripts are available for coverage, lint fixing, and auto-formatting.
@@ -157,12 +157,15 @@ src/
 
 ---
 
-## 🧩 Core Services & Modules
+## 🧩 Core Modules
 
 - **Authentication shell (`src/App.tsx`)** — wraps the router with `ClerkProvider`, adds theming and global toasts.
 - **Task service (`src/services/task/task.service.ts`)** — aggregates counts, filters by context, and mutates Appwrite documents.
-- **AI task generation (`src/services/ai/ai.service.ts`)** — handles Gemini requests, parses JSON responses, and validates structure.
-- **Project action handler (`src/router/actions/project/project.action.ts`)** — manages create/update/delete actions and AI-generated project wiring.
+- **Project service (`src/services/project/project.service.ts`)** — manages project creation, updates, deletion, and track recent projects.
+- **AI service (`src/services/ai/ai.service.ts`)** — handles Gemini requests, parses JSON responses, and validates structure.
+- **Action handlers (`src/router/actions/*`)** — manages create/update/delete actions and AI-generated task wiring.
+- **State loaders (`src/router/loaders/*`)** — fetch and normalize route data before render (SSR-like).
+- **Third party libraries (`src/lib/*`)** — centralized clients and adapters for external services
 - **Appwrite repositories (`src/repositories/*`)** — provide reusable CRUD operations for tasks/projects.
 
 ---
