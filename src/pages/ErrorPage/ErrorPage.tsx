@@ -1,4 +1,3 @@
-import { pageNotFound } from '@/assets';
 import { Head } from '@/components/atoms/Head';
 import { Footer } from '@/components/organisms/Footer';
 import { Header } from '@/components/organisms/Header';
@@ -59,7 +58,7 @@ export const ErrorPage = () => {
 
         <figure className="mt-10">
           <img
-            src={pageNotFound}
+            src="/empty-state/page-not-found.png"
             width={560}
             height={373}
             alt={isNotFound ? '404 page not found illustration' : 'Generic error illustration'}

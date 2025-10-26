@@ -1,4 +1,3 @@
-import { heroBannerLg, heroBannerSm } from '@/assets';
 import { Head } from '@/components/atoms/Head';
 import { Button } from '@/components/ui/button';
 import { ROUTES } from '@/constants/routes';
@@ -79,14 +78,14 @@ export const HomePage = () => {
                 aria-hidden="true"
               />
               <img
-                src={heroBannerSm}
+                src="/banner/hero-banner-sm.png"
                 width={520}
                 height={520}
                 alt="Illustration of Tasky AI app interface on mobile"
                 className="md:hidden w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
               />
               <img
-                src={heroBannerLg}
+                src="/banner/hero-banner-lg.png"
                 width={1000}
                 height={562}
                 alt="Illustration of Tasky AI app interface on desktop"

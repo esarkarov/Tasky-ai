@@ -24,11 +24,6 @@ vi.mock('@/components/ui/button', () => ({
   ),
 }));
 
-vi.mock('@/assets', () => ({
-  heroBannerLg: 'hero-banner-lg.png',
-  heroBannerSm: 'hero-banner-sm.png',
-}));
-
 vi.mock('@/constants/routes', () => ({
   ROUTES: {
     TODAY: '/today',
@@ -93,10 +88,10 @@ describe('HomePage', () => {
       const desktopImage = screen.getByAltText('Illustration of Tasky AI app interface on desktop');
 
       expect(mobileImage).toBeInTheDocument();
-      expect(mobileImage).toHaveAttribute('src', 'hero-banner-sm.png');
+      expect(mobileImage).toHaveAttribute('src', '/banner/hero-banner-sm.png');
 
       expect(desktopImage).toBeInTheDocument();
-      expect(desktopImage).toHaveAttribute('src', 'hero-banner-lg.png');
+      expect(desktopImage).toHaveAttribute('src', '/banner/hero-banner-lg.png');
     });
   });
 

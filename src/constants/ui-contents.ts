@@ -1,12 +1,5 @@
-import {
-  completedTaskEmptyState,
-  inboxTaskEmptyState,
-  projectTaskEmptyState,
-  todayTaskEmptyState,
-  upcomingTaskEmptyState,
-} from '@/assets';
-import { EmptyStateVariant } from '@/types/shared.types';
 import { EmptyStateContent } from '@/types/empty-state.types';
+import { EmptyStateVariant } from '@/types/shared.types';
 import { DEFAULT_EMPTY_STATE_IMAGE_HEIGHT } from './defaults';
 
 const createEmptyState = (src: string, width: number, title: string, description: string): EmptyStateContent => ({
@@ -21,31 +14,31 @@ const createEmptyState = (src: string, width: number, title: string, description
 
 export const EMPTY_STATE_CONTENTS: Record<EmptyStateVariant, EmptyStateContent> = {
   today: createEmptyState(
-    todayTaskEmptyState,
+    '/empty-state/today-task-empty-state.png',
     226,
     'What do you need to get done today?',
     'By default, tasks added here will be due today. Click + to add a task.'
   ),
   inbox: createEmptyState(
-    inboxTaskEmptyState,
+    '/empty-state/inbox-task-empty-state.png',
     344,
     'What is on your mind?',
     "Capture tasks that don't have a specific category. Click + to add a task."
   ),
   upcoming: createEmptyState(
-    upcomingTaskEmptyState,
+    '/empty-state/upcoming-task-empty-state.png',
     208,
     'Plan ahead with ease!',
     'Tasks added here will be due in the future. Click + to schedule a task.'
   ),
   completed: createEmptyState(
-    completedTaskEmptyState,
+    '/empty-state/completed-task-empty-state.png',
     231,
     'You have been productive!',
     'All the tasks you have completed will appear here. Keep up the great work!'
   ),
   project: createEmptyState(
-    projectTaskEmptyState,
+    '/empty-state/project-task-empty-state.png',
     228,
     "Let's build something amazing!",
     'Add tasks specific to this project. Click + to start planning.'

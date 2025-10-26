@@ -1,6 +1,6 @@
 <div align="center">
   <br />
-    <img src="public/hero-banner-lg.png" alt="Tasky AI Hero Banner" width="100%" style="border-radius: 12px;" >
+    <img src="public/banner/hero-banner-lg.png" alt="Tasky AI Hero Banner" width="100%" style="border-radius: 12px;" >
   <br />
 
   <div>

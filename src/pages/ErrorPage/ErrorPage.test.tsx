@@ -39,10 +39,6 @@ vi.mock('@/components/ui/button', () => ({
   ),
 }));
 
-vi.mock('@/assets', () => ({
-  pageNotFound: 'page-not-found.png',
-}));
-
 vi.mock('@/constants/routes', () => ({
   ROUTES: {
     HOME: '/',
@@ -138,7 +134,7 @@ describe('ErrorPage', () => {
 
       const image = screen.getByAltText('404 page not found illustration');
       expect(image).toBeInTheDocument();
-      expect(image).toHaveAttribute('src', 'page-not-found.png');
+      expect(image).toHaveAttribute('src', '/empty-state/page-not-found.png');
     });
 
     it('should display generic error title when not a route error', () => {
@@ -167,7 +163,7 @@ describe('ErrorPage', () => {
 
       const image = screen.getByAltText('Generic error illustration');
       expect(image).toBeInTheDocument();
-      expect(image).toHaveAttribute('src', 'page-not-found.png');
+      expect(image).toHaveAttribute('src', '/empty-state/page-not-found.png');
     });
   });
 

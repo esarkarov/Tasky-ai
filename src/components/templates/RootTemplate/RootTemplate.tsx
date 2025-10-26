@@ -9,7 +9,7 @@ export const RootTemplate = memo(() => {
   const isLoading = state === 'loading' && !formData;
 
   return (
-    <div className="relative isolate flex flex-col overflow-hidden bg-background">
+    <div className="relative isolate min-h-[100dvh] flex flex-col overflow-hidden bg-background">
       <Header />
       <main
         id="main-content"

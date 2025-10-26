@@ -1,4 +1,3 @@
-import { logo } from '@/assets';
 import { Loader2 } from 'lucide-react';
 import { memo } from 'react';
 
@@ -9,7 +8,7 @@ export const Loader = memo(() => {
       role="status"
       aria-live="polite">
       <img
-        src={logo}
+        src="/logo/logo.svg"
         width={65}
         height={65}
         alt="Tasky AI logo"
