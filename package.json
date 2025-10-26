@@ -13,7 +13,8 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "prettier": "prettier --write .",
-    "prettier:check": "prettier --check ."
+    "prettier:check": "prettier --check .",
+    "prepare": "husky"
   },
   "dependencies": {
     "@clerk/clerk-react": "^5.48.1",
@@ -67,7 +68,9 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.20",
     "globals": "^16.4.0",
+    "husky": "^9.1.7",
     "jsdom": "^27.0.0",
+    "lint-staged": "^16.2.6",
     "postcss": "^8.5.6",
     "prettier": "3.6.2",
     "tailwindcss": "^3.4.17",
