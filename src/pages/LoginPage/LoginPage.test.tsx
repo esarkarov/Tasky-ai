@@ -8,8 +8,8 @@ vi.mock('@/components/atoms/Head', () => ({
 
 vi.mock('@/constants/routes', () => ({
   ROUTES: {
-    LOGIN: '/login',
     REGISTER: '/register',
+    TODAY: '/app/today',
   },
 }));
 
@@ -49,18 +49,10 @@ describe('LoginPage', () => {
   });
 
   describe('Component Configuration', () => {
-    it('should pass correct routing prop to SignIn', () => {
+    it('should pass correct fallbackRedirectUrl prop to SignIn', () => {
       expect(mockSignIn).toHaveBeenCalledWith(
         expect.objectContaining({
-          routing: 'path',
-        })
-      );
-    });
-
-    it('should pass correct path prop to SignIn', () => {
-      expect(mockSignIn).toHaveBeenCalledWith(
-        expect.objectContaining({
-          path: '/login',
+          fallbackRedirectUrl: '/app/today',
         })
       );
     });
@@ -88,9 +80,8 @@ describe('LoginPage', () => {
 
     it('should pass all required props to SignIn component', () => {
       const signInProps = mockSignIn.mock.calls[0][0];
-      expect(signInProps).toHaveProperty('routing');
-      expect(signInProps).toHaveProperty('path');
       expect(signInProps).toHaveProperty('signUpUrl');
+      expect(signInProps).toHaveProperty('fallbackRedirectUrl');
       expect(signInProps).toHaveProperty('appearance');
     });
   });
@@ -136,8 +127,8 @@ describe('LoginPage', () => {
   describe('Routes Integration', () => {
     it('should use ROUTES constants for path configuration', () => {
       const signInProps = mockSignIn.mock.calls[0][0];
-      expect(signInProps.path).toBe('/login');
       expect(signInProps.signUpUrl).toBe('/register');
+      expect(signInProps.fallbackRedirectUrl).toBe('/app/today');
     });
   });
 });

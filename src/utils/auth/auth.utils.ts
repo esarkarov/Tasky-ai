@@ -3,10 +3,10 @@ import { ROUTES } from '@/constants/routes';
 import { redirect } from 'react-router';
 
 export function getUserId(): string {
-  const clerkUserId = sessionStorage.getItem(env.clerkUserStorageKey);
+  const clerkUserId = localStorage.getItem(env.clerkUserStorageKey);
 
   if (!clerkUserId) {
-    redirect(ROUTES.AUTH_SYNC);
+    redirect(ROUTES.LOGIN);
     return '';
   }
 

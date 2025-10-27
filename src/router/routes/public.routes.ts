@@ -1,5 +1,5 @@
 import { ROUTES } from '@/constants/routes';
-import { AuthSyncPage, HomePage, LoginPage, RegisterPage } from '@/router/lazy/router-lazy';
+import { HomePage, LoginPage, RegisterPage } from '@/router/lazy/router-lazy';
 import { RouteObject } from 'react-router';
 
 export const publicRoutes: RouteObject[] = [
@@ -19,12 +19,6 @@ export const publicRoutes: RouteObject[] = [
     path: ROUTES.LOGIN,
     lazy: {
       element: LoginPage,
-    },
-  },
-  {
-    path: ROUTES.AUTH_SYNC,
-    lazy: {
-      element: AuthSyncPage,
     },
   },
 ];

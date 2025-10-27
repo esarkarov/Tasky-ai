@@ -18,8 +18,7 @@ export const RegisterPage = () => {
         </h1>
 
         <SignUp
-          routing="path"
-          path={ROUTES.REGISTER}
+          fallbackRedirectUrl={ROUTES.TODAY}
           signInUrl={ROUTES.LOGIN}
           appearance={{
             elements: {

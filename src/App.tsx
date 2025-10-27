@@ -11,8 +11,8 @@ const App = () => {
     <ClerkProvider
       publishableKey={env.clerkPublishableKey}
       afterSignOutUrl={ROUTES.HOME}
-      signInForceRedirectUrl={ROUTES.AUTH_SYNC}
-      signUpForceRedirectUrl={ROUTES.AUTH_SYNC}
+      signInFallbackRedirectUrl={ROUTES.TODAY}
+      signUpFallbackRedirectUrl={ROUTES.TODAY}
       appearance={{
         baseTheme: dark,
         variables: {

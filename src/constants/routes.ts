@@ -4,7 +4,6 @@ export const ROUTES = {
   HOME: '/',
   LOGIN: '/login',
   REGISTER: '/register',
-  AUTH_SYNC: '/auth-sync',
 
   APP: APP_BASE,
   INBOX: `${APP_BASE}/inbox`,

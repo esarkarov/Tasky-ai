@@ -12,7 +12,7 @@ vi.mock('@/config/env.config', () => ({
 
 vi.mock('@/constants/routes', () => ({
   ROUTES: {
-    AUTH_SYNC: '/auth/sync',
+    LOGIN: '/login',
   },
 }));
 
@@ -27,15 +27,15 @@ describe('auth utils', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    sessionStorage.clear();
+    localStorage.clear();
   });
 
   describe('getUserId', () => {
     const setUserId = (userId: string | null) => {
       if (userId === null) {
-        sessionStorage.removeItem(STORAGE_KEY);
+        localStorage.removeItem(STORAGE_KEY);
       } else {
-        sessionStorage.setItem(STORAGE_KEY, userId);
+        localStorage.setItem(STORAGE_KEY, userId);
       }
     };
 
@@ -61,7 +61,7 @@ describe('auth utils', () => {
         const result = getUserId();
 
         expect(result).toBe('');
-        expect(mockedRedirect).toHaveBeenCalledWith(ROUTES.AUTH_SYNC);
+        expect(mockedRedirect).toHaveBeenCalledWith(ROUTES.LOGIN);
       });
     });
 
@@ -72,7 +72,7 @@ describe('auth utils', () => {
 
         getUserId();
 
-        expect(sessionStorage.getItem(STORAGE_KEY)).toBe(mockUserId);
+        expect(localStorage.getItem(STORAGE_KEY)).toBe(mockUserId);
       });
     });
   });

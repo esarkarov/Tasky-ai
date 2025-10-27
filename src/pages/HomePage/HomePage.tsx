@@ -12,7 +12,7 @@ export const HomePage = () => {
       <Head title="Tasky AI | AI-Powered Task Management App" />
 
       <section
-        className="py-20"
+        className="py-14"
         role="main"
         aria-labelledby="homepage-heading">
         <div className="container px-6 md:px-10 grid grid-cols-1 gap-16 items-center xl:gap-20 xl:grid-cols-[1fr_1.5fr]">
@@ -21,7 +21,7 @@ export const HomePage = () => {
               id="homepage-heading"
               className="text-balance text-5xl font-bold leading-[1.1] tracking-tight max-w-[20ch] md:text-6xl lg:text-7xl xl:text-6xl">
               Simplify Your Work and Life with{' '}
-              <span className="inline-flex bg-gradient-to-r from-primary via-orange-500 to-primary bg-clip-text text-transparent font-extrabold drop-shadow-[0_0_24px_rgba(251,146,60,0.3)]">
+              <span className="inline-flex bg-gradient-to-r from-primary via-[#ea580c] to-primary bg-clip-text text-transparent font-extrabold drop-shadow-[0_0_24px_rgba(251,146,60,0.3)]">
                 AI-Powered
               </span>{' '}
               Task Management.

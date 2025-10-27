@@ -1,4 +1,6 @@
 import { Loader } from '@/components/atoms/Loader';
+import { RedirectIfAuthenticated } from '@/components/guards/RedirectIfAuthenticated';
+import { RequireAuth } from '@/components/guards/RequireAuth';
 import { ROUTES } from '@/constants/routes';
 import { ErrorPage } from '@/pages/ErrorPage/ErrorPage';
 import { appLoader, AppTemplate, RootTemplate, taskAction } from '@/router/lazy/router-lazy';
@@ -15,7 +17,12 @@ export const router = createBrowserRouter([
     lazy: {
       element: RootTemplate,
     },
-    children: publicRoutes,
+    children: [
+      {
+        element: createElement(RedirectIfAuthenticated),
+        children: publicRoutes,
+      },
+    ],
   },
   {
     path: ROUTES.APP,
@@ -26,7 +33,12 @@ export const router = createBrowserRouter([
       action: taskAction,
       loader: appLoader,
     },
-    children: protectedRoutes,
+    children: [
+      {
+        element: createElement(RequireAuth),
+        children: protectedRoutes,
+      },
+    ],
   },
   {
     path: ROUTES.NOT_FOUND,

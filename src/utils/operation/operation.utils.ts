@@ -25,6 +25,7 @@ export const executeWithToast = async <T>(
       title: messages.success,
       description: successDescription,
       duration: TIMING.TOAST_DURATION,
+      className: 'border-l-4 border-[#ea580c]',
     });
 
     onSuccess?.();

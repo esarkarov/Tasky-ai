@@ -8,7 +8,6 @@ export const AppTemplate = async () =>
 export const HomePage = async () => createElement((await import('@/pages/HomePage/HomePage')).HomePage);
 export const LoginPage = async () => createElement((await import('@/pages/LoginPage/LoginPage')).LoginPage);
 export const RegisterPage = async () => createElement((await import('@/pages/RegisterPage/RegisterPage')).RegisterPage);
-export const AuthSyncPage = async () => createElement((await import('@/pages/AuthSyncPage/AuthSyncPage')).AuthSyncPage);
 export const InboxPage = async () => createElement((await import('@/pages/InboxPage/InboxPage')).InboxPage);
 export const TodayPage = async () => createElement((await import('@/pages/TodayPage/TodayPage')).TodayPage);
 export const UpcomingPage = async () => createElement((await import('@/pages/UpcomingPage/UpcomingPage')).UpcomingPage);
