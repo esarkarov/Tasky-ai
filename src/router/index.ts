@@ -1,6 +1,6 @@
 import { Loader } from '@/components/atoms/Loader';
-import { RedirectIfAuthenticated } from '@/components/guards/RedirectIfAuthenticated';
-import { RequireAuth } from '@/components/guards/RequireAuth';
+import { RedirectIfAuthenticated } from '@/components/guards/RedirectIfAuthenticated/RedirectIfAuthenticated';
+import { RequireAuth } from '@/components/guards/RequireAuth/RequireAuth';
 import { ROUTES } from '@/constants/routes';
 import { ErrorPage } from '@/pages/ErrorPage/ErrorPage';
 import { appLoader, AppTemplate, RootTemplate, taskAction } from '@/router/lazy/router-lazy';

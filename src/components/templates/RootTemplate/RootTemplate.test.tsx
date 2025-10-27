@@ -61,7 +61,7 @@ describe('RootTemplate', () => {
     });
   });
 
-  describe('Loading states', () => {
+  describe('Loading State', () => {
     it('should show loader when navigating without form submission', () => {
       setupNavigation('loading');
 
@@ -132,7 +132,7 @@ describe('RootTemplate', () => {
     });
   });
 
-  describe('Navigation states', () => {
+  describe('Navigation State', () => {
     it.each([
       { state: 'idle' as const, shouldShowLoader: false, ariaBusy: 'false' },
       { state: 'loading' as const, shouldShowLoader: true, ariaBusy: 'true' },

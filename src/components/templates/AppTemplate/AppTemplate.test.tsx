@@ -66,7 +66,7 @@ describe('AppTemplate', () => {
     });
   });
 
-  describe('Loading states', () => {
+  describe('Loading State', () => {
     it('should not apply loading styles when navigation is idle', () => {
       setupNavigation('idle');
 
@@ -118,7 +118,7 @@ describe('AppTemplate', () => {
     });
   });
 
-  describe('accessibility', () => {
+  describe('Accessibility', () => {
     it('should have main landmark with correct attributes', () => {
       setupNavigation('idle');
 
@@ -159,7 +159,7 @@ describe('AppTemplate', () => {
     });
   });
 
-  describe('Navigation states', () => {
+  describe('Navigation State', () => {
     it.each([
       { state: 'idle' as NavigationState, shouldShowLoading: false },
       { state: 'loading' as NavigationState, shouldShowLoading: true },
