@@ -79,6 +79,7 @@ describe('operation utils', () => {
         title: DEFAULT_MESSAGES.success,
         description: successDescription,
         duration: TIMING.TOAST_DURATION,
+        className: 'border-l-4 border-[#ea580c]',
       });
       expect(onSuccess).toHaveBeenCalled();
     });
@@ -116,6 +117,7 @@ describe('operation utils', () => {
         title: DEFAULT_MESSAGES.success,
         description: successDescription,
         duration: TIMING.TOAST_DURATION,
+        className: 'border-l-4 border-[#ea580c]',
       });
     });
   });

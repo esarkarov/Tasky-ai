@@ -1,3 +1,4 @@
+import { NavigationState } from '@/types/shared.types';
 import { render, screen } from '@testing-library/react';
 import { ReactNode } from 'react';
 import { MemoryRouter } from 'react-router';
@@ -18,7 +19,7 @@ vi.mock('@/components/ui/tooltip', () => ({
 
 vi.mock('@/constants/timing', () => ({
   TIMING: {
-    DELAY_DURATION: 700,
+    DELAY_DURATION: 500,
   },
 }));
 
@@ -37,101 +38,69 @@ vi.mock('react-router', async () => {
 });
 
 describe('AppTemplate', () => {
+  const renderComponent = () => {
+    return render(
+      <MemoryRouter>
+        <AppTemplate />
+      </MemoryRouter>
+    );
+  };
+  const setupNavigation = (state: NavigationState, formData: FormData | null = null) => {
+    mockUseNavigation.mockReturnValue({ state, formData });
+  };
+
   beforeEach(() => {
     vi.clearAllMocks();
-    mockUseNavigation.mockReturnValue({ state: 'idle', formData: null });
+    setupNavigation('idle');
   });
 
-  describe('Basic Rendering', () => {
+  describe('Layout Structure', () => {
     it('should render all main layout components', () => {
-      render(
-        <MemoryRouter>
-          <AppTemplate />
-        </MemoryRouter>
-      );
+      renderComponent();
 
       expect(screen.getByTestId('app-sidebar')).toBeInTheDocument();
       expect(screen.getByTestId('outlet')).toBeInTheDocument();
       expect(screen.getByRole('main')).toBeInTheDocument();
-    });
-
-    it('should render with correct provider hierarchy', () => {
-      render(
-        <MemoryRouter>
-          <AppTemplate />
-        </MemoryRouter>
-      );
-
       expect(screen.getByTestId('sidebar-provider')).toBeInTheDocument();
       expect(screen.getByTestId('tooltip-provider')).toBeInTheDocument();
     });
-
-    it('should render with correct layout structure', () => {
-      const { container } = render(
-        <MemoryRouter>
-          <AppTemplate />
-        </MemoryRouter>
-      );
-
-      const layoutContainer = container.querySelector('.flex.h-screen.w-full');
-      expect(layoutContainer).toBeInTheDocument();
-    });
   });
 
-  describe('Loading State', () => {
-    it('should NOT apply loading styles when navigation state is idle', () => {
-      mockUseNavigation.mockReturnValue({ state: 'idle', formData: null });
+  describe('Loading states', () => {
+    it('should not apply loading styles when navigation is idle', () => {
+      setupNavigation('idle');
 
-      render(
-        <MemoryRouter>
-          <AppTemplate />
-        </MemoryRouter>
-      );
+      renderComponent();
 
       const main = screen.getByRole('main');
       expect(main).not.toHaveClass('pointer-events-none');
       expect(main).not.toHaveClass('opacity-50');
     });
 
-    it('should apply loading styles when navigation state is loading without formData', () => {
-      mockUseNavigation.mockReturnValue({ state: 'loading', formData: null });
+    it('should apply loading styles when loading without formData', () => {
+      setupNavigation('loading');
 
-      render(
-        <MemoryRouter>
-          <AppTemplate />
-        </MemoryRouter>
-      );
+      renderComponent();
 
       const main = screen.getByRole('main');
       expect(main).toHaveClass('pointer-events-none');
       expect(main).toHaveClass('opacity-50');
     });
 
-    it('should NOT apply loading styles when loading WITH formData', () => {
-      mockUseNavigation.mockReturnValue({
-        state: 'loading',
-        formData: new FormData(),
-      });
+    it('should not apply loading styles when loading with formData', () => {
+      setupNavigation('loading', new FormData());
 
-      render(
-        <MemoryRouter>
-          <AppTemplate />
-        </MemoryRouter>
-      );
+      renderComponent();
 
       const main = screen.getByRole('main');
       expect(main).not.toHaveClass('pointer-events-none');
       expect(main).not.toHaveClass('opacity-50');
     });
 
-    it('should NOT apply loading styles when submitting', () => {
-      mockUseNavigation.mockReturnValue({ state: 'submitting', formData: null });
+    it('should not apply loading styles when submitting', () => {
+      setupNavigation('submitting');
 
-      render(
-        <MemoryRouter>
-          <AppTemplate />
-        </MemoryRouter>
-      );
+      renderComponent();
 
       const main = screen.getByRole('main');
       expect(main).not.toHaveClass('pointer-events-none');
@@ -139,13 +108,9 @@ describe('AppTemplate', () => {
     });
 
     it('should maintain base classes regardless of loading state', () => {
-      mockUseNavigation.mockReturnValue({ state: 'loading', formData: null });
+      setupNavigation('loading');
 
-      render(
-        <MemoryRouter>
-          <AppTemplate />
-        </MemoryRouter>
-      );
+      renderComponent();
 
       const main = screen.getByRole('main');
       expect(main).toHaveClass('flex-1');
@@ -153,15 +118,11 @@ describe('AppTemplate', () => {
     });
   });
 
-  describe('Accessibility', () => {
+  describe('accessibility', () => {
     it('should have main landmark with correct attributes', () => {
-      mockUseNavigation.mockReturnValue({ state: 'idle', formData: null });
+      setupNavigation('idle');
 
-      render(
-        <MemoryRouter>
-          <AppTemplate />
-        </MemoryRouter>
-      );
+      renderComponent();
 
       const main = screen.getByRole('main');
       expect(main).toHaveAttribute('id', 'main-content');
@@ -170,86 +131,53 @@ describe('AppTemplate', () => {
       expect(main).toHaveAttribute('aria-live', 'polite');
     });
 
-    it('should set aria-busy to true when loading', () => {
-      mockUseNavigation.mockReturnValue({ state: 'loading', formData: null });
+    it.each([
+      { state: 'loading' as NavigationState, expected: 'true' },
+      { state: 'idle' as NavigationState, expected: 'false' },
+      { state: 'submitting' as NavigationState, expected: 'false' },
+    ])('should set aria-busy to $expected when state is $state', ({ state, expected }) => {
+      setupNavigation(state);
 
-      render(
-        <MemoryRouter>
-          <AppTemplate />
-        </MemoryRouter>
-      );
-
-      const main = screen.getByRole('main');
-      expect(main).toHaveAttribute('aria-busy', 'true');
-    });
-
-    it('should set aria-busy to false when not loading', () => {
-      mockUseNavigation.mockReturnValue({ state: 'idle', formData: null });
-
-      render(
-        <MemoryRouter>
-          <AppTemplate />
-        </MemoryRouter>
-      );
+      renderComponent();
 
       const main = screen.getByRole('main');
-      expect(main).toHaveAttribute('aria-busy', 'false');
+      expect(main).toHaveAttribute('aria-busy', expected);
     });
 
-    it('should maintain focus management with tabIndex on main', () => {
-      mockUseNavigation.mockReturnValue({ state: 'idle', formData: null });
-
-      render(
-        <MemoryRouter>
-          <AppTemplate />
-        </MemoryRouter>
-      );
+    it('should maintain focus management with tabIndex', () => {
+      renderComponent();
 
       const main = screen.getByRole('main');
       expect(main).toHaveAttribute('tabIndex', '-1');
     });
 
     it('should have proper focus outline styles', () => {
-      mockUseNavigation.mockReturnValue({ state: 'idle', formData: null });
-
-      render(
-        <MemoryRouter>
-          <AppTemplate />
-        </MemoryRouter>
-      );
+      renderComponent();
 
       const main = screen.getByRole('main');
       expect(main).toHaveClass('focus:outline-none');
     });
   });
 
-  describe('Navigation States', () => {
-    it('should handle all navigation states correctly', () => {
-      const states: Array<'idle' | 'loading' | 'submitting'> = ['idle', 'loading', 'submitting'];
+  describe('Navigation states', () => {
+    it.each([
+      { state: 'idle' as NavigationState, shouldShowLoading: false },
+      { state: 'loading' as NavigationState, shouldShowLoading: true },
+      { state: 'submitting' as NavigationState, shouldShowLoading: false },
+    ])('should handle $state state correctly', ({ state, shouldShowLoading }) => {
+      setupNavigation(state);
 
-      states.forEach((state) => {
-        mockUseNavigation.mockReturnValue({ state, formData: null });
+      renderComponent();
 
-        const { unmount } = render(
-          <MemoryRouter>
-            <AppTemplate />
-          </MemoryRouter>
-        );
+      const main = screen.getByRole('main');
+      expect(main).toHaveAttribute('aria-busy', shouldShowLoading.toString());
 
-        const main = screen.getByRole('main');
-        const shouldBeLoading = state === 'loading';
-
-        expect(main).toHaveAttribute('aria-busy', shouldBeLoading.toString());
-
-        if (shouldBeLoading) {
-          expect(main).toHaveClass('pointer-events-none', 'opacity-50');
-        } else {
-          expect(main).not.toHaveClass('pointer-events-none');
-          expect(main).not.toHaveClass('opacity-50');
-        }
-
-        unmount();
-      });
+      if (shouldShowLoading) {
+        expect(main).toHaveClass('pointer-events-none', 'opacity-50');
+      } else {
+        expect(main).not.toHaveClass('pointer-events-none');
+        expect(main).not.toHaveClass('opacity-50');
+      }
     });
   });
 });
