@@ -1,8 +1,10 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { tasksCompletedLoader } from './tasks-completed.loader';
 import { taskService } from '@/services/task/task.service';
-import type { TasksResponse } from '@/types/tasks.types';
-import type { TasksLoaderData } from '@/types/loaders.types';
+import { projectService } from '@/services/project/project.service';
+import type { TaskEntity, TasksResponse } from '@/types/tasks.types';
+import type { ProjectEntity, ProjectListItem, ProjectsListResponse } from '@/types/projects.types';
+import type { ProjectTaskLoaderData, TasksLoaderData } from '@/types/loaders.types';
 
 vi.mock('@/services/task/task.service', () => ({
   taskService: {
@@ -10,7 +12,14 @@ vi.mock('@/services/task/task.service', () => ({
   },
 }));
 
+vi.mock('@/services/project/project.service', () => ({
+  projectService: {
+    getRecentProjects: vi.fn(),
+  },
+}));
+
 const mockTaskService = vi.mocked(taskService);
+const mockProjectService = vi.mocked(projectService);
 
 const createLoaderArgs = () => ({
   request: new Request('http://localhost'),
@@ -18,24 +27,47 @@ const createLoaderArgs = () => ({
   context: {},
 });
 
-const createMockTasks = (overrides?: Partial<TasksResponse>): TasksResponse => ({
-  total: 1,
-  documents: [
-    {
-      id: '1',
-      $id: 'task-123',
-      content: 'Completed task',
-      completed: true,
-      due_date: null,
-      projectId: null,
-      $createdAt: '2023-01-01T00:00:00.000Z',
-      $updatedAt: '2023-01-01T00:00:00.000Z',
-      $collectionId: 'tasks',
-      $databaseId: 'default',
-      $permissions: [],
-    },
-  ],
+const createMockTask = (overrides: Partial<TaskEntity> = {}): TaskEntity => ({
+  id: '1',
+  $id: 'task-123',
+  content: 'Completed task',
+  completed: true,
+  due_date: null,
+  projectId: null,
+  $createdAt: '2023-01-01T00:00:00.000Z',
+  $updatedAt: '2023-01-01T00:00:00.000Z',
+  $collectionId: 'tasks',
+  $databaseId: 'default',
+  $permissions: [],
   ...overrides,
+});
+
+const createMockTasks = (
+  docs: TasksResponse['documents'] = [createMockTask()],
+  total = docs.length
+): TasksResponse => ({
+  total,
+  documents: docs,
+});
+
+const createMockProject = (overrides: Partial<ProjectListItem> = {}): ProjectEntity => ({
+  $id: 'project-1',
+  userId: 'user-123',
+  name: 'Test Project',
+  color_name: 'orange',
+  color_hex: '#FFA500',
+  $createdAt: '2023-01-01T00:00:00.000Z',
+  $updatedAt: '2023-01-01T00:00:00.000Z',
+  $collectionId: 'projects',
+  $databaseId: 'default',
+  $permissions: [],
+  tasks: [],
+  ...overrides,
+});
+
+const createMockProjects = (docs: ProjectListItem[] = [createMockProject()]): ProjectsListResponse => ({
+  total: docs.length,
+  documents: docs,
 });
 
 beforeEach(() => {
@@ -44,52 +76,43 @@ beforeEach(() => {
 
 describe('tasksCompletedLoader', () => {
   describe('success cases', () => {
-    it('returns multiple completed tasks', async () => {
-      const mockTasks = createMockTasks({
-        total: 2,
-        documents: [
-          { ...createMockTasks().documents[0], id: '1', $id: 'task-1', content: 'Task 1' },
-          { ...createMockTasks().documents[0], id: '2', $id: 'task-2', content: 'Task 2' },
-        ],
-      });
-      mockTaskService.getCompletedTasks.mockResolvedValue(mockTasks);
+    it('returns multiple completed tasks and recent projects', async () => {
+      const tasks = createMockTasks([
+        createMockTask({ $id: 'task-1', content: 'Task 1' }),
+        createMockTask({ $id: 'task-2', content: 'Task 2' }),
+      ]);
+      const projects = createMockProjects();
 
-      const result = (await tasksCompletedLoader(createLoaderArgs())) as TasksLoaderData;
+      mockTaskService.getCompletedTasks.mockResolvedValue(tasks);
+      mockProjectService.getRecentProjects.mockResolvedValue(projects);
+
+      const result = (await tasksCompletedLoader(createLoaderArgs())) as ProjectTaskLoaderData;
 
       expect(mockTaskService.getCompletedTasks).toHaveBeenCalledOnce();
-      expect(result).toEqual(expect.objectContaining({ tasks: mockTasks }));
+      expect(mockProjectService.getRecentProjects).toHaveBeenCalledOnce();
+      expect(result.tasks).toEqual(tasks);
+      expect(result.projects).toEqual(projects);
     });
 
-    it('includes task project references', async () => {
-      const projectId = {
-        $id: 'project-1',
-        userId: 'user-123',
-        name: 'Test Project',
-        color_name: 'orange',
-        color_hex: '#FFA500',
-        $createdAt: '2023-01-01T00:00:00.000Z',
-        $updatedAt: '2023-01-01T00:00:00.000Z',
-        $collectionId: 'projects',
-        $databaseId: 'default',
-        $permissions: [],
-        tasks: [],
-      };
+    it('includes project reference in returned tasks', async () => {
+      const projectRef = createMockProject({ $id: 'project-1' });
+      const tasks = createMockTasks([createMockTask({ projectId: projectRef })]);
+      const projects = createMockProjects();
 
-      const mockTasks = createMockTasks({
-        documents: [{ ...createMockTasks().documents[0], projectId }],
-      });
-      mockTaskService.getCompletedTasks.mockResolvedValue(mockTasks);
+      mockTaskService.getCompletedTasks.mockResolvedValue(tasks);
+      mockProjectService.getRecentProjects.mockResolvedValue(projects);
 
       const result = (await tasksCompletedLoader(createLoaderArgs())) as TasksLoaderData;
 
       expect(result.tasks.documents[0].projectId?.$id).toBe('project-1');
     });
 
-    it('returns tasks with due dates', async () => {
-      const mockTasks = createMockTasks({
-        documents: [{ ...createMockTasks().documents[0], due_date: new Date('2023-12-31') }],
-      });
-      mockTaskService.getCompletedTasks.mockResolvedValue(mockTasks);
+    it('returns task with a valid due date if present', async () => {
+      const tasks = createMockTasks([createMockTask({ due_date: new Date('2023-12-31') })]);
+      const projects = createMockProjects();
+
+      mockTaskService.getCompletedTasks.mockResolvedValue(tasks);
+      mockProjectService.getRecentProjects.mockResolvedValue(projects);
 
       const result = (await tasksCompletedLoader(createLoaderArgs())) as TasksLoaderData;
 
@@ -98,9 +121,12 @@ describe('tasksCompletedLoader', () => {
   });
 
   describe('empty state', () => {
-    it('returns empty tasks list when none exist', async () => {
-      const mockTasks = createMockTasks({ total: 0, documents: [] });
-      mockTaskService.getCompletedTasks.mockResolvedValue(mockTasks);
+    it('returns an empty task list if no tasks exist', async () => {
+      const tasks = createMockTasks([], 0);
+      const projects = createMockProjects();
+
+      mockTaskService.getCompletedTasks.mockResolvedValue(tasks);
+      mockProjectService.getRecentProjects.mockResolvedValue(projects);
 
       const result = (await tasksCompletedLoader(createLoaderArgs())) as TasksLoaderData;
 
@@ -110,36 +136,42 @@ describe('tasksCompletedLoader', () => {
   });
 
   describe('error handling', () => {
-    it('throws if service call fails', async () => {
-      mockTaskService.getCompletedTasks.mockRejectedValue(new Error('Service error'));
+    it('throws if task service fails', async () => {
+      mockTaskService.getCompletedTasks.mockRejectedValue(new Error('Task error'));
 
-      await expect(tasksCompletedLoader(createLoaderArgs())).rejects.toThrow('Service error');
-      expect(mockTaskService.getCompletedTasks).toHaveBeenCalledOnce();
+      await expect(tasksCompletedLoader(createLoaderArgs())).rejects.toThrow('Task error');
+    });
+
+    it('throws if project service fails', async () => {
+      const tasks = createMockTasks();
+      mockTaskService.getCompletedTasks.mockResolvedValue(tasks);
+      mockProjectService.getRecentProjects.mockRejectedValue(new Error('Project error'));
+
+      await expect(tasksCompletedLoader(createLoaderArgs())).rejects.toThrow('Project error');
     });
   });
 
   describe('data structure validation', () => {
-    it('returns correct TasksLoaderData shape', async () => {
-      const mockTasks = createMockTasks();
-      mockTaskService.getCompletedTasks.mockResolvedValue(mockTasks);
+    it('returns shape conforming to TasksLoaderData', async () => {
+      const tasks = createMockTasks();
+      const projects = createMockProjects();
+
+      mockTaskService.getCompletedTasks.mockResolvedValue(tasks);
+      mockProjectService.getRecentProjects.mockResolvedValue(projects);
 
       const result = (await tasksCompletedLoader(createLoaderArgs())) as TasksLoaderData;
 
       expect(result).toHaveProperty('tasks');
-      expect(result.tasks).toMatchObject({
-        total: 1,
-        documents: expect.any(Array),
-      });
+      expect(result.tasks).toHaveProperty('total', 1);
+      expect(result.tasks.documents).toBeInstanceOf(Array);
     });
 
-    it('ensures all tasks are completed', async () => {
-      const mockTasks = createMockTasks({
-        documents: [
-          { ...createMockTasks().documents[0], completed: true },
-          { ...createMockTasks().documents[0], completed: true },
-        ],
-      });
-      mockTaskService.getCompletedTasks.mockResolvedValue(mockTasks);
+    it('ensures all tasks in the result are marked as completed', async () => {
+      const tasks = createMockTasks([createMockTask({ completed: true }), createMockTask({ completed: true })]);
+      const projects = createMockProjects();
+
+      mockTaskService.getCompletedTasks.mockResolvedValue(tasks);
+      mockProjectService.getRecentProjects.mockResolvedValue(projects);
 
       const result = (await tasksCompletedLoader(createLoaderArgs())) as TasksLoaderData;
 
