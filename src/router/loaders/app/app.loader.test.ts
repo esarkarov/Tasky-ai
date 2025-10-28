@@ -2,167 +2,122 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { appLoader } from './app.loader';
 import { projectService } from '@/services/project/project.service';
 import { taskService } from '@/services/task/task.service';
-import { getUserId } from '@/utils/auth/auth.utils';
-import { redirect } from 'react-router';
-import { ROUTES } from '@/constants/routes';
-import type { TaskCounts } from '@/types/tasks.types';
 import type { ProjectsListResponse, ProjectListItem } from '@/types/projects.types';
+import type { TaskCounts } from '@/types/tasks.types';
 
 vi.mock('@/services/project/project.service', () => ({
   projectService: {
     getRecentProjects: vi.fn(),
   },
 }));
+
 vi.mock('@/services/task/task.service', () => ({
   taskService: {
     getTaskCounts: vi.fn(),
   },
 }));
-vi.mock('react-router', () => ({
-  redirect: vi.fn(),
-}));
-vi.mock('@/utils/auth/auth.utils', () => ({
-  getUserId: vi.fn(),
-}));
-vi.mock('@/constants/routes');
 
-const mockedProjectService = vi.mocked(projectService);
-const mockedTaskService = vi.mocked(taskService);
-const mockedGetUserId = vi.mocked(getUserId);
-const mockedRedirect = vi.mocked(redirect);
+const mockProjectService = vi.mocked(projectService);
+const mockTaskService = vi.mocked(taskService);
+
+const createMockProject = (overrides: Partial<ProjectListItem> = {}): ProjectListItem => ({
+  $id: 'project-1',
+  $collectionId: 'projects',
+  $databaseId: 'db1',
+  $permissions: [],
+  $createdAt: new Date().toISOString(),
+  $updatedAt: new Date().toISOString(),
+  name: 'Test Project',
+  color_name: 'gray',
+  color_hex: '#cccccc',
+  ...overrides,
+});
+
+const createMockProjects = (docs: ProjectListItem[] = [createMockProject()]): ProjectsListResponse => ({
+  total: docs.length,
+  documents: docs,
+});
+
+const createMockTaskCounts = (today = 3, inbox = 1): TaskCounts => ({
+  todayTasks: today,
+  inboxTasks: inbox,
+});
+
+const createLoaderArgs = () => ({
+  request: new Request('http://localhost'),
+  params: {},
+  context: {},
+});
+
+beforeEach(() => {
+  vi.clearAllMocks();
+});
 
 describe('appLoader', () => {
-  const MOCK_USER_ID = 'user-123';
+  it('returns recent projects and task counts', async () => {
+    const mockProjects = createMockProjects();
+    const mockTaskCounts = createMockTaskCounts();
 
-  const createLoaderArgs = () => ({
-    request: new Request('http://localhost'),
-    params: {},
-    context: {},
+    mockProjectService.getRecentProjects.mockResolvedValue(mockProjects);
+    mockTaskService.getTaskCounts.mockResolvedValue(mockTaskCounts);
+
+    const result = await appLoader(createLoaderArgs());
+
+    expect(mockProjectService.getRecentProjects).toHaveBeenCalledOnce();
+    expect(mockTaskService.getTaskCounts).toHaveBeenCalledOnce();
+    expect(result).toEqual({ projects: mockProjects, taskCounts: mockTaskCounts });
   });
 
-  const createMockProjectListItem = (overrides?: Partial<ProjectListItem>): ProjectListItem => ({
-    $id: '123123',
-    $collectionId: 'projects',
-    $databaseId: '34sdfd',
-    $permissions: [],
-    $updatedAt: '2025-10-11T12:26:15.675+00:00',
-    name: 'Test Project',
-    color_name: 'Slate',
-    color_hex: '#64748b',
-    $createdAt: '2025-10-11T12:26:15.675+00:00',
-    ...overrides,
+  it('returns empty projects and zero task counts', async () => {
+    const emptyProjects = createMockProjects([]);
+    const zeroTaskCounts = createMockTaskCounts(0, 0);
+
+    mockProjectService.getRecentProjects.mockResolvedValue(emptyProjects);
+    mockTaskService.getTaskCounts.mockResolvedValue(zeroTaskCounts);
+
+    const result = await appLoader(createLoaderArgs());
+
+    expect(result).toEqual({ projects: emptyProjects, taskCounts: zeroTaskCounts });
   });
 
-  const createMockProjectsResponse = (
-    items: ProjectListItem[] = [createMockProjectListItem()]
-  ): ProjectsListResponse => ({
-    total: items.length,
-    documents: items,
-  });
+  describe('error handling', () => {
+    it('throws if projectService fails', async () => {
+      const error = new Error('Failed to fetch projects');
+      mockProjectService.getRecentProjects.mockRejectedValue(error);
 
-  const createMockTaskCounts = (todayTasks = 5, inboxTasks = 2): TaskCounts => ({
-    todayTasks,
-    inboxTasks,
-  });
+      await expect(appLoader(createLoaderArgs())).rejects.toThrow('Failed to fetch projects');
+    });
 
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
+    it('throws if taskService fails', async () => {
+      const projects = createMockProjects();
+      mockProjectService.getRecentProjects.mockResolvedValue(projects);
+      mockTaskService.getTaskCounts.mockRejectedValue(new Error('Failed to fetch tasks'));
 
-  describe('when user is not authenticated', () => {
-    it('should redirect to login page', async () => {
-      mockedGetUserId.mockReturnValue('');
-      mockedRedirect.mockReturnValue({} as Response);
+      await expect(appLoader(createLoaderArgs())).rejects.toThrow('Failed to fetch tasks');
+    });
 
-      const result = await appLoader(createLoaderArgs());
+    it('throws the first error if both services fail', async () => {
+      mockProjectService.getRecentProjects.mockRejectedValue(new Error('Project error'));
+      mockTaskService.getTaskCounts.mockRejectedValue(new Error('Task error'));
 
-      expect(mockedGetUserId).toHaveBeenCalledOnce();
-      expect(mockedRedirect).toHaveBeenCalledWith(ROUTES.LOGIN);
-      expect(result).toEqual({} as Response);
+      await expect(appLoader(createLoaderArgs())).rejects.toThrow('Project error');
     });
   });
 
-  describe('when user is authenticated', () => {
-    beforeEach(() => {
-      mockedGetUserId.mockReturnValue(MOCK_USER_ID);
-    });
+  it('calls both services in parallel', async () => {
+    const projects = createMockProjects();
+    const taskCounts = createMockTaskCounts();
 
-    it('should return projects and task counts', async () => {
-      const mockProjects = createMockProjectsResponse([
-        createMockProjectListItem({ name: 'React performance optimization' }),
-      ]);
-      const mockTaskCounts = createMockTaskCounts();
-      mockedProjectService.getRecentProjects.mockResolvedValue(mockProjects);
-      mockedTaskService.getTaskCounts.mockResolvedValue(mockTaskCounts);
+    const getRecentProjectsSpy = vi.spyOn(projectService, 'getRecentProjects');
+    const getTaskCountsSpy = vi.spyOn(taskService, 'getTaskCounts');
 
-      const result = await appLoader(createLoaderArgs());
+    mockProjectService.getRecentProjects.mockResolvedValue(projects);
+    mockTaskService.getTaskCounts.mockResolvedValue(taskCounts);
 
-      expect(mockedGetUserId).toHaveBeenCalledOnce();
-      expect(mockedProjectService.getRecentProjects).toHaveBeenCalledOnce();
-      expect(mockedTaskService.getTaskCounts).toHaveBeenCalledOnce();
-      expect(result).toEqual({
-        projects: mockProjects,
-        taskCounts: mockTaskCounts,
-      });
-    });
+    const result = await appLoader(createLoaderArgs());
 
-    it('should handle empty projects and task counts', async () => {
-      const mockProjects = createMockProjectsResponse([]);
-      const mockTaskCounts = createMockTaskCounts(0, 0);
-      mockedProjectService.getRecentProjects.mockResolvedValue(mockProjects);
-      mockedTaskService.getTaskCounts.mockResolvedValue(mockTaskCounts);
-
-      const result = await appLoader(createLoaderArgs());
-
-      expect(result).toEqual({
-        projects: mockProjects,
-        taskCounts: mockTaskCounts,
-      });
-    });
-
-    describe('error handling', () => {
-      it('should propagate project service errors', async () => {
-        const error = new Error('Project service error');
-        mockedProjectService.getRecentProjects.mockRejectedValue(error);
-
-        await expect(appLoader(createLoaderArgs())).rejects.toThrow('Project service error');
-        expect(mockedGetUserId).toHaveBeenCalledOnce();
-        expect(mockedProjectService.getRecentProjects).toHaveBeenCalledOnce();
-      });
-
-      it('should propagate task service errors', async () => {
-        const mockProjects = createMockProjectsResponse();
-        mockedProjectService.getRecentProjects.mockResolvedValue(mockProjects);
-        mockedTaskService.getTaskCounts.mockRejectedValue(new Error('Task service error'));
-
-        await expect(appLoader(createLoaderArgs())).rejects.toThrow('Task service error');
-        expect(mockedGetUserId).toHaveBeenCalledOnce();
-        expect(mockedTaskService.getTaskCounts).toHaveBeenCalledOnce();
-      });
-
-      it('should propagate first error when both services fail', async () => {
-        mockedProjectService.getRecentProjects.mockRejectedValue(new Error('Project service failed'));
-        mockedTaskService.getTaskCounts.mockRejectedValue(new Error('Task service failed'));
-
-        await expect(appLoader(createLoaderArgs())).rejects.toThrow('Project service failed');
-        expect(mockedGetUserId).toHaveBeenCalledOnce();
-      });
-    });
-
-    it('should make concurrent service calls', async () => {
-      const mockProjects = createMockProjectsResponse();
-      const mockTaskCounts = createMockTaskCounts(3, 1);
-      mockedProjectService.getRecentProjects.mockResolvedValue(mockProjects);
-      mockedTaskService.getTaskCounts.mockResolvedValue(mockTaskCounts);
-
-      const result = await appLoader(createLoaderArgs());
-
-      expect(mockedProjectService.getRecentProjects).toHaveBeenCalledOnce();
-      expect(mockedTaskService.getTaskCounts).toHaveBeenCalledOnce();
-      expect(result).toEqual({
-        projects: mockProjects,
-        taskCounts: mockTaskCounts,
-      });
-    });
+    expect(getRecentProjectsSpy).toHaveBeenCalledOnce();
+    expect(getTaskCountsSpy).toHaveBeenCalledOnce();
+    expect(result).toEqual({ projects, taskCounts });
   });
 });

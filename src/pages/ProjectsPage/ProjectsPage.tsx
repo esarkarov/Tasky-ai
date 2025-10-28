@@ -19,7 +19,6 @@ export const ProjectsPage = () => {
     projects: { total, documents },
   } = useLoaderData<ProjectsLoaderData>();
 
-  console.log(documents);
   return (
     <>
       <Head title="Tasky AI | My Projects" />

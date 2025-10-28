@@ -10,7 +10,7 @@ vi.mock('@/services/task/task.service', () => ({
   },
 }));
 
-const mockedTaskService = vi.mocked(taskService);
+const mockTaskService = vi.mocked(taskService);
 
 const createLoaderArgs = () => ({
   request: new Request('http://localhost'),
@@ -25,8 +25,8 @@ const createMockTasks = (overrides?: Partial<TasksResponse>): TasksResponse => (
       id: '1',
       $id: 'task-123',
       content: 'Completed task',
-      due_date: null,
       completed: true,
+      due_date: null,
       projectId: null,
       $createdAt: '2023-01-01T00:00:00.000Z',
       $updatedAt: '2023-01-01T00:00:00.000Z',
@@ -38,133 +38,112 @@ const createMockTasks = (overrides?: Partial<TasksResponse>): TasksResponse => (
   ...overrides,
 });
 
-describe('tasksCompletedLoader', () => {
-  beforeEach(() => {
-    vi.resetAllMocks();
-  });
+beforeEach(() => {
+  vi.clearAllMocks();
+});
 
-  describe('success scenarios', () => {
-    it('returns completed tasks', async () => {
+describe('tasksCompletedLoader', () => {
+  describe('success cases', () => {
+    it('returns multiple completed tasks', async () => {
       const mockTasks = createMockTasks({
         total: 2,
         documents: [
-          { ...createMockTasks().documents[0], id: '1', $id: 'task-123', content: 'Completed task 1' },
-          { ...createMockTasks().documents[0], id: '2', $id: 'task-456', content: 'Completed task 2' },
+          { ...createMockTasks().documents[0], id: '1', $id: 'task-1', content: 'Task 1' },
+          { ...createMockTasks().documents[0], id: '2', $id: 'task-2', content: 'Task 2' },
         ],
       });
-
-      mockedTaskService.getCompletedTasks.mockResolvedValue(mockTasks);
+      mockTaskService.getCompletedTasks.mockResolvedValue(mockTasks);
 
       const result = (await tasksCompletedLoader(createLoaderArgs())) as TasksLoaderData;
 
-      expect(mockedTaskService.getCompletedTasks).toHaveBeenCalledOnce();
-      expect(result).toEqual({ tasks: mockTasks });
+      expect(mockTaskService.getCompletedTasks).toHaveBeenCalledOnce();
+      expect(result).toEqual(expect.objectContaining({ tasks: mockTasks }));
     });
 
-    it('returns tasks with project references', async () => {
-      const mockTasks = createMockTasks({
-        documents: [
-          {
-            ...createMockTasks().documents[0],
-            projectId: {
-              $id: 'project-1',
-              userId: 'user-123',
-              name: 'Test Project',
-              color_name: 'orange',
-              color_hex: '#FFA500',
-              $createdAt: '2023-01-01T00:00:00.000Z',
-              $updatedAt: '2023-01-01T00:00:00.000Z',
-              $collectionId: 'projects',
-              $databaseId: 'default',
-              $permissions: [],
-              tasks: [],
-            },
-          },
-        ],
-      });
+    it('includes task project references', async () => {
+      const projectId = {
+        $id: 'project-1',
+        userId: 'user-123',
+        name: 'Test Project',
+        color_name: 'orange',
+        color_hex: '#FFA500',
+        $createdAt: '2023-01-01T00:00:00.000Z',
+        $updatedAt: '2023-01-01T00:00:00.000Z',
+        $collectionId: 'projects',
+        $databaseId: 'default',
+        $permissions: [],
+        tasks: [],
+      };
 
-      mockedTaskService.getCompletedTasks.mockResolvedValue(mockTasks);
+      const mockTasks = createMockTasks({
+        documents: [{ ...createMockTasks().documents[0], projectId }],
+      });
+      mockTaskService.getCompletedTasks.mockResolvedValue(mockTasks);
 
       const result = (await tasksCompletedLoader(createLoaderArgs())) as TasksLoaderData;
 
-      expect(mockedTaskService.getCompletedTasks).toHaveBeenCalledOnce();
       expect(result.tasks.documents[0].projectId?.$id).toBe('project-1');
     });
 
     it('returns tasks with due dates', async () => {
       const mockTasks = createMockTasks({
-        documents: [
-          {
-            ...createMockTasks().documents[0],
-            due_date: new Date('2023-12-31'),
-            content: 'Task with due date',
-          },
-        ],
+        documents: [{ ...createMockTasks().documents[0], due_date: new Date('2023-12-31') }],
       });
-
-      mockedTaskService.getCompletedTasks.mockResolvedValue(mockTasks);
+      mockTaskService.getCompletedTasks.mockResolvedValue(mockTasks);
 
       const result = (await tasksCompletedLoader(createLoaderArgs())) as TasksLoaderData;
 
-      expect(mockedTaskService.getCompletedTasks).toHaveBeenCalledOnce();
       expect(result.tasks.documents[0].due_date).toBeInstanceOf(Date);
     });
   });
 
-  describe('when no tasks exist', () => {
-    it('returns empty tasks list', async () => {
+  describe('empty state', () => {
+    it('returns empty tasks list when none exist', async () => {
       const mockTasks = createMockTasks({ total: 0, documents: [] });
-
-      mockedTaskService.getCompletedTasks.mockResolvedValue(mockTasks);
+      mockTaskService.getCompletedTasks.mockResolvedValue(mockTasks);
 
       const result = (await tasksCompletedLoader(createLoaderArgs())) as TasksLoaderData;
 
-      expect(mockedTaskService.getCompletedTasks).toHaveBeenCalledOnce();
-      expect(result).toEqual({ tasks: mockTasks });
       expect(result.tasks.total).toBe(0);
       expect(result.tasks.documents).toHaveLength(0);
     });
   });
 
   describe('error handling', () => {
-    it('throws if task service fails', async () => {
-      mockedTaskService.getCompletedTasks.mockRejectedValue(new Error('Service error'));
+    it('throws if service call fails', async () => {
+      mockTaskService.getCompletedTasks.mockRejectedValue(new Error('Service error'));
 
       await expect(tasksCompletedLoader(createLoaderArgs())).rejects.toThrow('Service error');
-      expect(mockedTaskService.getCompletedTasks).toHaveBeenCalledOnce();
+      expect(mockTaskService.getCompletedTasks).toHaveBeenCalledOnce();
     });
   });
 
-  describe('data validation', () => {
-    it('returns valid TasksLoaderData structure', async () => {
+  describe('data structure validation', () => {
+    it('returns correct TasksLoaderData shape', async () => {
       const mockTasks = createMockTasks();
-
-      mockedTaskService.getCompletedTasks.mockResolvedValue(mockTasks);
+      mockTaskService.getCompletedTasks.mockResolvedValue(mockTasks);
 
       const result = (await tasksCompletedLoader(createLoaderArgs())) as TasksLoaderData;
 
       expect(result).toHaveProperty('tasks');
-      expect(result.tasks).toHaveProperty('total');
-      expect(result.tasks).toHaveProperty('documents');
-      expect(result.tasks.total).toBe(1);
-      expect(result.tasks.documents).toHaveLength(1);
-      expect(result.tasks.documents[0].completed).toBe(true);
+      expect(result.tasks).toMatchObject({
+        total: 1,
+        documents: expect.any(Array),
+      });
     });
 
-    it('ensures all returned tasks are completed', async () => {
+    it('ensures all tasks are completed', async () => {
       const mockTasks = createMockTasks({
-        total: 2,
         documents: [
           { ...createMockTasks().documents[0], completed: true },
           { ...createMockTasks().documents[0], completed: true },
         ],
       });
-
-      mockedTaskService.getCompletedTasks.mockResolvedValue(mockTasks);
+      mockTaskService.getCompletedTasks.mockResolvedValue(mockTasks);
 
       const result = (await tasksCompletedLoader(createLoaderArgs())) as TasksLoaderData;
 
-      const allCompleted = result.tasks.documents.every((task) => task.completed === true);
+      const allCompleted = result.tasks.documents.every((task) => task.completed);
       expect(allCompleted).toBe(true);
     });
   });

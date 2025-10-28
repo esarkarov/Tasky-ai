@@ -10,7 +10,7 @@ vi.mock('@/services/task/task.service', () => ({
   },
 }));
 
-const mockedTaskService = vi.mocked(taskService);
+const mockTaskService = vi.mocked(taskService);
 
 const createLoaderArgs = () => ({
   request: new Request('http://localhost'),
@@ -38,13 +38,13 @@ const createMockTasks = (overrides?: Partial<TasksResponse>): TasksResponse => (
   ...overrides,
 });
 
-describe('tasksUpcomingLoader', () => {
-  beforeEach(() => {
-    vi.resetAllMocks();
-  });
+beforeEach(() => {
+  vi.clearAllMocks();
+});
 
-  describe('when upcoming tasks exist', () => {
-    it('returns upcoming tasks list', async () => {
+describe('tasksUpcomingLoader', () => {
+  describe('success scenarios', () => {
+    it('returns a list of upcoming tasks', async () => {
       const mockTasks = createMockTasks({
         total: 2,
         documents: [
@@ -52,35 +52,27 @@ describe('tasksUpcomingLoader', () => {
           { ...createMockTasks().documents[0], id: '2', $id: 'task-456', content: 'Upcoming task 2', completed: true },
         ],
       });
-
-      mockedTaskService.getUpcomingTasks.mockResolvedValue(mockTasks);
+      mockTaskService.getUpcomingTasks.mockResolvedValue(mockTasks);
 
       const result = (await tasksUpcomingLoader(createLoaderArgs())) as TasksLoaderData;
 
-      expect(mockedTaskService.getUpcomingTasks).toHaveBeenCalledOnce();
-      expect(result).toEqual({ tasks: mockTasks });
+      expect(mockTaskService.getUpcomingTasks).toHaveBeenCalledOnce();
+      expect(result.tasks).toEqual(mockTasks);
     });
 
     it('includes tasks with future due dates', async () => {
       const futureDate = new Date('2025-12-25');
       const mockTasks = createMockTasks({
-        documents: [
-          {
-            ...createMockTasks().documents[0],
-            content: 'Due later',
-            due_date: futureDate,
-          },
-        ],
+        documents: [{ ...createMockTasks().documents[0], content: 'Due later', due_date: futureDate }],
       });
-
-      mockedTaskService.getUpcomingTasks.mockResolvedValue(mockTasks);
+      mockTaskService.getUpcomingTasks.mockResolvedValue(mockTasks);
 
       const result = (await tasksUpcomingLoader(createLoaderArgs())) as TasksLoaderData;
 
       expect(result.tasks.documents[0].due_date).toEqual(futureDate);
     });
 
-    it('includes tasks assigned to a project', async () => {
+    it('includes tasks linked to a project', async () => {
       const mockTasks = createMockTasks({
         documents: [
           {
@@ -102,8 +94,7 @@ describe('tasksUpcomingLoader', () => {
           },
         ],
       });
-
-      mockedTaskService.getUpcomingTasks.mockResolvedValue(mockTasks);
+      mockTaskService.getUpcomingTasks.mockResolvedValue(mockTasks);
 
       const result = (await tasksUpcomingLoader(createLoaderArgs())) as TasksLoaderData;
 
@@ -111,34 +102,32 @@ describe('tasksUpcomingLoader', () => {
     });
   });
 
-  describe('when no upcoming tasks exist', () => {
-    it('returns an empty tasks array', async () => {
+  describe('empty state', () => {
+    it('returns an empty list when no upcoming tasks exist', async () => {
       const mockTasks = createMockTasks({ total: 0, documents: [] });
-
-      mockedTaskService.getUpcomingTasks.mockResolvedValue(mockTasks);
+      mockTaskService.getUpcomingTasks.mockResolvedValue(mockTasks);
 
       const result = (await tasksUpcomingLoader(createLoaderArgs())) as TasksLoaderData;
 
-      expect(mockedTaskService.getUpcomingTasks).toHaveBeenCalledOnce();
+      expect(mockTaskService.getUpcomingTasks).toHaveBeenCalledOnce();
       expect(result.tasks.total).toBe(0);
       expect(result.tasks.documents).toHaveLength(0);
     });
   });
 
   describe('error handling', () => {
-    it('throws if service call fails', async () => {
-      mockedTaskService.getUpcomingTasks.mockRejectedValue(new Error('Service failed'));
+    it('throws if the task service fails', async () => {
+      mockTaskService.getUpcomingTasks.mockRejectedValue(new Error('Service failed'));
 
       await expect(tasksUpcomingLoader(createLoaderArgs())).rejects.toThrow('Service failed');
-      expect(mockedTaskService.getUpcomingTasks).toHaveBeenCalledOnce();
+      expect(mockTaskService.getUpcomingTasks).toHaveBeenCalledOnce();
     });
   });
 
-  describe('data validation', () => {
-    it('returns a valid TasksLoaderData object', async () => {
+  describe('data shape validation', () => {
+    it('returns valid TasksLoaderData structure', async () => {
       const mockTasks = createMockTasks();
-
-      mockedTaskService.getUpcomingTasks.mockResolvedValue(mockTasks);
+      mockTaskService.getUpcomingTasks.mockResolvedValue(mockTasks);
 
       const result = (await tasksUpcomingLoader(createLoaderArgs())) as TasksLoaderData;
 

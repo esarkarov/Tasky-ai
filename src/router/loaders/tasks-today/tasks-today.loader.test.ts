@@ -10,7 +10,7 @@ vi.mock('@/services/task/task.service', () => ({
   },
 }));
 
-const mockedTaskService = vi.mocked(taskService);
+const mockTaskService = vi.mocked(taskService);
 
 const createLoaderArgs = () => ({
   request: new Request('http://localhost'),
@@ -25,8 +25,8 @@ const createMockTasks = (overrides?: Partial<TasksResponse>): TasksResponse => (
       id: '1',
       $id: 'task-123',
       content: 'Today task',
-      due_date: null,
       completed: false,
+      due_date: null,
       projectId: null,
       $createdAt: '2025-10-15T00:00:00.000Z',
       $updatedAt: '2025-10-15T00:00:00.000Z',
@@ -38,13 +38,13 @@ const createMockTasks = (overrides?: Partial<TasksResponse>): TasksResponse => (
   ...overrides,
 });
 
-describe('tasksTodayLoader', () => {
-  beforeEach(() => {
-    vi.resetAllMocks();
-  });
+beforeEach(() => {
+  vi.clearAllMocks();
+});
 
-  describe('when today tasks exist', () => {
-    it('returns tasks scheduled for today', async () => {
+describe('tasksTodayLoader', () => {
+  describe('success cases', () => {
+    it('returns a list of today tasks', async () => {
       const mockTasks = createMockTasks({
         total: 2,
         documents: [
@@ -52,13 +52,12 @@ describe('tasksTodayLoader', () => {
           { ...createMockTasks().documents[0], id: '2', $id: 'task-456', content: 'Today task 2', completed: true },
         ],
       });
-
-      mockedTaskService.getTodayTasks.mockResolvedValue(mockTasks);
+      mockTaskService.getTodayTasks.mockResolvedValue(mockTasks);
 
       const result = (await tasksTodayLoader(createLoaderArgs())) as TasksLoaderData;
 
-      expect(mockedTaskService.getTodayTasks).toHaveBeenCalledOnce();
-      expect(result).toEqual({ tasks: mockTasks });
+      expect(mockTaskService.getTodayTasks).toHaveBeenCalledOnce();
+      expect(result.tasks).toEqual(mockTasks);
     });
 
     it('includes tasks with due dates set to today', async () => {
@@ -72,38 +71,32 @@ describe('tasksTodayLoader', () => {
           },
         ],
       });
-
-      mockedTaskService.getTodayTasks.mockResolvedValue(mockTasks);
+      mockTaskService.getTodayTasks.mockResolvedValue(mockTasks);
 
       const result = (await tasksTodayLoader(createLoaderArgs())) as TasksLoaderData;
 
       expect(result.tasks.documents[0].due_date).toEqual(today);
     });
 
-    it('includes tasks assigned to projects', async () => {
-      const mockTasks = createMockTasks({
-        documents: [
-          {
-            ...createMockTasks().documents[0],
-            content: 'Project task',
-            projectId: {
-              $id: 'project-1',
-              userId: 'user-456',
-              name: 'Work Project',
-              color_name: 'red',
-              color_hex: '#FF0000',
-              $createdAt: '2023-01-01T00:00:00.000Z',
-              $updatedAt: '2023-01-01T00:00:00.000Z',
-              $collectionId: 'projects',
-              $databaseId: 'default',
-              $permissions: [],
-              tasks: [],
-            },
-          },
-        ],
-      });
+    it('includes tasks linked to a project', async () => {
+      const projectId = {
+        $id: 'project-1',
+        userId: 'user-456',
+        name: 'Work Project',
+        color_name: 'red',
+        color_hex: '#FF0000',
+        $createdAt: '2023-01-01T00:00:00.000Z',
+        $updatedAt: '2023-01-01T00:00:00.000Z',
+        $collectionId: 'projects',
+        $databaseId: 'default',
+        $permissions: [],
+        tasks: [],
+      };
 
-      mockedTaskService.getTodayTasks.mockResolvedValue(mockTasks);
+      const mockTasks = createMockTasks({
+        documents: [{ ...createMockTasks().documents[0], content: 'Project task', projectId }],
+      });
+      mockTaskService.getTodayTasks.mockResolvedValue(mockTasks);
 
       const result = (await tasksTodayLoader(createLoaderArgs())) as TasksLoaderData;
 
@@ -111,34 +104,32 @@ describe('tasksTodayLoader', () => {
     });
   });
 
-  describe('when no today tasks exist', () => {
-    it('returns an empty list', async () => {
+  describe('empty state', () => {
+    it('returns an empty task list when no tasks exist', async () => {
       const mockTasks = createMockTasks({ total: 0, documents: [] });
-
-      mockedTaskService.getTodayTasks.mockResolvedValue(mockTasks);
+      mockTaskService.getTodayTasks.mockResolvedValue(mockTasks);
 
       const result = (await tasksTodayLoader(createLoaderArgs())) as TasksLoaderData;
 
-      expect(mockedTaskService.getTodayTasks).toHaveBeenCalledOnce();
+      expect(mockTaskService.getTodayTasks).toHaveBeenCalledOnce();
       expect(result.tasks.total).toBe(0);
       expect(result.tasks.documents).toHaveLength(0);
     });
   });
 
   describe('error handling', () => {
-    it('throws when the service fails', async () => {
-      mockedTaskService.getTodayTasks.mockRejectedValue(new Error('Service failed'));
+    it('throws if the task service fails', async () => {
+      mockTaskService.getTodayTasks.mockRejectedValue(new Error('Service failed'));
 
       await expect(tasksTodayLoader(createLoaderArgs())).rejects.toThrow('Service failed');
-      expect(mockedTaskService.getTodayTasks).toHaveBeenCalledOnce();
+      expect(mockTaskService.getTodayTasks).toHaveBeenCalledOnce();
     });
   });
 
-  describe('data structure validation', () => {
-    it('returns correct TasksLoaderData format', async () => {
+  describe('data shape validation', () => {
+    it('returns correct TasksLoaderData structure', async () => {
       const mockTasks = createMockTasks();
-
-      mockedTaskService.getTodayTasks.mockResolvedValue(mockTasks);
+      mockTaskService.getTodayTasks.mockResolvedValue(mockTasks);
 
       const result = (await tasksTodayLoader(createLoaderArgs())) as TasksLoaderData;
 

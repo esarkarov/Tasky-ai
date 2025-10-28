@@ -10,10 +10,13 @@ import { buildTaskSuccessDescription, executeWithToast } from '@/utils/operation
 import { useCallback } from 'react';
 import { useFetcher } from 'react-router';
 
-export const useTaskOperations = (params: UseTaskOperationsParams = {}): UseTaskOperationsResult => {
-  const { onSuccess, enableUndo = true } = params;
+export const useTaskOperations = ({
+  onSuccess,
+  enableUndo = true,
+}: UseTaskOperationsParams = {}): UseTaskOperationsResult => {
   const { toast } = useToast();
   const fetcher = useFetcher();
+
   const isFormBusy = fetcher.state !== 'idle';
 
   const createTask = useCallback(

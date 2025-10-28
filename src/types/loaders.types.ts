@@ -5,6 +5,10 @@ export interface AppLoaderData {
   projects: ProjectsListResponse;
   taskCounts: TaskCounts;
 }
+export interface ProjectTaskLoaderData {
+  projects: ProjectsListResponse;
+  tasks: TasksResponse;
+}
 export interface TasksLoaderData {
   tasks: TasksResponse;
 }

@@ -4,7 +4,7 @@ interface Img {
   height: number;
 }
 export interface EmptyStateContent {
-  img?: Img;
+  img: Img;
   title: string;
   description: string;
 }

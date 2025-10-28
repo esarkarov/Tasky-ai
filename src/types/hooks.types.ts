@@ -1,6 +1,6 @@
+import { ProjectFormInput, ProjectInput } from '@/types/projects.types';
 import { HttpMethod, SearchStatus } from '@/types/shared.types';
-import { ProjectInput, ProjectFormInput } from '@/types/projects.types';
-import { TaskFormInput } from '@/types/tasks.types';
+import { TaskEntity, TaskFormInput } from '@/types/tasks.types';
 import { useFetcher } from 'react-router';
 
 export interface UseProjectOperationsParams {
@@ -30,4 +30,14 @@ export interface UseTaskOperationsResult {
   deleteTask: (taskId: string) => Promise<void>;
   fetcher: ReturnType<typeof useFetcher>;
   formState: boolean;
+}
+
+export interface UseProjectFilterParams {
+  tasks: TaskEntity[];
+  selectedProjectId: string | null;
+}
+
+export interface UseProjectFilterResult {
+  filteredTasks: TaskEntity[] | undefined;
+  filteredCount: number;
 }

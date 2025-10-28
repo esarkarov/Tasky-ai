@@ -1,28 +1,29 @@
-import { PROJECT_TOAST_CONTENTS } from '@/constants/ui-contents';
 import { HTTP_METHODS } from '@/constants/http-methods';
 import { ROUTES } from '@/constants/routes';
 import { TIMING } from '@/constants/timing';
+import { PROJECT_TOAST_CONTENTS } from '@/constants/ui-contents';
 import { MAX_TRUNCATE_LENGTH } from '@/constants/validation';
 import { useToast } from '@/hooks/use-toast';
-import { truncateString } from '@/utils/text/text.utils';
-import { SearchStatus } from '@/types/shared.types';
 import { UseProjectOperationsParams, UseProjectOperationsResult } from '@/types/hooks.types';
 import { ProjectFormInput } from '@/types/projects.types';
+import { SearchStatus } from '@/types/shared.types';
+import { buildProjectSuccessDescription, buildSearchUrl, executeWithToast } from '@/utils/operation/operation.utils';
+import { truncateString } from '@/utils/text/text.utils';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useFetcher, useLocation, useNavigate, useNavigation } from 'react-router';
-import { buildProjectSuccessDescription, buildSearchUrl, executeWithToast } from '@/utils/operation/operation.utils';
 
-export const useProjectOperations = (params: UseProjectOperationsParams = {}): UseProjectOperationsResult => {
-  const { method = 'POST', projectData, onSuccess } = params;
-
-  const { toast } = useToast();
-  const { pathname } = useLocation();
-  const fetcher = useFetcher();
-  const navigate = useNavigate();
-  const { state, location } = useNavigation();
-
+export const useProjectOperations = ({
+  method = 'POST',
+  projectData,
+  onSuccess,
+}: UseProjectOperationsParams = {}): UseProjectOperationsResult => {
   const [searchStatus, setSearchStatus] = useState<SearchStatus>('idle');
   const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const { state, location } = useNavigation();
+  const { pathname } = useLocation();
+  const { toast } = useToast();
+  const fetcher = useFetcher();
+  const navigate = useNavigate();
 
   const isFormBusy = fetcher.state !== 'idle';
   const isViewingCurrentProject = pathname === ROUTES.PROJECT(projectData?.id as string);
