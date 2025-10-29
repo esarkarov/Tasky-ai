@@ -10,23 +10,25 @@ export const LoginPage = () => {
       <main
         role="main"
         aria-labelledby="login-page-title"
-        className="flex justify-center py-12">
+        className="flex justify-center py-12 animate-fade-in">
         <h1
           id="login-page-title"
           className="sr-only">
           Log in to Tasky AI
         </h1>
 
-        <SignIn
-          fallbackRedirectUrl={ROUTES.TODAY}
-          signUpUrl={ROUTES.REGISTER}
-          appearance={{
-            elements: {
-              rootBox: 'mx-auto',
-              card: 'shadow-lg',
-            },
-          }}
-        />
+        <div className="animate-fade-in-up opacity-0 [animation-delay:0.2s] [animation-fill-mode:forwards]">
+          <SignIn
+            fallbackRedirectUrl={ROUTES.TODAY}
+            signUpUrl={ROUTES.REGISTER}
+            appearance={{
+              elements: {
+                rootBox: 'mx-auto',
+                card: 'shadow-lg',
+              },
+            }}
+          />
+        </div>
       </main>
     </>
   );

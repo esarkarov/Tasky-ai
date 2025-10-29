@@ -1,3 +1,4 @@
+'use client';
 import { Head } from '@/components/atoms/Head';
 import { Button } from '@/components/ui/button';
 import { ROUTES } from '@/constants/routes';
@@ -19,7 +20,7 @@ export const HomePage = () => {
           <div className="flex flex-col items-center text-center space-y-8 lg:text-left lg:items-start lg:space-y-10">
             <h1
               id="homepage-heading"
-              className="text-balance text-5xl font-bold leading-[1.1] tracking-tight max-w-[20ch] md:text-6xl lg:text-7xl xl:text-6xl">
+              className="text-balance text-5xl font-bold leading-[1.1] tracking-tight max-w-[20ch] md:text-6xl lg:text-7xl xl:text-6xl animate-[fade-in-up_0.8s_ease-out]">
               Simplify Your Work and Life with{' '}
               <span className="inline-flex bg-gradient-to-r from-primary via-[#ea580c] to-primary bg-clip-text text-transparent font-extrabold drop-shadow-[0_0_24px_rgba(251,146,60,0.3)]">
                 AI-Powered
@@ -28,13 +29,13 @@ export const HomePage = () => {
             </h1>
 
             <p
-              className="text-pretty max-w-[50ch] text-lg leading-relaxed text-muted-foreground/90 md:text-xl lg:text-2xl"
+              className="text-pretty max-w-[50ch] text-lg leading-relaxed text-muted-foreground/90 md:text-xl lg:text-2xl animate-[fade-in-up_0.8s_ease-out_0.2s_both]"
               aria-label="App description">
               Simplify life for both you and your team with the AI powered task manager and to-do list app.
             </p>
 
             <div
-              className="mt-6 flex gap-4 justify-center lg:justify-start"
+              className="mt-6 flex gap-4 justify-center lg:justify-start animate-[fade-in-up_0.8s_ease-out_0.4s_both]"
               role="group"
               aria-label="Primary actions">
               {isSignedIn ? (
@@ -63,9 +64,9 @@ export const HomePage = () => {
             </div>
           </div>
 
-          <figure className="relative group perspective-[2000px]">
+          <figure className="relative group perspective-[2000px] animate-[slide-in-right_1s_ease-out_0.3s_both]">
             <div
-              className="absolute -inset-8 bg-gradient-to-br from-primary/30 via-orange-500/20 to-primary/30 rounded-[3rem] blur-3xl opacity-60 group-hover:opacity-80 transition-all duration-700 animate-pulse"
+              className="absolute -inset-8 bg-gradient-to-br from-primary/30 via-orange-500/20 to-primary/30 rounded-[3rem] blur-3xl opacity-60 group-hover:opacity-80 transition-all duration-700 animate-[glow-pulse_4s_ease-in-out_infinite]"
               aria-hidden="true"
             />
             <div
