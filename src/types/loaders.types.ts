@@ -18,3 +18,8 @@ export interface ProjectDetailLoaderData {
 export interface ProjectsLoaderData {
   projects: ProjectsListResponse;
 }
+
+export interface ProjectDetailWithRecentLoaderData {
+  project: ProjectEntity;
+  projects: ProjectsListResponse;
+}

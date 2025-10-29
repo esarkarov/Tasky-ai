@@ -1,12 +1,13 @@
+import { Button } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
-import { Button } from '../ui/button';
+import { memo } from 'react';
 
 interface LoadMoreButtonProps {
   handleLoadMore: () => void;
   isLoading: boolean;
 }
 
-export const LoadMoreButton = ({ handleLoadMore, isLoading }: LoadMoreButtonProps) => {
+export const LoadMoreButton = memo(({ handleLoadMore, isLoading }: LoadMoreButtonProps) => {
   return (
     <Button
       onClick={handleLoadMore}
@@ -24,4 +25,6 @@ export const LoadMoreButton = ({ handleLoadMore, isLoading }: LoadMoreButtonProp
       )}
     </Button>
   );
-};
+});
+
+LoadMoreButton.displayName = 'LoadMoreButton';

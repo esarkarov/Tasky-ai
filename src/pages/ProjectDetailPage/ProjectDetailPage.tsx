@@ -1,5 +1,6 @@
 import { AddTaskButton } from '@/components/atoms/AddTaskButton';
 import { Head } from '@/components/atoms/Head';
+import { LoadMoreButton } from '@/components/atoms/LoadMoreButton';
 import { Page, PageHeader, PageList, PageTitle } from '@/components/atoms/Page';
 import { TotalCounter } from '@/components/atoms/TotalCounter';
 import { EmptyStateMessage } from '@/components/organisms/EmptyStateMessage';
@@ -8,6 +9,7 @@ import { TaskCard } from '@/components/organisms/TaskCard';
 import { TaskForm } from '@/components/organisms/TaskForm';
 import { TopAppBar } from '@/components/organisms/TopAppBar';
 import { Button } from '@/components/ui/button';
+import { useLoadMore } from '@/hooks/use-load-more';
 import { useTaskOperations } from '@/hooks/use-task-operations';
 import { ProjectDetailLoaderData } from '@/types/loaders.types';
 import type { Models } from 'appwrite';
@@ -16,12 +18,12 @@ import { useMemo, useState } from 'react';
 import { useLoaderData } from 'react-router';
 
 export const ProjectDetailPage = () => {
-  const [isFormShow, setIsFormShow] = useState<boolean>(false);
+  const [isFormShow, setIsFormShow] = useState(false);
   const { project } = useLoaderData<ProjectDetailLoaderData>();
-  const { createTask } = useTaskOperations();
   const { tasks, name, color_hex, color_name, $id } = project;
+  const { createTask } = useTaskOperations();
 
-  const projectTasks = useMemo(() => {
+  const filteredProjectTasks = useMemo(() => {
     const incompleteTasks = tasks?.filter((task: Models.Document) => !task.completed) as Models.Document[];
 
     const sortedTasks = incompleteTasks?.sort((taskA, taskB) => {
@@ -32,6 +34,14 @@ export const ProjectDetailPage = () => {
 
     return sortedTasks;
   }, [tasks]);
+  const {
+    visibleItems: visibleProjectTasks,
+    isLoading,
+    hasMore,
+    handleLoadMore,
+    getItemClassName,
+    getItemStyle,
+  } = useLoadMore(filteredProjectTasks || []);
 
   return (
     <>
@@ -39,7 +49,7 @@ export const ProjectDetailPage = () => {
 
       <TopAppBar
         title={name}
-        taskCount={projectTasks?.length}
+        taskCount={filteredProjectTasks?.length}
       />
 
       <Page aria-labelledby="project-detail-title">
@@ -63,9 +73,9 @@ export const ProjectDetailPage = () => {
               </Button>
             </ProjectActionMenu>
           </div>
-          {projectTasks?.length > 0 && (
+          {filteredProjectTasks?.length > 0 && (
             <TotalCounter
-              total={projectTasks?.length}
+              total={filteredProjectTasks?.length}
               label="task"
               icon={ClipboardCheck}
             />
@@ -73,15 +83,20 @@ export const ProjectDetailPage = () => {
         </PageHeader>
 
         <PageList aria-label={`Tasks for project ${name}`}>
-          {projectTasks?.map(({ $id, content, completed, due_date }) => (
-            <TaskCard
+          {visibleProjectTasks?.map(({ $id, content, completed, due_date }, index) => (
+            <div
               key={$id}
-              id={$id}
-              content={content}
-              completed={completed}
-              dueDate={due_date}
-              project={project}
-            />
+              className={getItemClassName(index)}
+              style={getItemStyle(index)}>
+              <TaskCard
+                key={$id}
+                id={$id}
+                content={content}
+                completed={completed}
+                dueDate={due_date}
+                project={project}
+              />
+            </div>
           ))}
 
           {!isFormShow && (
@@ -91,7 +106,7 @@ export const ProjectDetailPage = () => {
             />
           )}
 
-          {!projectTasks?.length && !isFormShow && <EmptyStateMessage variant="project" />}
+          {!filteredProjectTasks?.length && !isFormShow && <EmptyStateMessage variant="project" />}
 
           {isFormShow && (
             <TaskForm
@@ -105,6 +120,15 @@ export const ProjectDetailPage = () => {
               onCancel={() => setIsFormShow(false)}
               onSubmit={createTask}
             />
+          )}
+
+          {hasMore && (
+            <div className="flex justify-center py-6">
+              <LoadMoreButton
+                isLoading={isLoading}
+                handleLoadMore={handleLoadMore}
+              />
+            </div>
           )}
         </PageList>
       </Page>

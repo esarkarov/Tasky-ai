@@ -12,12 +12,22 @@ import { cn } from '@/utils/ui/ui.utils';
 import { ProjectsLoaderData } from '@/types/loaders.types';
 import { FolderKanban, Plus } from 'lucide-react';
 import { useLoaderData } from 'react-router';
+import { useLoadMore } from '@/hooks/use-load-more';
+import { LoadMoreButton } from '@/components/atoms/LoadMoreButton';
 
 export const ProjectsPage = () => {
   const { fetcher, searchStatus, searchProjects } = useProjectOperations();
   const {
-    projects: { total, documents },
+    projects: { total, documents: projectDocs },
   } = useLoaderData<ProjectsLoaderData>();
+  const {
+    visibleItems: visibleProjects,
+    isLoading,
+    hasMore,
+    handleLoadMore,
+    getItemClassName,
+    getItemStyle,
+  } = useLoadMore(projectDocs || []);
 
   return (
     <>
@@ -65,11 +75,16 @@ export const ProjectsPage = () => {
           </div>
 
           <div className={cn(searchStatus === 'searching' && 'opacity-25')}>
-            {documents?.map((project) => (
-              <ProjectCard
+            {visibleProjects.map((project, index) => (
+              <div
                 key={project.$id}
-                project={project}
-              />
+                className={getItemClassName(index)}
+                style={getItemStyle(index)}>
+                <ProjectCard
+                  key={project.$id}
+                  project={project}
+                />
+              </div>
             ))}
 
             {!total && (
@@ -78,6 +93,15 @@ export const ProjectsPage = () => {
                 role="status">
                 No project found
               </p>
+            )}
+
+            {hasMore && (
+              <div className="flex justify-center py-6">
+                <LoadMoreButton
+                  isLoading={isLoading}
+                  handleLoadMore={handleLoadMore}
+                />
+              </div>
             )}
           </div>
         </PageList>
