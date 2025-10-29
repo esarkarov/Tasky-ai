@@ -1,5 +1,5 @@
 import { TIMING } from '@/constants/timing';
-import { MAX_TRUNCATE_LENGTH } from '@/constants/validation';
+import { MAX_PROJECT_NAME_TRUNCATE_LENGTH, MAX_TASK_CONTENT_TRUNCATE_LENGTH } from '@/constants/validation';
 import { OperationResult } from '@/types/shared.types';
 import {
   buildProjectSuccessDescription,
@@ -17,7 +17,8 @@ vi.mock('@/constants/timing', () => ({
 }));
 
 vi.mock('@/constants/validation', () => ({
-  MAX_TRUNCATE_LENGTH: 30,
+  MAX_PROJECT_NAME_TRUNCATE_LENGTH: 30,
+  MAX_TASK_CONTENT_TRUNCATE_LENGTH: 50,
 }));
 
 vi.mock('@/utils/text/text.utils', () => ({
@@ -121,30 +122,26 @@ describe('operation utils', () => {
   });
 
   describe('buildTaskSuccessDescription', () => {
-    const DEFAULT_MAX_LENGTH = 50;
     const mockTruncateMessages = [
       {
         description: 'default max length',
         content: 'This is a very long task description that should be truncated',
         prefix: 'Task created',
-        maxLength: undefined,
-        expectedMaxLength: DEFAULT_MAX_LENGTH,
+        maxLength: MAX_TASK_CONTENT_TRUNCATE_LENGTH,
         truncatedContent: 'This is a very long task description tha...',
       },
       {
         description: 'custom max length',
         content: 'Short task',
         prefix: 'Task updated',
-        maxLength: 20,
-        expectedMaxLength: 20,
+        maxLength: MAX_TASK_CONTENT_TRUNCATE_LENGTH,
         truncatedContent: 'Short task',
       },
       {
         description: 'empty content',
         content: '',
         prefix: 'Task created',
-        maxLength: undefined,
-        expectedMaxLength: DEFAULT_MAX_LENGTH,
+        maxLength: MAX_TASK_CONTENT_TRUNCATE_LENGTH,
         truncatedContent: '',
       },
     ];
@@ -155,14 +152,12 @@ describe('operation utils', () => {
 
     it.each(mockTruncateMessages)(
       'should build description with $description',
-      ({ content, prefix, maxLength, expectedMaxLength, truncatedContent }) => {
+      ({ content, prefix, maxLength, truncatedContent }) => {
         setupTruncateMock(truncatedContent);
 
-        const result = maxLength
-          ? buildTaskSuccessDescription(content, prefix, maxLength)
-          : buildTaskSuccessDescription(content, prefix);
+        const result = buildTaskSuccessDescription(content, prefix);
 
-        expect(mockedTruncateString).toHaveBeenCalledWith(content, expectedMaxLength);
+        expect(mockedTruncateString).toHaveBeenCalledWith(content, maxLength);
         expect(result).toBe(`${prefix} "${truncatedContent}"`);
       }
     );
@@ -206,7 +201,7 @@ describe('operation utils', () => {
 
         const result = buildProjectSuccessDescription(projectName, hasAITasks, method);
 
-        expect(mockedTruncateString).toHaveBeenCalledWith(projectName, MAX_TRUNCATE_LENGTH);
+        expect(mockedTruncateString).toHaveBeenCalledWith(projectName, MAX_PROJECT_NAME_TRUNCATE_LENGTH);
         expect(result).toBe(expected);
       }
     );

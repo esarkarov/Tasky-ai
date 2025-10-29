@@ -16,10 +16,9 @@ import { useState } from 'react';
 import { useLoaderData } from 'react-router';
 
 export const InboxPage = () => {
-  const [isFormOpen, setIsFormOpen] = useState<boolean>(false);
-  const { createTask } = useTaskOperations();
+  const [isFormOpen, setIsFormOpen] = useState(false);
   const {
-    tasks: { total, documents },
+    tasks: { total, documents: taskDocs },
   } = useLoaderData<TasksLoaderData>();
   const {
     visibleItems: visibleTasks,
@@ -28,7 +27,8 @@ export const InboxPage = () => {
     handleLoadMore,
     getItemClassName,
     getItemStyle,
-  } = useLoadMore(documents || []);
+  } = useLoadMore(taskDocs || []);
+  const { createTask } = useTaskOperations();
 
   return (
     <>

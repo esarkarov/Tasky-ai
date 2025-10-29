@@ -8,8 +8,8 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function getTaskDueDateColorClass(dueDate: Date | null, completed?: boolean): string | undefined {
-  if (dueDate === null || completed === undefined) return;
+export function getTaskDueDateColorClass(dueDate: Date | null, completed: boolean) {
+  if (!dueDate) return;
 
   if (isBefore(dueDate, startOfToday()) && !completed) {
     return 'text-red-500';
@@ -22,7 +22,7 @@ export function getTaskDueDateColorClass(dueDate: Date | null, completed?: boole
   }
 }
 
-export const getBadgeCount = (href: string, taskCounts: TaskCounts): number | undefined => {
+export const getBadgeCount = (href: string, taskCounts: TaskCounts) => {
   switch (href) {
     case ROUTES.INBOX:
       return taskCounts?.inboxTasks;

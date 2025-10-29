@@ -2,7 +2,7 @@ import { HTTP_METHODS } from '@/constants/http-methods';
 import { ROUTES } from '@/constants/routes';
 import { TIMING } from '@/constants/timing';
 import { PROJECT_TOAST_CONTENTS } from '@/constants/ui-contents';
-import { MAX_TRUNCATE_LENGTH } from '@/constants/validation';
+import { MAX_PROJECT_NAME_TRUNCATE_LENGTH } from '@/constants/validation';
 import { useToast } from '@/hooks/use-toast';
 import { UseProjectOperationsParams, UseProjectOperationsResult } from '@/types/hooks.types';
 import { ProjectFormInput } from '@/types/projects.types';
@@ -80,7 +80,7 @@ export const useProjectOperations = ({
         encType: 'application/json',
       });
 
-    const description = `The project ${truncateString(projectData.name, MAX_TRUNCATE_LENGTH)} has been successfully deleted.`;
+    const description = `The project ${truncateString(projectData.name, MAX_PROJECT_NAME_TRUNCATE_LENGTH)} has been successfully deleted.`;
 
     await executeWithToast(operation, toast, PROJECT_TOAST_CONTENTS.DELETE, description, onSuccess);
   }, [projectData, isViewingCurrentProject, navigate, fetcher, toast, onSuccess]);

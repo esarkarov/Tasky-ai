@@ -1,4 +1,4 @@
-export const generateContents = (prompt: string): string => {
+export const buildTaskGenerationPrompt = (prompt: string) => {
   const result = `
       Generate and return a list of tasks based on the provided prompt and the given JSON schema.
 

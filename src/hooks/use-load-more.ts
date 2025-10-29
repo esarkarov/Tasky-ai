@@ -9,9 +9,8 @@ export const useLoadMore = <T>(items: T[], params: UseLoadMoreParams = {}): UseL
   const [visibleCount, setVisibleCount] = useState(initialCount);
   const [isLoading, setIsLoading] = useState(false);
 
-  const totalCount = items.length;
   const visibleItems = items.slice(0, visibleCount);
-  const hasMore = visibleCount < totalCount;
+  const hasMore = visibleCount < items.length;
 
   const handleLoadMore = useCallback(() => {
     setIsLoading(true);

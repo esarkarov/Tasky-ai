@@ -133,11 +133,6 @@ describe('date utils', () => {
           input: '2023-01-01',
           expectedDay: 'Tuesday',
         },
-        {
-          type: 'timestamp',
-          input: 1672531200000,
-          expectedDay: 'Wednesday',
-        },
       ];
 
       it.each(mockDateTypes)('should handle $type input', ({ input, expectedDay }) => {

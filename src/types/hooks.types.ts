@@ -29,7 +29,7 @@ export interface UseTaskOperationsResult {
   formState: boolean;
 }
 export interface UseProjectFilterParams {
-  tasks: TaskEntity[];
+  taskDocs: TaskEntity[];
 }
 export interface UseProjectFilterResult {
   filteredTasks: TaskEntity[] | undefined;

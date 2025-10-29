@@ -2,9 +2,8 @@ import { WEEKDAYS } from '@/constants/weekdays';
 import { toTitleCase } from '@/utils/text/text.utils';
 import { format, formatRelative, isSameYear } from 'date-fns';
 
-export function formatCustomDate(date: string | number | Date): string {
+export function formatCustomDate(date: string | Date) {
   const today = new Date();
-
   const relativeDay = toTitleCase(formatRelative(date, today).split(' at ')[0]);
 
   if (WEEKDAYS.includes(relativeDay)) {

@@ -18,9 +18,7 @@ export const UpcomingPage = () => {
     tasks: { total, documents: taskDocs },
     projects: { documents: projectDocs },
   } = useLoaderData<ProjectTaskLoaderData>();
-  const { filteredTasks, filteredCount, setSelectedProjectId, selectedProjectId } = useProjectFilter({
-    tasks: taskDocs,
-  });
+  const { filteredTasks, filteredCount, setSelectedProjectId, selectedProjectId } = useProjectFilter({ taskDocs });
   const {
     visibleItems: visibleTasks,
     isLoading,

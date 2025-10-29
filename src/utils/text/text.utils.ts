@@ -1,17 +1,17 @@
-export function toTitleCase(str: string): string {
-  if (!str) return '';
+export function toTitleCase(value: string) {
+  if (!value) return '';
 
-  return str[0]?.toUpperCase() + str.slice(1);
+  return value[0]?.toUpperCase() + value.slice(1);
 }
 
-export function truncateString(str: string, maxLength: number): string {
-  if (!str) return '';
+export function truncateString(value: string, maxLength: number) {
+  if (!value) return '';
 
-  if (str.length > maxLength) {
-    return `${str.slice(0, maxLength - 1)}...`;
+  if (value.length > maxLength) {
+    return `${value.slice(0, maxLength - 1)}...`;
   }
 
-  return str;
+  return value;
 }
 
 export function generateID(): string {

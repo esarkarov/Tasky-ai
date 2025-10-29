@@ -1,23 +1,23 @@
 import { UseProjectFilterParams, UseProjectFilterResult } from '@/types/hooks.types';
 import { useMemo, useState } from 'react';
 
-export const useProjectFilter = ({ tasks }: UseProjectFilterParams): UseProjectFilterResult => {
+export const useProjectFilter = ({ taskDocs }: UseProjectFilterParams): UseProjectFilterResult => {
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
 
   const filteredTasks = useMemo(() => {
     if (!selectedProjectId || selectedProjectId === 'all') {
-      return tasks;
+      return taskDocs;
     }
 
     if (selectedProjectId === 'inbox') {
-      return tasks?.filter((task) => !task.projectId);
+      return taskDocs?.filter((task) => !task.projectId);
     }
 
-    return tasks?.filter((task) => {
+    return taskDocs?.filter((task) => {
       const taskProjectId = typeof task.projectId === 'object' ? task.projectId?.$id : task.projectId;
       return taskProjectId === selectedProjectId;
     });
-  }, [tasks, selectedProjectId]);
+  }, [taskDocs, selectedProjectId]);
 
   const filteredCount = filteredTasks?.length || 0;
 

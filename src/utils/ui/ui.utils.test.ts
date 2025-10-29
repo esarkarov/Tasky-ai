@@ -74,19 +74,10 @@ describe('ui utils', () => {
       mockedIsTomorrow.mockReturnValue(isTomorrowValue);
     };
 
-    describe('when dueDate or completed is null/undefined', () => {
+    describe('when dueDate is null/undefined', () => {
       it('should return undefined when dueDate is null', () => {
         const dueDate = null;
         const completed = false;
-
-        const result = getTaskDueDateColorClass(dueDate, completed);
-
-        expect(result).toBeUndefined();
-      });
-
-      it('should return undefined when completed is undefined', () => {
-        const dueDate = OVERDUE_DATE;
-        const completed = undefined;
 
         const result = getTaskDueDateColorClass(dueDate, completed);
 

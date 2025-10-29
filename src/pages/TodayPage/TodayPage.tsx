@@ -20,14 +20,11 @@ import { useLoaderData } from 'react-router';
 
 export const TodayPage = () => {
   const [isFormOpen, setIsFormOpen] = useState<boolean>(false);
-  const { createTask } = useTaskOperations();
   const {
     tasks: { total, documents: taskDocs },
     projects: { documents: projectDocs },
   } = useLoaderData<ProjectTaskLoaderData>();
-  const { filteredTasks, filteredCount, selectedProjectId, setSelectedProjectId } = useProjectFilter({
-    tasks: taskDocs,
-  });
+  const { filteredTasks, filteredCount, selectedProjectId, setSelectedProjectId } = useProjectFilter({ taskDocs });
   const {
     visibleItems: visibleTasks,
     isLoading,
@@ -36,6 +33,7 @@ export const TodayPage = () => {
     getItemClassName,
     getItemStyle,
   } = useLoadMore(filteredTasks || []);
+  const { createTask } = useTaskOperations();
 
   return (
     <>

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { generateContents } from '@/utils/ai/ai.utils';
+import { buildTaskGenerationPrompt } from '@/utils/ai/ai.utils';
 
 describe('ai utils', () => {
   const MOCK_DATE = new Date('2023-01-01T00:00:00.000Z');
@@ -13,7 +13,7 @@ describe('ai utils', () => {
     vi.useRealTimers();
   });
 
-  describe('generateContents', () => {
+  describe('buildTaskGenerationPrompt', () => {
     const REQUIRED_SCHEMA_FIELDS = ['Task Schema:', 'content: string;', 'due_date: Date | null;'];
     const REQUIRED_INSTRUCTIONS = [
       'Generate and return a list of tasks',
@@ -49,7 +49,7 @@ describe('ai utils', () => {
       ];
 
       it.each(mockPrompts)('should handle $description', ({ prompt, expectedSubstrings }) => {
-        const result = generateContents(prompt);
+        const result = buildTaskGenerationPrompt(prompt);
 
         expectContainsAll(result, expectedSubstrings);
         expect(result).toContain(MOCK_DATE.toString());
@@ -60,7 +60,7 @@ describe('ai utils', () => {
       it('should include all required schema fields', () => {
         const prompt = 'test prompt';
 
-        const result = generateContents(prompt);
+        const result = buildTaskGenerationPrompt(prompt);
 
         expectContainsAll(result, REQUIRED_SCHEMA_FIELDS);
       });
@@ -68,7 +68,7 @@ describe('ai utils', () => {
       it('should include all required instructions', () => {
         const prompt = 'test prompt';
 
-        const result = generateContents(prompt);
+        const result = buildTaskGenerationPrompt(prompt);
 
         expectContainsAll(result, REQUIRED_INSTRUCTIONS);
       });
@@ -78,7 +78,7 @@ describe('ai utils', () => {
       it('should include current date in generated content', () => {
         const prompt = 'Build a todo app';
 
-        const result = generateContents(prompt);
+        const result = buildTaskGenerationPrompt(prompt);
 
         expect(result).toContain(MOCK_DATE.toString());
       });

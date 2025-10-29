@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { aiService } from './ai.service';
 import { aiRepository } from '@/repositories/ai/ai.repository';
-import { generateContents } from '@/utils/ai/ai.utils';
+import { buildTaskGenerationPrompt } from '@/utils/ai/ai.utils';
 import { AIGeneratedTask } from '@/types/tasks.types';
 
 vi.mock('@/repositories/ai/ai.repository', () => ({
@@ -10,11 +10,11 @@ vi.mock('@/repositories/ai/ai.repository', () => ({
   },
 }));
 vi.mock('@/utils/ai/ai.utils', () => ({
-  generateContents: vi.fn(),
+  buildTaskGenerationPrompt: vi.fn(),
 }));
 
 const mockedAiRepository = vi.mocked(aiRepository);
-const mockedGenerateContents = vi.mocked(generateContents);
+const mockedbuildTaskGenerationPrompt = vi.mocked(buildTaskGenerationPrompt);
 
 describe('aiService', () => {
   const MOCK_PROMPT = 'Create a project for building a website';
@@ -56,7 +56,7 @@ describe('aiService', () => {
         const result = await aiService.generateProjectTasks(prompt);
 
         expect(result).toEqual([]);
-        expect(mockedGenerateContents).not.toHaveBeenCalled();
+        expect(mockedbuildTaskGenerationPrompt).not.toHaveBeenCalled();
         expect(mockedAiRepository.generateContent).not.toHaveBeenCalled();
       });
     });
@@ -65,12 +65,12 @@ describe('aiService', () => {
       it('should generate tasks successfully', async () => {
         const mockTasks = createMockTasks();
         const mockResponse = createMockResponse(JSON.stringify(mockTasks));
-        mockedGenerateContents.mockReturnValue(MOCK_GENERATED_CONTENTS);
+        mockedbuildTaskGenerationPrompt.mockReturnValue(MOCK_GENERATED_CONTENTS);
         mockedAiRepository.generateContent.mockResolvedValue(mockResponse);
 
         const result = await aiService.generateProjectTasks(MOCK_PROMPT);
 
-        expect(mockedGenerateContents).toHaveBeenCalledWith(MOCK_PROMPT);
+        expect(mockedbuildTaskGenerationPrompt).toHaveBeenCalledWith(MOCK_PROMPT);
         expect(mockedAiRepository.generateContent).toHaveBeenCalledWith(MOCK_GENERATED_CONTENTS);
         expect(result).toEqual(mockTasks);
       });
@@ -87,7 +87,7 @@ describe('aiService', () => {
         'should return empty array when response text is $description',
         async ({ responseText }) => {
           const mockResponse = createMockResponse(responseText);
-          mockedGenerateContents.mockReturnValue(MOCK_GENERATED_CONTENTS);
+          mockedbuildTaskGenerationPrompt.mockReturnValue(MOCK_GENERATED_CONTENTS);
           mockedAiRepository.generateContent.mockResolvedValue(mockResponse);
 
           const result = await aiService.generateProjectTasks(MOCK_PROMPT);
@@ -99,7 +99,7 @@ describe('aiService', () => {
 
     describe('when repository fails', () => {
       it('should return empty array', async () => {
-        mockedGenerateContents.mockReturnValue(MOCK_GENERATED_CONTENTS);
+        mockedbuildTaskGenerationPrompt.mockReturnValue(MOCK_GENERATED_CONTENTS);
         mockedAiRepository.generateContent.mockRejectedValue(new Error('API error'));
 
         const result = await aiService.generateProjectTasks(MOCK_PROMPT);
