@@ -1,5 +1,6 @@
 import { AddTaskButton } from '@/components/atoms/AddTaskButton';
 import { Head } from '@/components/atoms/Head';
+import { LoadMoreButton } from '@/components/atoms/LoadMoreButton';
 import { Page, PageHeader, PageList, PageTitle } from '@/components/atoms/Page';
 import { TotalCounter } from '@/components/atoms/TotalCounter';
 import { EmptyStateMessage } from '@/components/organisms/EmptyStateMessage';
@@ -7,6 +8,7 @@ import { FilterSelect } from '@/components/organisms/FilterSelect';
 import { TaskCard } from '@/components/organisms/TaskCard';
 import { TaskForm } from '@/components/organisms/TaskForm';
 import { TopAppBar } from '@/components/organisms/TopAppBar';
+import { useLoadMore } from '@/hooks/use-load-more';
 import { useProjectFilter } from '@/hooks/use-project-filter';
 import { useTaskOperations } from '@/hooks/use-task-operations';
 import { ProjectTaskLoaderData } from '@/types/loaders.types';
@@ -17,17 +19,23 @@ import { useState } from 'react';
 import { useLoaderData } from 'react-router';
 
 export const TodayPage = () => {
-  const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
   const [isFormOpen, setIsFormOpen] = useState<boolean>(false);
   const { createTask } = useTaskOperations();
   const {
     tasks: { total, documents: taskDocs },
     projects: { documents: projectDocs },
   } = useLoaderData<ProjectTaskLoaderData>();
-  const { filteredTasks, filteredCount } = useProjectFilter({
+  const { filteredTasks, filteredCount, selectedProjectId, setSelectedProjectId } = useProjectFilter({
     tasks: taskDocs,
-    selectedProjectId,
   });
+  const {
+    visibleItems: visibleTasks,
+    isLoading,
+    hasMore,
+    handleLoadMore,
+    getItemClassName,
+    getItemStyle,
+  } = useLoadMore(filteredTasks || []);
 
   return (
     <>
@@ -60,15 +68,19 @@ export const TodayPage = () => {
         </PageHeader>
 
         <PageList aria-label="Today's tasks">
-          {filteredTasks?.map(({ $id, content, completed, due_date, projectId }) => (
-            <TaskCard
+          {visibleTasks.map(({ $id, content, completed, due_date, projectId }, index) => (
+            <div
               key={$id}
-              id={$id}
-              content={content}
-              completed={completed}
-              dueDate={due_date as Date}
-              project={projectId as ProjectEntity}
-            />
+              className={getItemClassName(index)}
+              style={getItemStyle(index)}>
+              <TaskCard
+                id={$id}
+                content={content}
+                completed={completed}
+                dueDate={due_date as Date}
+                project={projectId as ProjectEntity}
+              />
+            </div>
           ))}
 
           {!isFormOpen && (
@@ -92,6 +104,15 @@ export const TodayPage = () => {
               onCancel={() => setIsFormOpen(false)}
               onSubmit={createTask}
             />
+          )}
+
+          {hasMore && (
+            <div className="flex justify-center py-6">
+              <LoadMoreButton
+                isLoading={isLoading}
+                handleLoadMore={handleLoadMore}
+              />
+            </div>
           )}
         </PageList>
       </Page>

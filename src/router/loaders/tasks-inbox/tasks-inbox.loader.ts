@@ -1,9 +1,9 @@
+import { projectService } from '@/services/project/project.service';
 import { taskService } from '@/services/task/task.service';
-import { TasksLoaderData } from '@/types/loaders.types';
 import type { LoaderFunction } from 'react-router';
 
-export const tasksInboxLoader: LoaderFunction = async (): Promise<TasksLoaderData> => {
-  const tasks = await taskService.getInboxTasks();
+export const tasksInboxLoader: LoaderFunction = async () => {
+  const [projects, tasks] = await Promise.all([projectService.getRecentProjects(), taskService.getInboxTasks()]);
 
-  return { tasks };
+  return { tasks, projects };
 };

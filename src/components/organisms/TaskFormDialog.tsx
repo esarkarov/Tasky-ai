@@ -4,7 +4,7 @@ import { ROUTES } from '@/constants/routes';
 import { useTaskOperations } from '@/hooks/use-task-operations';
 import { startOfToday } from 'date-fns';
 import type { PropsWithChildren } from 'react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useLocation } from 'react-router';
 
 export const TaskFormDialog: React.FC<PropsWithChildren> = ({ children }) => {
@@ -14,21 +14,6 @@ export const TaskFormDialog: React.FC<PropsWithChildren> = ({ children }) => {
     onSuccess: () => setIsOpen(false),
   });
   const isToday = pathname === ROUTES.TODAY;
-
-  useEffect(() => {
-    const listener = (event: KeyboardEvent) => {
-      if (event.key === 'q') {
-        const target = event.target as HTMLElement;
-        if (target.localName === 'textarea') return;
-
-        event.preventDefault();
-        setIsOpen(true);
-      }
-    };
-
-    document.addEventListener('keydown', listener);
-    return () => document.removeEventListener('keydown', listener);
-  }, []);
 
   return (
     <Dialog

@@ -1,27 +1,34 @@
 import { Head } from '@/components/atoms/Head';
+import { LoadMoreButton } from '@/components/atoms/LoadMoreButton';
 import { Page, PageHeader, PageList, PageTitle } from '@/components/atoms/Page';
 import { TotalCounter } from '@/components/atoms/TotalCounter';
 import { EmptyStateMessage } from '@/components/organisms/EmptyStateMessage';
 import { FilterSelect } from '@/components/organisms/FilterSelect';
 import { TaskCard } from '@/components/organisms/TaskCard';
 import { TopAppBar } from '@/components/organisms/TopAppBar';
+import { useLoadMore } from '@/hooks/use-load-more';
 import { useProjectFilter } from '@/hooks/use-project-filter';
 import { ProjectTaskLoaderData } from '@/types/loaders.types';
 import { ProjectEntity } from '@/types/projects.types';
 import { ClipboardCheck } from 'lucide-react';
-import { useState } from 'react';
 import { useLoaderData } from 'react-router';
 
 export const UpcomingPage = () => {
-  const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
   const {
     tasks: { total, documents: taskDocs },
     projects: { documents: projectDocs },
   } = useLoaderData<ProjectTaskLoaderData>();
-  const { filteredTasks, filteredCount } = useProjectFilter({
+  const { filteredTasks, filteredCount, setSelectedProjectId, selectedProjectId } = useProjectFilter({
     tasks: taskDocs,
-    selectedProjectId,
   });
+  const {
+    visibleItems: visibleTasks,
+    isLoading,
+    hasMore,
+    handleLoadMore,
+    getItemClassName,
+    getItemStyle,
+  } = useLoadMore(filteredTasks || []);
 
   return (
     <>
@@ -46,26 +53,39 @@ export const UpcomingPage = () => {
               )}
             </div>
             <FilterSelect
+              projectDocs={projectDocs}
               selectedProjectId={selectedProjectId}
               setSelectedProjectId={setSelectedProjectId}
-              projectDocs={projectDocs}
             />
           </div>
         </PageHeader>
 
         <PageList aria-label="Upcoming tasks">
-          {filteredTasks?.map(({ $id, content, completed, due_date, projectId }) => (
-            <TaskCard
+          {visibleTasks.map(({ $id, content, completed, due_date, projectId }, index) => (
+            <div
               key={$id}
-              id={$id}
-              content={content}
-              completed={completed}
-              dueDate={due_date as Date}
-              project={projectId as ProjectEntity}
-            />
+              className={getItemClassName(index)}
+              style={getItemStyle(index)}>
+              <TaskCard
+                id={$id}
+                content={content}
+                completed={completed}
+                dueDate={due_date as Date}
+                project={projectId as ProjectEntity}
+              />
+            </div>
           ))}
 
           {!filteredCount && <EmptyStateMessage variant="upcoming" />}
+
+          {hasMore && (
+            <div className="flex justify-center py-6">
+              <LoadMoreButton
+                isLoading={isLoading}
+                handleLoadMore={handleLoadMore}
+              />
+            </div>
+          )}
         </PageList>
       </Page>
     </>

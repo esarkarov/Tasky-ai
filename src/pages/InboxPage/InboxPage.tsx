@@ -1,23 +1,34 @@
 import { AddTaskButton } from '@/components/atoms/AddTaskButton';
 import { Head } from '@/components/atoms/Head';
+import { LoadMoreButton } from '@/components/atoms/LoadMoreButton';
 import { Page, PageHeader, PageList, PageTitle } from '@/components/atoms/Page';
 import { TotalCounter } from '@/components/atoms/TotalCounter';
 import { EmptyStateMessage } from '@/components/organisms/EmptyStateMessage';
 import { TaskCard } from '@/components/organisms/TaskCard';
 import { TaskForm } from '@/components/organisms/TaskForm';
 import { TopAppBar } from '@/components/organisms/TopAppBar';
+import { useLoadMore } from '@/hooks/use-load-more';
 import { useTaskOperations } from '@/hooks/use-task-operations';
 import { TasksLoaderData } from '@/types/loaders.types';
+import { ProjectEntity } from '@/types/projects.types';
 import { ClipboardCheck } from 'lucide-react';
 import { useState } from 'react';
 import { useLoaderData } from 'react-router';
 
 export const InboxPage = () => {
+  const [isFormOpen, setIsFormOpen] = useState<boolean>(false);
+  const { createTask } = useTaskOperations();
   const {
     tasks: { total, documents },
   } = useLoaderData<TasksLoaderData>();
-  const { createTask } = useTaskOperations();
-  const [isFormOpen, setIsFormOpen] = useState<boolean>(false);
+  const {
+    visibleItems: visibleTasks,
+    isLoading,
+    hasMore,
+    handleLoadMore,
+    getItemClassName,
+    getItemStyle,
+  } = useLoadMore(documents || []);
 
   return (
     <>
@@ -41,15 +52,19 @@ export const InboxPage = () => {
         </PageHeader>
 
         <PageList aria-label="Inbox tasks">
-          {documents?.map(({ $id, content, completed, due_date, project }) => (
-            <TaskCard
+          {visibleTasks.map(({ $id, content, completed, due_date, projectId }, index) => (
+            <div
               key={$id}
-              id={$id}
-              content={content}
-              completed={completed}
-              dueDate={due_date as Date}
-              project={project}
-            />
+              className={getItemClassName(index)}
+              style={getItemStyle(index)}>
+              <TaskCard
+                id={$id}
+                content={content}
+                completed={completed}
+                dueDate={due_date as Date}
+                project={projectId as ProjectEntity}
+              />
+            </div>
           ))}
 
           {!isFormOpen && <AddTaskButton onClick={() => setIsFormOpen(true)} />}
@@ -63,6 +78,15 @@ export const InboxPage = () => {
               onCancel={() => setIsFormOpen(false)}
               onSubmit={createTask}
             />
+          )}
+
+          {hasMore && (
+            <div className="flex justify-center py-6">
+              <LoadMoreButton
+                isLoading={isLoading}
+                handleLoadMore={handleLoadMore}
+              />
+            </div>
           )}
         </PageList>
       </Page>

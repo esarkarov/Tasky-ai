@@ -1,7 +1,9 @@
 import { UseProjectFilterParams, UseProjectFilterResult } from '@/types/hooks.types';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 
-export const useProjectFilter = ({ tasks, selectedProjectId }: UseProjectFilterParams): UseProjectFilterResult => {
+export const useProjectFilter = ({ tasks }: UseProjectFilterParams): UseProjectFilterResult => {
+  const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
+
   const filteredTasks = useMemo(() => {
     if (!selectedProjectId || selectedProjectId === 'all') {
       return tasks;
@@ -22,5 +24,7 @@ export const useProjectFilter = ({ tasks, selectedProjectId }: UseProjectFilterP
   return {
     filteredTasks,
     filteredCount,
+    selectedProjectId,
+    setSelectedProjectId,
   };
 };

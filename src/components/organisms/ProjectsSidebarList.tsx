@@ -28,7 +28,7 @@ export const ProjectsSidebarList = ({ onNavigationClick }: ProjectsSidebarListPr
               onNavigationClick={onNavigationClick}
             />
           ))}
-          {documents !== null && total > 1 && (
+          {documents !== null && total > 8 && (
             <SidebarMenuItem>
               <AllProjectsButton onNavigationClick={onNavigationClick} />
             </SidebarMenuItem>
