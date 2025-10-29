@@ -6,9 +6,9 @@ import { ProjectNameInput } from '@/components/molecules/ProjectNameInput';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { DEFAULT_PROJECT_FORM_DATA } from '@/constants/defaults';
+import { useProjectForm } from '@/hooks/use-project-form';
+import { ProjectFormInput, ProjectInput } from '@/types/projects.types';
 import { CrudMode } from '@/types/shared.types';
-import { ProjectInput, ProjectFormInput } from '@/types/projects.types';
-import { useCallback, useMemo, useState } from 'react';
 import { cn } from '@/utils/ui/ui.utils';
 
 interface ProjectFormProps {
@@ -26,59 +26,25 @@ export const ProjectForm = ({
   onSubmit,
   formState,
 }: ProjectFormProps) => {
-  const [projectName, setProjectName] = useState<string>(defaultFormData.name);
-  const [colorName, setColorName] = useState<string>(defaultFormData.color_name);
-  const [colorHex, setColorHex] = useState<string>(defaultFormData.color_hex);
-  const [aiTaskGen, setAiTaskGen] = useState<boolean>(false);
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  const [taskGenPrompt, setTaskGenPrompt] = useState<string>('');
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-
-  const formData = useMemo<ProjectFormInput>(
-    () => ({
-      ...defaultFormData,
-      name: projectName,
-      color_name: colorName,
-      color_hex: colorHex,
-      ai_task_gen: aiTaskGen,
-      task_gen_prompt: taskGenPrompt,
-    }),
-    [defaultFormData, projectName, colorName, colorHex, aiTaskGen, taskGenPrompt]
-  );
-
-  const isDisabled = useMemo(() => {
-    const hasName = Boolean(projectName.trim());
-    const aiRequirementMet = !aiTaskGen || Boolean(taskGenPrompt.trim());
-    return hasName && aiRequirementMet;
-  }, [projectName, aiTaskGen, taskGenPrompt]);
-
-  const handleSubmit = useCallback(async () => {
-    if (onSubmit && !isSubmitting) {
-      setIsSubmitting(true);
-      try {
-        await onSubmit(formData);
-      } finally {
-        setIsSubmitting(false);
-      }
-    }
-  }, [onSubmit, isSubmitting, formData]);
-
-  const handleKeySubmit = useCallback(
-    (e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      if (e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault();
-        handleSubmit();
-      }
-    },
-    [handleSubmit]
-  );
-
-  const handleColorSelect = (value: string) => {
-    const [name, hex] = value.split('=');
-    setColorName(name);
-    setColorHex(hex);
-    setIsOpen(false);
-  };
+  const {
+    projectName,
+    colorHex,
+    colorName,
+    aiTaskGen,
+    taskGenPrompt,
+    isOpen,
+    isSubmitting,
+    isDisabled,
+    setProjectName,
+    setAiTaskGen,
+    setTaskGenPrompt,
+    setIsOpen,
+    handleColorSelect,
+    handleSubmit,
+  } = useProjectForm({
+    defaultFormData,
+    onSubmit,
+  });
 
   const isPending = isSubmitting || formState;
 
@@ -98,7 +64,6 @@ export const ProjectForm = ({
         <ProjectNameInput
           value={projectName}
           onChange={setProjectName}
-          onKeyDown={handleKeySubmit}
           disabled={isPending}
         />
         <ColorPicker
@@ -115,7 +80,6 @@ export const ProjectForm = ({
             prompt={taskGenPrompt}
             onToggle={setAiTaskGen}
             onPromptChange={setTaskGenPrompt}
-            onKeyDown={handleKeySubmit}
             disabled={isPending}
           />
         )}

@@ -1,5 +1,6 @@
 import { TIMING } from '@/constants/timing';
 import { MAX_TRUNCATE_LENGTH } from '@/constants/validation';
+import { OperationResult } from '@/types/shared.types';
 import {
   buildProjectSuccessDescription,
   buildSearchUrl,
@@ -39,14 +40,14 @@ describe('operation utils', () => {
       errorDescription: 'Something went wrong',
     };
 
-    type ToastSetup = {
+    interface ToastSetup {
       operation: ReturnType<typeof vi.fn>;
       toastHandler: ReturnType<typeof vi.fn>;
       update: ReturnType<typeof vi.fn>;
       onSuccess?: ReturnType<typeof vi.fn>;
-    };
+    }
 
-    const setupToastMocks = (operationResult: 'success' | 'error'): ToastSetup => {
+    const setupToastMocks = (operationResult: OperationResult): ToastSetup => {
       const operation = vi.fn();
       const toastHandler = vi.fn();
       const update = vi.fn();
@@ -71,14 +72,13 @@ describe('operation utils', () => {
 
       expect(toastHandler).toHaveBeenCalledWith({
         title: DEFAULT_MESSAGES.loading,
-        duration: Infinity,
+        duration: TIMING.TOAST_DURATION,
       });
       expect(operation).toHaveBeenCalled();
       expect(update).toHaveBeenCalledWith({
         id: MOCK_TOAST_ID,
         title: DEFAULT_MESSAGES.success,
         description: successDescription,
-        duration: TIMING.TOAST_DURATION,
         className: 'border-l-4 border-[#ea580c]',
       });
       expect(onSuccess).toHaveBeenCalled();
@@ -92,14 +92,13 @@ describe('operation utils', () => {
 
       expect(toastHandler).toHaveBeenCalledWith({
         title: DEFAULT_MESSAGES.loading,
-        duration: Infinity,
+        duration: TIMING.TOAST_DURATION,
       });
       expect(operation).toHaveBeenCalled();
       expect(update).toHaveBeenCalledWith({
         id: MOCK_TOAST_ID,
         title: DEFAULT_MESSAGES.error,
         description: DEFAULT_MESSAGES.errorDescription,
-        duration: TIMING.TOAST_DURATION,
         variant: 'destructive',
       });
       expect(onSuccess).not.toHaveBeenCalled();
@@ -116,7 +115,6 @@ describe('operation utils', () => {
         id: MOCK_TOAST_ID,
         title: DEFAULT_MESSAGES.success,
         description: successDescription,
-        duration: TIMING.TOAST_DURATION,
         className: 'border-l-4 border-[#ea580c]',
       });
     });

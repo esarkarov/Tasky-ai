@@ -6,11 +6,10 @@ import { InputValueCount } from '@/components/atoms/InputValueCount';
 interface ProjectNameInputProps {
   value: string;
   onChange: (value: string) => void;
-  onKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => void;
   disabled: boolean;
 }
 
-export const ProjectNameInput = ({ value, onChange, onKeyDown, disabled }: ProjectNameInputProps) => {
+export const ProjectNameInput = ({ value, onChange, disabled }: ProjectNameInputProps) => {
   return (
     <div>
       <Label htmlFor="project_name">Project name</Label>
@@ -23,7 +22,6 @@ export const ProjectNameInput = ({ value, onChange, onKeyDown, disabled }: Proje
         disabled={disabled}
         maxLength={MAX_NAME_LENGTH}
         onInput={(e) => onChange(e.currentTarget.value)}
-        onKeyDown={onKeyDown}
         aria-describedby="project-name-count"
         aria-invalid={value.length > MAX_NAME_LENGTH}
       />

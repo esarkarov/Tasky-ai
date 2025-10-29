@@ -6,6 +6,7 @@ export type HttpMethod = 'POST' | 'PUT';
 export type EmptyStateVariant = 'today' | 'inbox' | 'upcoming' | 'completed' | 'project';
 export type SearchStatus = 'idle' | 'loading' | 'searching';
 export type NavigationState = 'idle' | 'loading' | 'submitting';
+export type OperationResult = 'success' | 'error';
 export interface BaseEntity extends Models.Document {
   $id: string;
   $createdAt: string;

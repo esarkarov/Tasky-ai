@@ -6,10 +6,9 @@ import { MAX_PROMPT_LENGTH, PROMPT_WARNING_LENGTH } from '@/constants/validation
 interface AIPromptInputProps {
   prompt: string;
   onChange: (prompt: string) => void;
-  onKeyDown: (event: React.KeyboardEvent<HTMLTextAreaElement>) => void;
 }
 
-export const AIPromptInput = ({ prompt, onChange, onKeyDown }: AIPromptInputProps) => {
+export const AIPromptInput = ({ prompt, onChange }: AIPromptInputProps) => {
   return (
     <div className="px-3 pb-3">
       <Label
@@ -24,7 +23,6 @@ export const AIPromptInput = ({ prompt, onChange, onKeyDown }: AIPromptInputProp
         className="border-none my-2 focus-visible:ring-2 focus-visible:ring-ring"
         value={prompt}
         onChange={(e) => onChange(e.currentTarget.value)}
-        onKeyDown={onKeyDown}
         aria-describedby="ai-task-generator-description"
         aria-invalid={prompt.length > MAX_PROMPT_LENGTH}
       />

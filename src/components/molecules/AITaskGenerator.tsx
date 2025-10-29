@@ -8,18 +8,10 @@ interface AITaskGeneratorProps {
   prompt: string;
   onToggle: (enabled: boolean) => void;
   onPromptChange: (prompt: string) => void;
-  onKeyDown: (event: React.KeyboardEvent<HTMLTextAreaElement>) => void;
   disabled: boolean;
 }
 
-export const AITaskGenerator = ({
-  enabled,
-  prompt,
-  onToggle,
-  onPromptChange,
-  onKeyDown,
-  disabled,
-}: AITaskGeneratorProps) => (
+export const AITaskGenerator = ({ enabled, prompt, onToggle, onPromptChange, disabled }: AITaskGeneratorProps) => (
   <section
     className="mt-6 rounded-md border"
     aria-labelledby="ai-task-generator-label">
@@ -55,7 +47,6 @@ export const AITaskGenerator = ({
     {enabled && (
       <AIPromptInput
         prompt={prompt}
-        onKeyDown={onKeyDown}
         onChange={onPromptChange}
       />
     )}

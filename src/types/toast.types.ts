@@ -6,7 +6,6 @@ export interface ToastMessages {
   error: string;
   errorDescription: string;
 }
-
 export interface ToastHandler {
   id: string;
   dismiss: () => void;

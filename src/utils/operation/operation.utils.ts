@@ -14,7 +14,7 @@ export const executeWithToast = async <T>(
 ): Promise<void> => {
   const { id, update } = toastHandler({
     title: messages.loading,
-    duration: Infinity,
+    duration: TIMING.TOAST_DURATION,
   });
 
   try {
@@ -24,7 +24,6 @@ export const executeWithToast = async <T>(
       id,
       title: messages.success,
       description: successDescription,
-      duration: TIMING.TOAST_DURATION,
       className: 'border-l-4 border-[#ea580c]',
     });
 
@@ -34,7 +33,6 @@ export const executeWithToast = async <T>(
       id,
       title: messages.error,
       description: messages.errorDescription,
-      duration: TIMING.TOAST_DURATION,
       variant: 'destructive',
     });
   }

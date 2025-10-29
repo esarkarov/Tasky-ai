@@ -11,7 +11,7 @@ interface ColorPickerProps {
   isOpen: boolean;
   colorHex: string;
   colorName: string;
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsOpen: (open: boolean) => void;
   handleSelect: (value: string) => void;
   disabled: boolean;
 }
