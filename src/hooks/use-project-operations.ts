@@ -19,6 +19,9 @@ export const useProjectOperations = ({
 }: UseProjectOperationsParams = {}): UseProjectOperationsResult => {
   const [searchStatus, setSearchStatus] = useState<SearchStatus>('idle');
   const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const abortControllerRef = useRef<AbortController | null>(null);
+  const lastSearchValueRef = useRef<string>('');
+
   const { state, location } = useNavigation();
   const { pathname } = useLocation();
   const { toast } = useToast();
@@ -38,6 +41,9 @@ export const useProjectOperations = ({
     return () => {
       if (searchTimeoutRef.current) {
         clearTimeout(searchTimeoutRef.current);
+      }
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
       }
     };
   }, []);
@@ -81,16 +87,45 @@ export const useProjectOperations = ({
 
   const searchProjects = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>): void => {
+      const searchValue = e.target.value.trim();
+
+      if (searchValue === lastSearchValueRef.current) {
+        return;
+      }
+
       if (searchTimeoutRef.current) {
         clearTimeout(searchTimeoutRef.current);
       }
-      const searchValue = e.target.value.trim();
-      setSearchStatus('loading');
 
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+
+      if (!searchValue) {
+        lastSearchValueRef.current = '';
+        setSearchStatus('idle');
+        navigate(ROUTES.PROJECTS);
+        return;
+      }
+
+      setSearchStatus('loading');
       searchTimeoutRef.current = setTimeout(() => {
+        abortControllerRef.current = new AbortController();
+        lastSearchValueRef.current = searchValue;
         setSearchStatus('searching');
-        navigate(buildSearchUrl(ROUTES.PROJECTS, searchValue));
-        setTimeout(() => setSearchStatus('idle'), 100);
+
+        try {
+          navigate(buildSearchUrl(ROUTES.PROJECTS, searchValue));
+        } catch (error) {
+          if (error instanceof Error && error.name !== 'AbortError') {
+            console.error('Search navigation error:', error);
+          }
+        } finally {
+          setTimeout(() => {
+            setSearchStatus('idle');
+            abortControllerRef.current = null;
+          }, 100);
+        }
       }, TIMING.DELAY_DURATION);
     },
     [navigate]

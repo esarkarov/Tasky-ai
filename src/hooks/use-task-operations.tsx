@@ -76,6 +76,7 @@ export const useTaskOperations = ({
           toast({
             title: '1 task completed',
             duration: TIMING.TOAST_DURATION,
+            className: 'border-l-4 border-[#ea580c]',
             action: (
               <ToastAction
                 altText="Undo task completion"
@@ -88,6 +89,7 @@ export const useTaskOperations = ({
           toast({
             title: completed ? TASK_TOAST_CONTENTS.COMPLETE.success : TASK_TOAST_CONTENTS.COMPLETE.UNCOMPLETE,
             duration: TIMING.TOAST_DURATION,
+            className: 'border-l-4 border-[#ea580c]',
           });
         }
       } catch {
