@@ -2,13 +2,13 @@ import { LucideIcon } from 'lucide-react';
 import { memo } from 'react';
 
 interface TotalCounterProps {
-  total: number;
-  label: string;
+  totalCount: number;
   icon: LucideIcon;
+  label?: string;
 }
 
-export const TotalCounter = memo(({ total, label, icon: Icon }: TotalCounterProps) => {
-  const displayLabel = total === 1 ? label : `${label}s`;
+export const TotalCounter = memo(({ totalCount, label = 'task', icon: Icon }: TotalCounterProps) => {
+  const labelText = `${label}${totalCount !== 1 ? 's' : ''}`;
 
   return (
     <div
@@ -19,7 +19,7 @@ export const TotalCounter = memo(({ total, label, icon: Icon }: TotalCounterProp
         aria-hidden="true"
       />
       <span>
-        {total} {displayLabel}
+        {totalCount} {labelText}
       </span>
     </div>
   );

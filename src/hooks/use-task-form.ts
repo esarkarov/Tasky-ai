@@ -1,91 +1,100 @@
 import { UseTaskFormParams, UseTaskFormResult } from '@/types/hooks.types';
-import { ProjectInfo } from '@/types/projects.types';
+import { SelectedProject } from '@/types/projects.types';
 import { TaskFormInput } from '@/types/tasks.types';
 import * as chrono from 'chrono-node';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
 export const useTaskForm = ({
-  defaultFormData,
-  projectDocs,
+  defaultValues,
+  projects,
   onSubmit,
-  onCancel,
+  handleCancel,
 }: UseTaskFormParams): UseTaskFormResult => {
-  const [taskContent, setTaskContent] = useState(defaultFormData.content);
-  const [dueDate, setDueDate] = useState(defaultFormData.due_date);
-  const [projectId, setProjectId] = useState(defaultFormData.projectId);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [projectInfo, setProjectInfo] = useState<ProjectInfo>({
+  const [content, setContent] = useState(defaultValues.content);
+  const [dueDate, setDueDate] = useState<Date | null>(defaultValues.due_date);
+  const [selectedProject, setSelectedProject] = useState<SelectedProject>({
+    id: defaultValues.projectId,
     name: '',
     colorHex: '',
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const formData = useMemo<TaskFormInput>(
+  const formValues = useMemo<TaskFormInput>(
     () => ({
-      content: taskContent,
+      content,
       due_date: dueDate,
-      projectId: projectId,
+      projectId: selectedProject.id,
     }),
-    [taskContent, dueDate, projectId]
+    [content, dueDate, selectedProject.id]
   );
-  const isDisabled = taskContent.trim().length > 0;
+
+  const isValid = useMemo(() => content.trim().length > 0, [content]);
 
   useEffect(() => {
-    if (projectId && projectDocs) {
-      const project = projectDocs?.find(({ $id }) => projectId === $id);
+    if (selectedProject.id && projects) {
+      const project = projects.find(({ $id }) => selectedProject.id === $id);
       if (project) {
-        setProjectInfo({
+        setSelectedProject({
+          id: project.$id,
           name: project.name,
           colorHex: project.color_hex,
         });
       }
     }
-  }, [projectId, projectDocs]);
+  }, [selectedProject.id, projects]);
 
   useEffect(() => {
-    if (taskContent) {
-      const chronoParsed = chrono.parse(taskContent);
+    if (content) {
+      const chronoParsed = chrono.parse(content);
       if (chronoParsed.length > 0) {
         const lastDate = chronoParsed[chronoParsed.length - 1];
         setDueDate(lastDate.date());
       }
     }
-  }, [taskContent]);
+  }, [content]);
 
-  const resetForm = useCallback(() => {
-    setTaskContent('');
+  const handleReset = useCallback(() => {
+    setContent('');
     setDueDate(null);
-    setProjectId(null);
-    setProjectInfo({ name: '', colorHex: '' });
+    setSelectedProject({ id: null, name: '', colorHex: '' });
+    setIsSubmitting(false);
+  }, []);
+
+  const handleProjectChange = useCallback((project: SelectedProject) => {
+    setSelectedProject(project);
+  }, []);
+
+  const removeDueDate = useCallback(() => {
+    setDueDate(null);
   }, []);
 
   const handleSubmit = useCallback(async () => {
-    if (!onSubmit || isSubmitting || !taskContent.trim()) return;
+    if (!onSubmit || isSubmitting || !isValid) return;
 
     setIsSubmitting(true);
     try {
-      await onSubmit(formData, defaultFormData.id);
-      resetForm();
-      onCancel();
+      await onSubmit(formValues, defaultValues.id);
+      handleReset();
+      handleCancel();
     } catch (error) {
       console.error('Task submission error:', error);
     } finally {
       setIsSubmitting(false);
     }
-  }, [onSubmit, isSubmitting, taskContent, formData, defaultFormData.id, resetForm, onCancel]);
+  }, [onSubmit, isSubmitting, isValid, formValues, defaultValues.id, handleReset, handleCancel]);
 
   return {
-    taskContent,
+    formValues,
+    content,
     dueDate,
-    projectId,
-    projectInfo,
+    selectedProject,
     isSubmitting,
-    formData,
-    isDisabled,
-    setTaskContent,
+    isValid,
+    setContent,
     setDueDate,
-    setProjectId,
-    setProjectInfo,
+    handleProjectChange,
+    removeDueDate,
     handleSubmit,
-    resetForm,
+    handleReset,
   };
 };

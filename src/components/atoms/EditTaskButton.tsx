@@ -3,10 +3,10 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import { Edit } from 'lucide-react';
 
 interface TaskEditButtonProps {
-  onEdit: () => void;
+  onClick: () => void;
 }
 
-export const EditTaskButton = ({ onEdit }: TaskEditButtonProps) => {
+export const EditTaskButton = ({ onClick }: TaskEditButtonProps) => {
   return (
     <Tooltip>
       <TooltipTrigger asChild>
@@ -16,7 +16,7 @@ export const EditTaskButton = ({ onEdit }: TaskEditButtonProps) => {
           size="icon"
           className="h-6 w-6 text-muted-foreground"
           aria-label="Edit task"
-          onClick={onEdit}>
+          onClick={onClick}>
           <Edit aria-hidden="true" />
         </Button>
       </TooltipTrigger>

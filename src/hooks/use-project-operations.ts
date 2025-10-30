@@ -48,7 +48,7 @@ export const useProjectOperations = ({
     };
   }, []);
 
-  const saveProject = useCallback(
+  const handleSaveProject = useCallback(
     async (formData: ProjectFormInput): Promise<void> => {
       if (!formData) return;
 
@@ -66,7 +66,7 @@ export const useProjectOperations = ({
     [fetcher, method, operationMessages, toast, onSuccess]
   );
 
-  const deleteProject = useCallback(async (): Promise<void> => {
+  const handleDeleteProject = useCallback(async (): Promise<void> => {
     if (!projectData) return;
 
     if (isViewingCurrentProject) {
@@ -85,7 +85,7 @@ export const useProjectOperations = ({
     await executeWithToast(operation, toast, PROJECT_TOAST_CONTENTS.DELETE, description, onSuccess);
   }, [projectData, isViewingCurrentProject, navigate, fetcher, toast, onSuccess]);
 
-  const searchProjects = useCallback(
+  const handleSearchProjects = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>): void => {
       const searchValue = e.target.value.trim();
 
@@ -132,9 +132,9 @@ export const useProjectOperations = ({
   );
 
   return {
-    saveProject,
-    deleteProject,
-    searchProjects,
+    handleSaveProject,
+    handleDeleteProject,
+    handleSearchProjects,
     fetcher,
     formState: isFormBusy,
     searchStatus: isNavigatingToProjects ? 'searching' : searchStatus,

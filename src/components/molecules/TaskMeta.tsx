@@ -25,10 +25,10 @@ export const TaskMeta = ({ task, project }: TaskMetaProps) => {
       {showDueDate && (
         <TaskDueDate
           completed={task.completed}
-          date={task.due_date}
+          dueDate={task.due_date}
         />
       )}
-      {showProject && <ProjectBadge project={task.project} />}
+      {showProject && <ProjectBadge project={task?.project} />}
     </CardFooter>
   );
 };

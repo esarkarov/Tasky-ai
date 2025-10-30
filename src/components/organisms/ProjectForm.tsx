@@ -12,41 +12,41 @@ import { CrudMode } from '@/types/shared.types';
 import { cn } from '@/utils/ui/ui.utils';
 
 interface ProjectFormProps {
-  onSubmit: (formData: ProjectFormInput) => Promise<void>;
-  onCancel: () => void;
   mode: CrudMode;
-  defaultFormData?: ProjectInput;
-  formState: boolean;
+  defaultValues?: ProjectInput;
+  isSubmitting?: boolean;
+  handleCancel: () => void;
+  onSubmit: (formData: ProjectFormInput) => Promise<void>;
 }
 
 export const ProjectForm = ({
-  defaultFormData = DEFAULT_PROJECT_FORM_DATA,
+  defaultValues = DEFAULT_PROJECT_FORM_DATA,
   mode,
-  onCancel,
+  handleCancel,
   onSubmit,
-  formState,
+  isSubmitting: externalSubmitting = false,
 }: ProjectFormProps) => {
   const {
-    projectName,
-    colorHex,
-    colorName,
-    aiTaskGen,
-    taskGenPrompt,
-    isOpen,
-    isSubmitting,
-    isDisabled,
-    setProjectName,
-    setAiTaskGen,
-    setTaskGenPrompt,
-    setIsOpen,
+    name,
+    color,
+    aiEnabled,
+    aiPrompt,
+    colorPickerOpen,
+    isSubmitting: internalSubmitting,
+    isValid,
+    setName,
+    setAiEnabled,
+    setAiPrompt,
+    setColorPickerOpen,
     handleColorSelect,
     handleSubmit,
   } = useProjectForm({
-    defaultFormData,
+    defaultValues,
     onSubmit,
   });
 
-  const isPending = isSubmitting || formState;
+  const isPending = internalSubmitting || externalSubmitting;
+  const isCreateMode = mode === 'create';
 
   return (
     <Card
@@ -57,40 +57,39 @@ export const ProjectForm = ({
         isPending && 'animate-pulse pointer-events-none'
       )}>
       <CardHeader className="p-4">
-        <CardTitle id="project-form-title">{mode === 'create' ? 'Add project' : 'Edit project'}</CardTitle>
+        <CardTitle id="project-form-title">{isCreateMode ? 'Add project' : 'Edit project'}</CardTitle>
       </CardHeader>
       <Separator />
       <CardContent className="p-4 grid grid-cols-1 gap-3">
         <ProjectNameInput
-          value={projectName}
-          onChange={setProjectName}
+          value={name}
+          onChange={setName}
           disabled={isPending}
         />
         <ColorPicker
-          setIsOpen={setIsOpen}
-          handleSelect={handleColorSelect}
+          open={colorPickerOpen}
+          value={color}
           disabled={isPending}
-          colorHex={colorHex}
-          colorName={colorName}
-          isOpen={isOpen}
+          onOpenChange={setColorPickerOpen}
+          handleColorSelect={handleColorSelect}
         />
-        {mode === 'create' && (
+        {isCreateMode && (
           <AITaskGenerator
-            enabled={aiTaskGen}
-            prompt={taskGenPrompt}
-            onToggle={setAiTaskGen}
-            onPromptChange={setTaskGenPrompt}
+            checked={aiEnabled}
+            value={aiPrompt}
             disabled={isPending}
+            onCheckedChange={setAiEnabled}
+            onValueChange={setAiPrompt}
           />
         )}
       </CardContent>
       <Separator />
       <CardFooter className="flex justify-end gap-3 p-4">
-        <CancelProjectButton onCancel={onCancel} />
+        <CancelProjectButton onClick={handleCancel} />
         <SubmitProjectButton
           mode={mode}
-          handleSubmit={handleSubmit}
-          disabled={isDisabled}
+          onClick={handleSubmit}
+          disabled={isValid || isPending}
         />
       </CardFooter>
     </Card>

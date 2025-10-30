@@ -2,23 +2,22 @@ import { Separator } from '@/components/ui/separator';
 import { SOCIAL_LINKS } from '@/constants/app-links';
 
 interface FooterNavLinkProps {
-  href: string;
+  link: (typeof SOCIAL_LINKS)[number];
   index: number;
-  label: string;
 }
 
-export const FooterNavLink = ({ href, index, label }: FooterNavLinkProps) => {
+export const FooterNavLink = ({ link, index }: FooterNavLinkProps) => {
   const isLast = index === SOCIAL_LINKS.length - 1;
 
   return (
     <li className="flex items-center">
       <a
-        href={href}
+        href={link.href}
         className="text-sm text-muted-foreground transition-colors duration-200 hover:text-foreground"
         target="_blank"
         rel="noopener noreferrer"
-        aria-label={label}>
-        {label}
+        aria-label={link.label}>
+        {link.label}
       </a>
 
       {!isLast && (

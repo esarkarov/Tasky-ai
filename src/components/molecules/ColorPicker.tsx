@@ -8,22 +8,21 @@ import { PROJECT_COLORS } from '@/constants/colors';
 import { ChevronDown, Circle } from 'lucide-react';
 
 interface ColorPickerProps {
-  isOpen: boolean;
-  colorHex: string;
-  colorName: string;
-  setIsOpen: (open: boolean) => void;
-  handleSelect: (value: string) => void;
+  open: boolean;
   disabled: boolean;
+  value: { name: string; hex: string };
+  onOpenChange: (open: boolean) => void;
+  handleColorSelect: (value: string) => void;
 }
 
-export const ColorPicker = ({ isOpen, setIsOpen, colorName, colorHex, handleSelect, disabled }: ColorPickerProps) => {
+export const ColorPicker = ({ open, onOpenChange, value, handleColorSelect, disabled }: ColorPickerProps) => {
   return (
     <div>
       <Label htmlFor="color">Color</Label>
       <Popover
         modal
-        open={isOpen}
-        onOpenChange={setIsOpen}>
+        open={open}
+        onOpenChange={onOpenChange}>
         <PopoverTrigger asChild>
           <Button
             id="color"
@@ -31,14 +30,14 @@ export const ColorPicker = ({ isOpen, setIsOpen, colorName, colorHex, handleSele
             variant="outline"
             className="w-full mt-2 justify-between"
             aria-haspopup="listbox"
-            aria-expanded={isOpen}
+            aria-expanded={open}
             disabled={disabled}
-            aria-label={`Select project color (currently ${colorName})`}>
+            aria-label={`Select project color (currently ${value.name})`}>
             <Circle
-              fill={colorHex}
+              fill={value.hex}
               aria-hidden="true"
             />
-            <span>{colorName}</span>
+            <span>{value.name}</span>
             <ChevronDown
               className="ms-auto"
               aria-hidden="true"
@@ -62,15 +61,14 @@ export const ColorPicker = ({ isOpen, setIsOpen, colorName, colorHex, handleSele
                 <CommandEmpty>No color found.</CommandEmpty>
                 <CommandGroup>
                   {PROJECT_COLORS.map(({ name, hex }) => {
-                    const isSelected = colorName === name;
-
+                    const defaultValue = `${name}=${hex}`;
                     return (
                       <SelectableCommandItem
                         key={name}
                         id={name}
-                        value={`${name}=${hex}`}
-                        isSelected={isSelected}
-                        onSelect={handleSelect}
+                        value={defaultValue}
+                        selected={value.name === name}
+                        onSelect={() => handleColorSelect(defaultValue)}
                         icon={
                           <Circle
                             fill={hex}

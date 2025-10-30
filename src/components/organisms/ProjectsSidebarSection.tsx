@@ -5,10 +5,10 @@ import { Collapsible } from '@/components/ui/collapsible';
 import { SidebarGroup } from '@/components/ui/sidebar';
 
 interface ProjectsSidebarSectionProps {
-  onNavigationClick: () => void;
+  handleMobileNavigation: () => void;
 }
 
-export const ProjectsSidebarSection = ({ onNavigationClick }: ProjectsSidebarSectionProps) => {
+export const ProjectsSidebarSection = ({ handleMobileNavigation }: ProjectsSidebarSectionProps) => {
   return (
     <Collapsible
       defaultOpen
@@ -16,7 +16,7 @@ export const ProjectsSidebarSection = ({ onNavigationClick }: ProjectsSidebarSec
       <SidebarGroup>
         <ProjectsSidebarLabel />
         <AddProjectButton />
-        <ProjectsSidebarList onNavigationClick={onNavigationClick} />
+        <ProjectsSidebarList handleMobileNavigation={handleMobileNavigation} />
       </SidebarGroup>
     </Collapsible>
   );

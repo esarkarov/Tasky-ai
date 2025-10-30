@@ -1,7 +1,7 @@
 import { AddTaskButton } from '@/components/atoms/AddTaskButton';
 import { Head } from '@/components/atoms/Head';
 import { LoadMoreButton } from '@/components/atoms/LoadMoreButton';
-import { Page, PageHeader, PageList, PageTitle } from '@/components/atoms/Page';
+import { PageContainer, PageHeader, PageList, PageTitle } from '@/components/atoms/Page';
 import { TotalCounter } from '@/components/atoms/TotalCounter';
 import { EmptyStateMessage } from '@/components/organisms/EmptyStateMessage';
 import { ProjectActionMenu } from '@/components/organisms/ProjectActionMenu';
@@ -21,7 +21,7 @@ export const ProjectDetailPage = () => {
   const [isFormShow, setIsFormShow] = useState(false);
   const { project } = useLoaderData<ProjectDetailLoaderData>();
   const { tasks, name, color_hex, color_name, $id } = project;
-  const { createTask } = useTaskOperations();
+  const { handleCreateTask } = useTaskOperations();
 
   const filteredProjectTasks = useMemo(() => {
     const incompleteTasks = tasks?.filter((task: Models.Document) => !task.completed) as Models.Document[];
@@ -34,8 +34,9 @@ export const ProjectDetailPage = () => {
 
     return sortedTasks;
   }, [tasks]);
+
   const {
-    visibleItems: visibleProjectTasks,
+    items: visibleProjectTasks,
     isLoading,
     hasMore,
     handleLoadMore,
@@ -49,16 +50,16 @@ export const ProjectDetailPage = () => {
 
       <TopAppBar
         title={name}
-        taskCount={filteredProjectTasks?.length}
+        totalCount={filteredProjectTasks?.length}
       />
 
-      <Page aria-labelledby="project-detail-title">
+      <PageContainer aria-labelledby="project-detail-title">
         <PageHeader>
           <div className="flex items-center gap-2">
             <PageTitle>{name}</PageTitle>
 
             <ProjectActionMenu
-              defaultFormData={{
+              defaultValues={{
                 id: $id,
                 name: name,
                 color_name: color_name,
@@ -75,8 +76,7 @@ export const ProjectDetailPage = () => {
           </div>
           {filteredProjectTasks?.length > 0 && (
             <TotalCounter
-              total={filteredProjectTasks?.length}
-              label="task"
+              totalCount={filteredProjectTasks?.length}
               icon={ClipboardCheck}
             />
           )}
@@ -112,26 +112,26 @@ export const ProjectDetailPage = () => {
             <TaskForm
               className="mt-1"
               mode="create"
-              defaultFormData={{
+              defaultValues={{
                 content: '',
                 due_date: null,
                 projectId: $id,
               }}
-              onCancel={() => setIsFormShow(false)}
-              onSubmit={createTask}
+              handleCancel={() => setIsFormShow(false)}
+              onSubmit={handleCreateTask}
             />
           )}
 
           {hasMore && (
             <div className="flex justify-center py-6">
               <LoadMoreButton
-                isLoading={isLoading}
-                handleLoadMore={handleLoadMore}
+                loading={isLoading}
+                onClick={handleLoadMore}
               />
             </div>
           )}
         </PageList>
-      </Page>
+      </PageContainer>
     </>
   );
 };

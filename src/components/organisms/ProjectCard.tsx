@@ -23,7 +23,7 @@ export const ProjectCard = memo(({ project }: ProjectCardProps) => {
       />
       <p className="max-w-[48ch] truncate text-sm">{project.name}</p>
       <ProjectActionMenu
-        defaultFormData={{
+        defaultValues={{
           id: project.$id,
           name: project.name,
           color_name: project.color_name,

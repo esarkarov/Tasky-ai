@@ -4,14 +4,14 @@ import { Switch } from '@/components/ui/switch';
 import { Bot } from 'lucide-react';
 
 interface AITaskGeneratorProps {
-  enabled: boolean;
-  prompt: string;
-  onToggle: (enabled: boolean) => void;
-  onPromptChange: (prompt: string) => void;
+  checked: boolean;
+  value: string;
+  onCheckedChange: (isEnabled: boolean) => void;
+  onValueChange: (value: string) => void;
   disabled: boolean;
 }
 
-export const AITaskGenerator = ({ enabled, prompt, onToggle, onPromptChange, disabled }: AITaskGeneratorProps) => (
+export const AITaskGenerator = ({ checked, value, onCheckedChange, onValueChange, disabled }: AITaskGeneratorProps) => (
   <section
     className="mt-6 rounded-md border"
     aria-labelledby="ai-task-generator-label">
@@ -38,16 +38,16 @@ export const AITaskGenerator = ({ enabled, prompt, onToggle, onPromptChange, dis
       <Switch
         id="ai_generate"
         aria-describedby="ai-task-generator-description"
-        checked={enabled}
-        onCheckedChange={onToggle}
+        checked={checked}
+        onCheckedChange={onCheckedChange}
         disabled={disabled}
       />
     </div>
 
-    {enabled && (
+    {checked && (
       <AIPromptInput
-        prompt={prompt}
-        onChange={onPromptChange}
+        value={value}
+        onChange={onValueChange}
       />
     )}
   </section>

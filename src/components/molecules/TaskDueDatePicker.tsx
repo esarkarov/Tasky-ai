@@ -10,15 +10,20 @@ import { useState } from 'react';
 interface TaskDueDatePickerProps {
   dueDate: Date | null;
   disabled: boolean;
-  onDateChange: (date: Date | null) => void;
-  onDateRemove: () => void;
+  handleDateSelect: (date: Date | null) => void;
+  handleDateRemove: () => void;
 }
 
-export const TaskDueDatePicker = ({ dueDate, disabled, onDateChange, onDateRemove }: TaskDueDatePickerProps) => {
+export const TaskDueDatePicker = ({
+  dueDate,
+  disabled,
+  handleDateSelect,
+  handleDateRemove,
+}: TaskDueDatePickerProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  const handleDateSelect = (selectedDate: Date | undefined) => {
-    onDateChange(selectedDate || null);
+  const onDateSelect = (selectedDate: Date | undefined) => {
+    handleDateSelect(selectedDate || null);
     setIsOpen(false);
   };
 
@@ -53,13 +58,13 @@ export const TaskDueDatePicker = ({ dueDate, disabled, onDateChange, onDateRemov
             mode="single"
             disabled={{ before: new Date() }}
             selected={dueDate ? new Date(dueDate) : undefined}
-            onSelect={handleDateSelect}
+            onSelect={onDateSelect}
             autoFocus
           />
         </PopoverContent>
       </Popover>
 
-      {dueDate && <RemoveDueDateButton onDateRemove={onDateRemove} />}
+      {dueDate && <RemoveDueDateButton onClick={handleDateRemove} />}
     </div>
   );
 };

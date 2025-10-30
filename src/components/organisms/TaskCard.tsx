@@ -14,8 +14,8 @@ interface TaskCardProps {
 }
 
 export const TaskCard = memo(({ id, content, completed, dueDate, project }: TaskCardProps) => {
-  const [isEditing, setIsEditing] = useState<boolean>(false);
-  const { updateTask, fetcher } = useTaskOperations({
+  const [isEditing, setIsEditing] = useState(false);
+  const { handleUpdateTask, fetcher } = useTaskOperations({
     onSuccess: () => setIsEditing(false),
   });
 
@@ -40,18 +40,18 @@ export const TaskCard = memo(({ id, content, completed, dueDate, project }: Task
         <TaskItem
           task={task}
           project={project}
-          onEdit={() => setIsEditing(true)}
+          handleEdit={() => setIsEditing(true)}
         />
       ) : (
         <TaskForm
           className="my-1"
-          defaultFormData={{
+          defaultValues={{
             ...task,
             projectId: project && project?.$id,
           }}
           mode="update"
-          onCancel={() => setIsEditing(false)}
-          onSubmit={updateTask}
+          handleCancel={() => setIsEditing(false)}
+          onSubmit={handleUpdateTask}
         />
       )}
     </article>

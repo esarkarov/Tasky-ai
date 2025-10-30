@@ -5,15 +5,16 @@ import { cn } from '@/utils/ui/ui.utils';
 import { useEffect, useState } from 'react';
 
 interface TopAppBarProps {
+  label?: string;
+  totalCount: number;
   title: string;
-  taskCount?: number;
 }
 
-export const TopAppBar = ({ title, taskCount }: TopAppBarProps) => {
-  const [showTitle, setShowTitle] = useState<boolean>(false);
+export const TopAppBar = ({ title, totalCount, label = 'task' }: TopAppBarProps) => {
+  const [isTitleVisible, setIsTitleVisible] = useState(false);
 
   useEffect(() => {
-    const listener = () => setShowTitle(window.scrollY > TIMING.SCROLL_THRESHOLD);
+    const listener = () => setIsTitleVisible(window.scrollY > TIMING.SCROLL_THRESHOLD);
 
     window.addEventListener('scroll', listener);
     return () => window.removeEventListener('scroll', listener);
@@ -23,15 +24,16 @@ export const TopAppBar = ({ title, taskCount }: TopAppBarProps) => {
     <header
       className={cn(
         'sticky z-40 bg-background top-0 h-14 grid grid-cols-[40px,minmax(0,1fr),40px] items-center px-4',
-        showTitle && 'border-b'
+        isTitleVisible && 'border-b'
       )}
       role="banner"
       aria-label="Application top bar">
       <ToggleSidebarButton />
       <AppBarTitle
         title={title}
-        showTitle={showTitle}
-        taskCount={taskCount}
+        isVisible={isTitleVisible}
+        totalCount={totalCount}
+        label={label}
       />
     </header>
   );

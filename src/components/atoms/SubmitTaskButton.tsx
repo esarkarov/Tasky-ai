@@ -3,17 +3,17 @@ import { CrudMode } from '@/types/shared.types';
 import { SendHorizonal } from 'lucide-react';
 
 interface SubmitTaskButtonProps {
-  disabled: boolean;
   mode: CrudMode;
-  onSubmit: () => Promise<void>;
+  disabled: boolean;
+  onClick: () => Promise<void>;
 }
 
-export const SubmitTaskButton = ({ mode, disabled, onSubmit }: SubmitTaskButtonProps) => {
+export const SubmitTaskButton = ({ mode, disabled, onClick }: SubmitTaskButtonProps) => {
   return (
     <Button
       type="submit"
       aria-label={mode === 'create' ? 'Add task' : 'Save task'}
-      onClick={onSubmit}
+      onClick={onClick}
       disabled={!disabled}>
       <span className="max-md:hidden">{mode === 'create' ? 'Add' : 'Save'}</span>
       <SendHorizonal

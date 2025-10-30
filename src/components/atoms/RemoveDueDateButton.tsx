@@ -3,9 +3,9 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import { X } from 'lucide-react';
 
 interface RemoveDueDateButtonProps {
-  onDateRemove: () => void;
+  onClick: () => void;
 }
-export const RemoveDueDateButton = ({ onDateRemove }: RemoveDueDateButtonProps) => {
+export const RemoveDueDateButton = ({ onClick }: RemoveDueDateButtonProps) => {
   return (
     <Tooltip>
       <TooltipTrigger asChild>
@@ -15,7 +15,7 @@ export const RemoveDueDateButton = ({ onDateRemove }: RemoveDueDateButtonProps) 
           size="sm"
           className="px-2 -ms-2"
           aria-label="Remove due date"
-          onClick={onDateRemove}>
+          onClick={onClick}>
           <X aria-hidden="true" />
         </Button>
       </TooltipTrigger>

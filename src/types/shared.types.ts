@@ -7,6 +7,7 @@ export type EmptyStateVariant = 'today' | 'inbox' | 'upcoming' | 'completed' | '
 export type SearchStatus = 'idle' | 'loading' | 'searching';
 export type NavigationState = 'idle' | 'loading' | 'submitting';
 export type OperationResult = 'success' | 'error';
+export type TriggerVariant = 'icon' | 'menu-item';
 export interface BaseEntity extends Models.Document {
   $id: string;
   $createdAt: string;

@@ -1,6 +1,6 @@
 import { type PropsWithChildren, memo } from 'react';
 
-const Page: React.FC<PropsWithChildren> = memo(({ children }) => {
+const PageContainer: React.FC<PropsWithChildren> = memo(({ children }) => {
   return (
     <main
       className="container md:max-w-screen-lg"
@@ -43,9 +43,9 @@ const PageList: React.FC<PropsWithChildren> = memo(({ children }) => {
   );
 });
 
-Page.displayName = 'Page';
+PageContainer.displayName = 'PageContainer';
 PageTitle.displayName = 'PageTitle';
 PageHeader.displayName = 'PageHeader';
 PageList.displayName = 'PageList';
 
-export { Page, PageHeader, PageTitle, PageList };
+export { PageContainer, PageHeader, PageTitle, PageList };

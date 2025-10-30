@@ -1,7 +1,6 @@
-import { ProjectFormInput, ProjectInfo, ProjectInput, ProjectListItem } from '@/types/projects.types';
+import { ColorValue, ProjectFormInput, ProjectInput, ProjectListItem, SelectedProject } from '@/types/projects.types';
 import { HttpMethod, SearchStatus } from '@/types/shared.types';
 import { TaskEntity, TaskFormInput } from '@/types/tasks.types';
-import { Dispatch, SetStateAction } from 'react';
 import { useFetcher } from 'react-router';
 export interface UseProjectOperationsParams {
   method?: HttpMethod;
@@ -9,9 +8,9 @@ export interface UseProjectOperationsParams {
   onSuccess?: () => void;
 }
 export interface UseProjectOperationsResult {
-  saveProject: (data: ProjectFormInput) => Promise<void>;
-  deleteProject: () => Promise<void>;
-  searchProjects: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleSaveProject: (data: ProjectFormInput) => Promise<void>;
+  handleDeleteProject: () => Promise<void>;
+  handleSearchProjects: (e: React.ChangeEvent<HTMLInputElement>) => void;
   searchStatus: SearchStatus;
   fetcher: ReturnType<typeof useFetcher>;
   formState: boolean;
@@ -21,77 +20,76 @@ export interface UseTaskOperationsParams {
   enableUndo?: boolean;
 }
 export interface UseTaskOperationsResult {
-  createTask: (formData: TaskFormInput) => Promise<void>;
-  updateTask: (formData: TaskFormInput, taskId?: string) => Promise<void>;
+  handleCreateTask: (formData: TaskFormInput) => Promise<void>;
+  handleUpdateTask: (formData: TaskFormInput, taskId?: string) => Promise<void>;
   toggleTaskComplete: (taskId: string, completed: boolean) => Promise<void>;
-  deleteTask: (taskId: string) => Promise<void>;
+  handleDeleteTask: (taskId: string) => Promise<void>;
   fetcher: ReturnType<typeof useFetcher>;
   formState: boolean;
 }
 export interface UseProjectFilterParams {
-  taskDocs: TaskEntity[];
+  tasks: TaskEntity[];
 }
 export interface UseProjectFilterResult {
   filteredTasks: TaskEntity[] | undefined;
   filteredCount: number;
-  selectedProjectId: string | null;
-  setSelectedProjectId: Dispatch<SetStateAction<string | null>>;
+  value: string | null;
+  setValue: (value: string | null) => void;
 }
 export interface UseLoadMoreParams {
   initialCount?: number;
   pageSize?: number;
 }
 export interface UseLoadMoreResult<T> {
-  visibleItems: T[];
-  visibleCount: number;
+  items: T[];
+  count: number;
   isLoading: boolean;
   hasMore: boolean;
   handleLoadMore: () => void;
-  reset: () => void;
+  handleReset: () => void;
   getItemClassName: (index: number) => string;
   getItemStyle: (index: number) => React.CSSProperties;
 }
 export interface UseTaskFormParams {
-  defaultFormData: TaskFormInput;
-  projectDocs?: ProjectListItem[];
+  defaultValues: TaskFormInput;
+  projects?: ProjectListItem[];
   onSubmit?: (formData: TaskFormInput, taskId?: string) => Promise<void>;
-  onCancel: () => void;
+  handleCancel: () => void;
 }
 export interface UseTaskFormResult {
-  taskContent: string;
+  content: string;
   dueDate: Date | null;
-  projectId: string | null;
-  projectInfo: ProjectInfo;
+  selectedProject: SelectedProject;
   isSubmitting: boolean;
-  isDisabled: boolean;
-  formData: TaskFormInput;
-  setTaskContent: (content: string) => void;
+  isValid: boolean;
+  formValues: TaskFormInput;
+  setContent: (content: string) => void;
   setDueDate: (date: Date | null) => void;
-  setProjectId: (id: string | null) => void;
-  setProjectInfo: (info: ProjectInfo) => void;
+  handleProjectChange: (project: SelectedProject) => void;
+  removeDueDate: () => void;
   handleSubmit: () => Promise<void>;
-  resetForm: () => void;
+  handleReset: () => void;
 }
 
 export interface UseProjectFormParams {
-  defaultFormData: ProjectInput;
+  defaultValues: ProjectInput;
   onSubmit: (formData: ProjectFormInput) => Promise<void>;
 }
 
 export interface UseProjectFormResult {
-  projectName: string;
-  colorName: string;
-  colorHex: string;
-  aiTaskGen: boolean;
-  taskGenPrompt: string;
-  isOpen: boolean;
+  name: string;
+  color: ColorValue;
+  aiEnabled: boolean;
+  aiPrompt: string;
+  colorPickerOpen: boolean;
   isSubmitting: boolean;
-  isDisabled: boolean;
-  formData: ProjectFormInput;
-  setProjectName: (name: string) => void;
-  setAiTaskGen: (enabled: boolean) => void;
-  setTaskGenPrompt: (prompt: string) => void;
-  setIsOpen: (open: boolean) => void;
+  isValid: boolean;
+  formValues: ProjectFormInput;
+  setName: (name: string) => void;
+  setColor: (value: ColorValue) => void;
+  setAiEnabled: (enabled: boolean) => void;
+  setAiPrompt: (prompt: string) => void;
+  setColorPickerOpen: (open: boolean) => void;
   handleColorSelect: (value: string) => void;
   handleSubmit: () => Promise<void>;
 }

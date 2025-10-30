@@ -12,7 +12,7 @@ export const AppSidebar = () => {
   const { taskCounts } = useLoaderData<AppLoaderData>();
   const { isMobile, setOpenMobile } = useSidebar();
 
-  const handleNavigationClick = () => {
+  const handleMobileNavigation = () => {
     if (isMobile) {
       setOpenMobile(false);
     }
@@ -34,9 +34,9 @@ export const AppSidebar = () => {
         <TaskSidebarNavGroup
           currentPath={pathname}
           taskCounts={taskCounts}
-          onNavigationClick={handleNavigationClick}
+          handleMobileNavigation={handleMobileNavigation}
         />
-        <ProjectsSidebarSection onNavigationClick={handleNavigationClick} />
+        <ProjectsSidebarSection handleMobileNavigation={handleMobileNavigation} />
       </SidebarContent>
       <SidebarFooter>
         <UserChip />

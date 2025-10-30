@@ -9,16 +9,19 @@ import { TaskEntity } from '@/types/tasks.types';
 interface TaskItemProps {
   project: ProjectEntity;
   task: TaskEntity;
-  onEdit: () => void;
+  handleEdit: () => void;
 }
 
-export const TaskItem = ({ project, task, onEdit }: TaskItemProps) => (
+export const TaskItem = ({ project, task, handleEdit }: TaskItemProps) => (
   <div
     className="group/card relative grid grid-cols-[max-content,minmax(0,1fr)] gap-3 border-b"
     role="group"
     aria-labelledby={`task-${task.id}-content`}
     aria-describedby={`task-${task.id}-metadata`}>
-    <CompleteTaskButton task={task} />
+    <CompleteTaskButton
+      taskId={task.id}
+      completed={task.completed}
+    />
     <Card className="rounded-none py-2 space-y-1.5 border-none">
       <CardContent className="p-0">
         <p
@@ -34,7 +37,7 @@ export const TaskItem = ({ project, task, onEdit }: TaskItemProps) => (
     </Card>
     <TaskActions
       task={task}
-      onEdit={onEdit}
+      handleEdit={handleEdit}
     />
   </div>
 );

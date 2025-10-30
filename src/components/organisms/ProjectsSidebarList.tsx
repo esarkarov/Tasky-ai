@@ -6,31 +6,28 @@ import { ProjectsLoaderData } from '@/types/loaders.types';
 import { useLoaderData } from 'react-router';
 
 interface ProjectsSidebarListProps {
-  onNavigationClick: () => void;
+  handleMobileNavigation: () => void;
 }
 
-export const ProjectsSidebarList = ({ onNavigationClick }: ProjectsSidebarListProps) => {
+export const ProjectsSidebarList = ({ handleMobileNavigation }: ProjectsSidebarListProps) => {
   const {
-    projects: { documents, total },
+    projects: { documents: projectDocs, total },
   } = useLoaderData<ProjectsLoaderData>();
 
   return (
     <CollapsibleContent id="projects-list">
       <SidebarGroupContent>
         <SidebarMenu>
-          {documents.slice(0, 8).map(({ $id, name, color_hex, color_name }) => (
+          {projectDocs.slice(0, 9).map((project) => (
             <ProjectSidebarNavItem
-              key={$id}
-              id={$id}
-              name={name}
-              colorHex={color_hex}
-              colorName={color_name}
-              onNavigationClick={onNavigationClick}
+              key={project.$id}
+              project={project}
+              handleMobileNavigation={handleMobileNavigation}
             />
           ))}
-          {documents !== null && total > 8 && (
+          {projectDocs !== null && total > 9 && (
             <SidebarMenuItem>
-              <AllProjectsButton onNavigationClick={onNavigationClick} />
+              <AllProjectsButton onClick={handleMobileNavigation} />
             </SidebarMenuItem>
           )}
           {!total && (

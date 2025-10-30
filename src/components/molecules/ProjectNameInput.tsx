@@ -1,7 +1,7 @@
+import { InputValueCount } from '@/components/atoms/InputValueCount';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { MAX_NAME_LENGTH, NAME_WARNING_THRESHOLD } from '@/constants/validation';
-import { InputValueCount } from '@/components/atoms/InputValueCount';
+import { MAX_NAME_LENGTH } from '@/constants/validation';
 
 interface ProjectNameInputProps {
   value: string;
@@ -21,14 +21,13 @@ export const ProjectNameInput = ({ value, onChange, disabled }: ProjectNameInput
         value={value}
         disabled={disabled}
         maxLength={MAX_NAME_LENGTH}
-        onInput={(e) => onChange(e.currentTarget.value)}
+        onChange={(e) => onChange(e.currentTarget.value)}
         aria-describedby="project-name-count"
         aria-invalid={value.length > MAX_NAME_LENGTH}
       />
       <InputValueCount
-        value={value}
+        valueLength={value.length}
         maxLength={MAX_NAME_LENGTH}
-        threshold={NAME_WARNING_THRESHOLD}
       />
     </div>
   );

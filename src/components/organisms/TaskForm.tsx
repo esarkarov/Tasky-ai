@@ -17,43 +17,42 @@ import { useLoaderData } from 'react-router';
 interface TaskFormProps {
   mode: CrudMode;
   className?: ClassValue;
-  defaultFormData?: TaskFormInput;
+  defaultValues?: TaskFormInput;
   onSubmit?: (formData: TaskFormInput, taskId?: string) => Promise<void>;
-  onCancel: () => void;
+  handleCancel: () => void;
 }
 
 export const TaskForm = ({
-  defaultFormData = DEFAULT_TASK_FORM_DATA,
+  defaultValues = DEFAULT_TASK_FORM_DATA,
   className,
   mode,
-  onCancel,
+  handleCancel,
   onSubmit,
 }: TaskFormProps) => {
   const { formState } = useTaskOperations({
-    onSuccess: onCancel,
+    onSuccess: handleCancel,
   });
   const {
     projects: { documents: projectDocs },
   } = useLoaderData<ProjectsLoaderData>();
 
   const {
-    taskContent,
+    content,
     dueDate,
-    projectInfo,
+    selectedProject,
     isSubmitting,
-    isDisabled,
-    setTaskContent,
+    isValid,
+    setContent,
     setDueDate,
-    setProjectId,
-    setProjectInfo,
+    handleProjectChange,
+    removeDueDate,
     handleSubmit,
   } = useTaskForm({
-    defaultFormData,
-    projectDocs,
+    projects: projectDocs,
+    defaultValues,
     onSubmit,
-    onCancel,
+    handleCancel,
   });
-
   const isPending = isSubmitting || formState;
 
   return (
@@ -73,31 +72,30 @@ export const TaskForm = ({
           {mode === 'create' ? 'Create task' : 'Edit task'}
         </h2>
         <TaskContentInput
-          value={taskContent}
-          onChange={setTaskContent}
+          value={content}
+          onChange={setContent}
           disabled={isPending}
         />
         <TaskDueDatePicker
           dueDate={dueDate as Date}
-          onDateChange={setDueDate}
-          onDateRemove={() => setDueDate(null)}
+          handleDateSelect={setDueDate}
+          handleDateRemove={removeDueDate}
           disabled={isPending}
         />
       </CardContent>
       <Separator />
       <CardFooter className="grid grid-cols-[minmax(0,1fr),max-content] gap-2 p-2">
         <ProjectPicker
-          setProjectInfo={setProjectInfo}
-          setProjectId={setProjectId}
-          projectInfo={projectInfo}
-          projectDocs={projectDocs}
+          value={selectedProject}
+          onValueChange={handleProjectChange}
+          projects={projectDocs}
           disabled={isPending}
         />
         <TaskFormActions
-          disabled={isDisabled}
+          disabled={isValid || isPending}
           mode={mode}
-          onCancel={onCancel}
-          onSubmit={handleSubmit}
+          handleCancel={handleCancel}
+          handleSubmit={handleSubmit}
         />
       </CardFooter>
     </Card>

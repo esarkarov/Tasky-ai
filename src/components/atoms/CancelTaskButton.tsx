@@ -2,15 +2,15 @@ import { Button } from '@/components/ui/button';
 import { X } from 'lucide-react';
 
 interface CancelTaskButtonProps {
-  onCancel: () => void;
+  onClick: () => void;
 }
 
-export const CancelTaskButton = ({ onCancel }: CancelTaskButtonProps) => {
+export const CancelTaskButton = ({ onClick }: CancelTaskButtonProps) => {
   return (
     <Button
       type="button"
       variant="secondary"
-      onClick={onCancel}
+      onClick={onClick}
       aria-label="Cancel task form">
       <span className="max-md:hidden">Cancel</span>
       <X

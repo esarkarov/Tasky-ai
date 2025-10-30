@@ -4,13 +4,12 @@ import { TIMING } from '@/constants/timing';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@clerk/clerk-react';
 import { useEffect } from 'react';
-import { Outlet, useLocation, useNavigate } from 'react-router';
+import { Outlet, useNavigate } from 'react-router';
 
 export const RequireAuth = () => {
   const { isSignedIn, isLoaded } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
-  const location = useLocation();
 
   useEffect(() => {
     if (isLoaded && !isSignedIn) {
@@ -22,7 +21,7 @@ export const RequireAuth = () => {
       });
       navigate(ROUTES.LOGIN, { replace: true });
     }
-  }, [isLoaded, isSignedIn, navigate, location, toast]);
+  }, [isLoaded, isSignedIn, navigate, toast]);
 
   if (!isLoaded) {
     return <Loader />;

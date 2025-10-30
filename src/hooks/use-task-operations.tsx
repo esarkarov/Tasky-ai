@@ -19,7 +19,7 @@ export const useTaskOperations = ({
 
   const isFormBusy = fetcher.state !== 'idle';
 
-  const createTask = useCallback(
+  const handleCreateTask = useCallback(
     async (formData: TaskFormInput): Promise<void> => {
       if (!formData) return;
 
@@ -37,7 +37,7 @@ export const useTaskOperations = ({
     [toast, onSuccess, fetcher]
   );
 
-  const updateTask = useCallback(
+  const handleUpdateTask = useCallback(
     async (formData: TaskFormInput, taskId?: string): Promise<void> => {
       if (!taskId && !formData.id) return;
 
@@ -104,7 +104,7 @@ export const useTaskOperations = ({
     [enableUndo, fetcher, toast]
   );
 
-  const deleteTask = useCallback(
+  const handleDeleteTask = useCallback(
     async (taskId: string): Promise<void> => {
       if (!taskId) return;
 
@@ -126,10 +126,10 @@ export const useTaskOperations = ({
   );
 
   return {
-    createTask,
-    updateTask,
+    handleCreateTask,
+    handleUpdateTask,
     toggleTaskComplete,
-    deleteTask,
+    handleDeleteTask,
     fetcher,
     formState: isFormBusy,
   };

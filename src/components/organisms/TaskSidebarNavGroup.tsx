@@ -14,10 +14,10 @@ import { CirclePlus } from 'lucide-react';
 interface TaskSidebarNavGroupProps {
   currentPath: string;
   taskCounts: TaskCounts;
-  onNavigationClick: () => void;
+  handleMobileNavigation: () => void;
 }
 
-export const TaskSidebarNavGroup = ({ currentPath, taskCounts, onNavigationClick }: TaskSidebarNavGroupProps) => (
+export const TaskSidebarNavGroup = ({ currentPath, taskCounts, handleMobileNavigation }: TaskSidebarNavGroupProps) => (
   <SidebarGroup
     role="navigation"
     aria-label="Primary navigation">
@@ -33,13 +33,13 @@ export const TaskSidebarNavGroup = ({ currentPath, taskCounts, onNavigationClick
             </SidebarMenuButton>
           </TaskFormDialog>
         </SidebarMenuItem>
-        {TASK_SIDEBAR_LINKS.map((item, index) => (
+        {TASK_SIDEBAR_LINKS.map((link, index) => (
           <TaskSidebarNavLink
             key={index}
-            item={item}
-            isActive={currentPath === item.href}
+            link={link}
+            isActive={currentPath === link.href}
             taskCounts={taskCounts}
-            onNavigationClick={onNavigationClick}
+            onClick={handleMobileNavigation}
           />
         ))}
       </SidebarMenu>

@@ -3,21 +3,21 @@ import { formatCustomDate } from '@/utils/date/date.utils';
 import { getTaskDueDateColorClass } from '@/utils/ui/ui.utils';
 import { CalendarDays } from 'lucide-react';
 
-interface DueDateProps {
+interface TaskDueDateProps {
   completed: boolean;
-  date: string | Date | null;
+  dueDate: Date | string | null;
 }
 
-export const TaskDueDate = ({ completed, date }: DueDateProps) => {
-  if (!date) return null;
-  const formattedDate = formatCustomDate(date);
-  const dateTime = new Date(date).toISOString();
+export const TaskDueDate = ({ completed, dueDate }: TaskDueDateProps) => {
+  if (!dueDate) return null;
+  const formattedDate = formatCustomDate(dueDate);
+  const dateTime = new Date(dueDate).toISOString();
 
   return (
     <div
       className={cn(
         'flex items-center gap-1 text-xs text-muted-foreground',
-        getTaskDueDateColorClass(date as Date, completed)
+        getTaskDueDateColorClass(dueDate as Date, completed)
       )}
       aria-label="Task due date">
       <CalendarDays

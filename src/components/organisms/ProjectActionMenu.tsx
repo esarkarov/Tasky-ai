@@ -13,12 +13,12 @@ import type { DropdownMenuContentProps } from '@radix-ui/react-dropdown-menu';
 import { Edit } from 'lucide-react';
 
 interface ProjectActionMenuProps extends DropdownMenuContentProps {
-  defaultFormData: ProjectInput;
+  defaultValues: ProjectInput;
 }
 
-export const ProjectActionMenu = ({ children, defaultFormData, ...props }: ProjectActionMenuProps) => {
-  const { deleteProject } = useProjectOperations({
-    projectData: defaultFormData,
+export const ProjectActionMenu = ({ children, defaultValues, ...props }: ProjectActionMenuProps) => {
+  const { handleDeleteProject } = useProjectOperations({
+    projectData: defaultValues,
   });
 
   return (
@@ -26,26 +26,28 @@ export const ProjectActionMenu = ({ children, defaultFormData, ...props }: Proje
       <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
       <DropdownMenuContent
         {...props}
-        aria-label={`Actions for project ${defaultFormData.name}`}>
+        aria-label={`Actions for project ${defaultValues.name}`}>
         <DropdownMenuItem asChild>
           <ProjectFormDialog
             method="PUT"
-            defaultFormData={defaultFormData}>
+            defaultValues={defaultValues}>
             <Button
               type="button"
               variant="ghost"
               size="sm"
               className="w-full justify-start px-2"
-              aria-label={`Edit project ${defaultFormData.name}`}>
+              aria-label={`Edit project ${defaultValues.name}`}>
               <Edit aria-hidden="true" /> Edit
             </Button>
           </ProjectFormDialog>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
           <ConfirmationDialog
-            entityType="project"
-            selectedItem={defaultFormData}
-            onDelete={deleteProject}
+            id={defaultValues.id as string}
+            label={defaultValues.name}
+            handleDelete={handleDeleteProject}
+            variant="menu-item"
+            title="Delete Project?"
           />
         </DropdownMenuItem>
       </DropdownMenuContent>

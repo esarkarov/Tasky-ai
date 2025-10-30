@@ -1,15 +1,15 @@
 import { Input } from '@/components/ui/input';
-import { cn } from '@/utils/ui/ui.utils';
 import { SearchStatus } from '@/types/shared.types';
+import { cn } from '@/utils/ui/ui.utils';
 import { Loader2, Search } from 'lucide-react';
-import { ChangeEventHandler } from 'react';
+import { ChangeEvent } from 'react';
 
 interface ProjectSearchFieldProps {
-  onSearchProjects: ChangeEventHandler<HTMLInputElement>;
+  onChange: (event: ChangeEvent<HTMLInputElement>) => void;
   searchStatus: SearchStatus;
 }
 
-export const ProjectSearchField = ({ onSearchProjects, searchStatus }: ProjectSearchFieldProps) => {
+export const ProjectSearchField = ({ onChange, searchStatus }: ProjectSearchFieldProps) => {
   const isLoading = searchStatus !== 'idle';
 
   return (
@@ -32,7 +32,7 @@ export const ProjectSearchField = ({ onSearchProjects, searchStatus }: ProjectSe
         name="q"
         placeholder="Search projects"
         className="pl-8 pr-8"
-        onChange={onSearchProjects}
+        onChange={onChange}
         aria-describedby="search-status"
       />
 

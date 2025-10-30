@@ -1,6 +1,6 @@
 import { Head } from '@/components/atoms/Head';
 import { LoadMoreButton } from '@/components/atoms/LoadMoreButton';
-import { Page, PageHeader, PageList, PageTitle } from '@/components/atoms/Page';
+import { PageContainer, PageHeader, PageList, PageTitle } from '@/components/atoms/Page';
 import { TotalCounter } from '@/components/atoms/TotalCounter';
 import { EmptyStateMessage } from '@/components/organisms/EmptyStateMessage';
 import { FilterSelect } from '@/components/organisms/FilterSelect';
@@ -18,9 +18,11 @@ export const UpcomingPage = () => {
     tasks: { total, documents: taskDocs },
     projects: { documents: projectDocs },
   } = useLoaderData<ProjectTaskLoaderData>();
-  const { filteredTasks, filteredCount, setSelectedProjectId, selectedProjectId } = useProjectFilter({ taskDocs });
+  const { filteredTasks, filteredCount, value, setValue } = useProjectFilter({
+    tasks: taskDocs,
+  });
   const {
-    visibleItems: visibleTasks,
+    items: visibleTasks,
     isLoading,
     hasMore,
     handleLoadMore,
@@ -34,26 +36,25 @@ export const UpcomingPage = () => {
 
       <TopAppBar
         title="Upcoming"
-        taskCount={total}
+        totalCount={total}
       />
 
-      <Page aria-labelledby="upcoming-page-title">
+      <PageContainer aria-labelledby="upcoming-page-title">
         <PageHeader>
           <div className="flex flex-row items-center justify-between">
             <div className="flex flex-col gap-2">
               <PageTitle>Upcoming</PageTitle>
               {total > 0 && (
                 <TotalCounter
-                  total={total}
-                  label="task"
+                  totalCount={total}
                   icon={ClipboardCheck}
                 />
               )}
             </div>
             <FilterSelect
-              projectDocs={projectDocs}
-              selectedProjectId={selectedProjectId}
-              setSelectedProjectId={setSelectedProjectId}
+              projects={projectDocs}
+              value={value}
+              handleValueChange={setValue}
             />
           </div>
         </PageHeader>
@@ -79,13 +80,13 @@ export const UpcomingPage = () => {
           {hasMore && (
             <div className="flex justify-center py-6">
               <LoadMoreButton
-                isLoading={isLoading}
-                handleLoadMore={handleLoadMore}
+                loading={isLoading}
+                onClick={handleLoadMore}
               />
             </div>
           )}
         </PageList>
-      </Page>
+      </PageContainer>
     </>
   );
 };

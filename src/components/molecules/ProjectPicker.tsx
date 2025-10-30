@@ -3,51 +3,56 @@ import { Button } from '@/components/ui/button';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandList } from '@/components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { ProjectInfo, ProjectListItem } from '@/types/projects.types';
+import { ProjectListItem, SelectedProject } from '@/types/projects.types';
 import { ChevronDown, Hash, Inbox } from 'lucide-react';
 import { useState } from 'react';
 
 interface ProjectPickerProps {
-  setProjectInfo: (value: ProjectInfo) => void;
-  setProjectId: (value: string | null) => void;
-  projectInfo: ProjectInfo;
-  projectDocs: ProjectListItem[];
+  onValueChange: (project: SelectedProject) => void;
+  value: SelectedProject;
+  projects: ProjectListItem[];
   disabled: boolean;
 }
 
-export const ProjectPicker = ({
-  projectInfo,
-  projectDocs,
-  setProjectId,
-  setProjectInfo,
-  disabled,
-}: ProjectPickerProps) => {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+export const ProjectPicker = ({ value, projects, onValueChange, disabled }: ProjectPickerProps) => {
+  const [open, setOpen] = useState(false);
+
+  const handleProjectSelect = (project: ProjectListItem | null) => {
+    if (project) {
+      const isDeselecting = value.id === project.$id;
+      onValueChange({
+        id: isDeselecting ? null : project.$id,
+        name: isDeselecting ? '' : project.name,
+        colorHex: isDeselecting ? '' : project.color_hex,
+      });
+    }
+    setOpen(false);
+  };
 
   return (
     <Popover
-      open={isOpen}
-      onOpenChange={setIsOpen}
+      open={open}
+      onOpenChange={setOpen}
       modal>
       <PopoverTrigger asChild>
         <Button
           type="button"
           variant="ghost"
           role="combobox"
-          aria-expanded={isOpen}
+          aria-expanded={open}
           aria-haspopup="listbox"
           aria-label="Select project"
           className="max-w-max"
           disabled={disabled}>
-          {projectInfo.name ? (
+          {value.name ? (
             <Hash
-              color={projectInfo.colorHex}
+              color={value.colorHex}
               aria-hidden="true"
             />
           ) : (
             <Inbox aria-hidden="true" />
           )}
-          <span className="truncate">{projectInfo.name || 'Inbox'}</span>
+          <span className="truncate">{value.name || 'Inbox'}</span>
           <ChevronDown
             className="ml-1"
             aria-hidden="true"
@@ -69,32 +74,21 @@ export const ProjectPicker = ({
             <ScrollArea>
               <CommandEmpty>No project found.</CommandEmpty>
               <CommandGroup>
-                {projectDocs?.map(({ $id, name, color_hex }) => {
-                  const isSelected = projectInfo.name === name;
-
-                  const handleProjectSelect = () => {
-                    setProjectInfo({
-                      name: isSelected ? '' : name,
-                      colorHex: isSelected ? '' : color_hex,
-                    });
-                    setProjectId(isSelected ? null : $id);
-                    setIsOpen(false);
-                  };
-
+                {projects?.map((project) => {
                   return (
                     <SelectableCommandItem
-                      key={$id}
-                      id={$id}
-                      value={`${name}=${color_hex}`}
-                      isSelected={isSelected}
-                      onSelect={handleProjectSelect}
+                      key={project.$id}
+                      id={project.$id}
+                      value={`${project.name}=${project.color_hex}`}
+                      selected={value.id === project.$id}
+                      onSelect={() => handleProjectSelect(project)}
                       icon={
                         <Hash
-                          color={color_hex}
+                          color={project.color_hex}
                           aria-hidden="true"
                         />
                       }
-                      label={name}
+                      label={project.name}
                     />
                   );
                 })}

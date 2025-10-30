@@ -1,8 +1,7 @@
 import { Footer } from '@/components/organisms/Footer';
 import { Header } from '@/components/organisms/Header';
-import { Loader } from '@/components/atoms/Loader';
-import { Outlet, useNavigation } from 'react-router';
 import { memo } from 'react';
+import { Outlet, useNavigation } from 'react-router';
 
 export const RootTemplate = memo(() => {
   const { state, formData } = useNavigation();
@@ -34,7 +33,6 @@ export const RootTemplate = memo(() => {
         style={{ animationDelay: '1s' }}
         aria-hidden="true"
       />
-      {isLoading && <Loader />}
     </div>
   );
 });

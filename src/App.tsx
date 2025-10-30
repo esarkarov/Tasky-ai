@@ -1,9 +1,11 @@
+import { Loader } from '@/components/atoms/Loader';
 import { Toaster } from '@/components/ui/toaster';
 import { env } from '@/config/env.config';
 import { ROUTES } from '@/constants/routes';
 import { router } from '@/router';
 import { ClerkProvider } from '@clerk/clerk-react';
 import { dark } from '@clerk/themes';
+import { Suspense } from 'react';
 import { RouterProvider } from 'react-router';
 
 const App = () => {
@@ -27,7 +29,9 @@ const App = () => {
           colorTextOnPrimaryBackground: 'hsl(60 9.1% 97.8%)',
         },
       }}>
-      <RouterProvider router={router} />
+      <Suspense fallback={<Loader />}>
+        <RouterProvider router={router} />
+      </Suspense>
       <Toaster />
     </ClerkProvider>
   );

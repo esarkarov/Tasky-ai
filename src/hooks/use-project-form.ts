@@ -1,68 +1,82 @@
 import { UseProjectFormParams, UseProjectFormResult } from '@/types/hooks.types';
-import { ProjectFormInput } from '@/types/projects.types';
+import { ColorValue, ProjectFormInput } from '@/types/projects.types';
 import { useCallback, useMemo, useState } from 'react';
 
-export const useProjectForm = ({ defaultFormData, onSubmit }: UseProjectFormParams): UseProjectFormResult => {
-  const [projectName, setProjectName] = useState(defaultFormData.name);
-  const [colorName, setColorName] = useState(defaultFormData.color_name);
-  const [colorHex, setColorHex] = useState(defaultFormData.color_hex);
-  const [aiTaskGen, setAiTaskGen] = useState(false);
-  const [taskGenPrompt, setTaskGenPrompt] = useState('');
-  const [isOpen, setIsOpen] = useState(false);
+export const useProjectForm = ({ defaultValues, onSubmit }: UseProjectFormParams): UseProjectFormResult => {
+  const [name, setName] = useState(defaultValues.name);
+  const [color, setColor] = useState<ColorValue>({
+    name: defaultValues.color_name,
+    hex: defaultValues.color_hex,
+  });
+  const [aiEnabled, setAiEnabled] = useState(false);
+  const [aiPrompt, setAiPrompt] = useState('');
+  const [colorPickerOpen, setColorPickerOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const formData = useMemo<ProjectFormInput>(
+  const formValues = useMemo<ProjectFormInput>(
     () => ({
-      ...defaultFormData,
-      name: projectName,
-      color_name: colorName,
-      color_hex: colorHex,
-      ai_task_gen: aiTaskGen,
-      task_gen_prompt: taskGenPrompt,
+      ...defaultValues,
+      name,
+      color_name: color.name,
+      color_hex: color.hex,
+      ai_task_gen: aiEnabled,
+      task_gen_prompt: aiPrompt,
     }),
-    [defaultFormData, projectName, colorName, colorHex, aiTaskGen, taskGenPrompt]
+    [defaultValues, name, color.name, color.hex, aiEnabled, aiPrompt]
   );
 
-  const isDisabled = useMemo(() => {
-    const hasName = projectName.trim().length > 0;
-    const aiRequirementMet = !aiTaskGen || taskGenPrompt.trim().length > 0;
+  const isValid = useMemo(() => {
+    const hasName = name.trim().length > 0;
+    const aiRequirementMet = !aiEnabled || aiPrompt.trim().length > 0;
     return hasName && aiRequirementMet;
-  }, [projectName, aiTaskGen, taskGenPrompt]);
+  }, [name, aiEnabled, aiPrompt]);
+
+  const handleReset = useCallback(() => {
+    setName(defaultValues.name);
+    setColor({
+      name: defaultValues.color_name,
+      hex: defaultValues.color_hex,
+    });
+    setAiEnabled(false);
+    setAiPrompt('');
+    setColorPickerOpen(false);
+    setIsSubmitting(false);
+  }, [defaultValues.name, defaultValues.color_name, defaultValues.color_hex]);
 
   const handleColorSelect = useCallback((value: string) => {
-    const [name, hex] = value.split('=');
-    setColorName(name);
-    setColorHex(hex);
-    setIsOpen(false);
+    const [colorName, colorHex] = value.split('=');
+    setColor({ name: colorName, hex: colorHex });
+    setColorPickerOpen(false);
   }, []);
 
   const handleSubmit = useCallback(async () => {
-    if (isSubmitting) return;
+    if (isSubmitting || !isValid) return;
 
     setIsSubmitting(true);
     try {
-      await onSubmit(formData);
+      await onSubmit(formValues);
+      handleReset();
     } catch (error) {
       console.error('Project submission error:', error);
     } finally {
       setIsSubmitting(false);
     }
-  }, [isSubmitting, onSubmit, formData]);
+  }, [isSubmitting, isValid, onSubmit, formValues, handleReset]);
 
   return {
-    projectName,
-    colorName,
-    colorHex,
-    aiTaskGen,
-    taskGenPrompt,
-    isOpen,
+    formValues,
+    name,
+    color,
+    aiEnabled,
+    aiPrompt,
+    colorPickerOpen,
     isSubmitting,
-    isDisabled,
-    formData,
-    setProjectName,
-    setAiTaskGen,
-    setTaskGenPrompt,
-    setIsOpen,
+    isValid,
+    setName,
+    setColor,
+    setAiEnabled,
+    setAiPrompt,
+    setColorPickerOpen,
     handleColorSelect,
     handleSubmit,
   };

@@ -1,15 +1,15 @@
 import { Button } from '@/components/ui/button';
 
 interface CancelProjectButtonProps {
-  onCancel: () => void;
+  onClick: () => void;
 }
 
-export const CancelProjectButton = ({ onCancel }: CancelProjectButtonProps) => {
+export const CancelProjectButton = ({ onClick }: CancelProjectButtonProps) => {
   return (
     <Button
       type="button"
       variant="secondary"
-      onClick={onCancel}
+      onClick={onClick}
       aria-label="Cancel project form">
       Cancel
     </Button>

@@ -6,6 +6,7 @@ interface HeadProps {
   description?: string;
   keywords?: string[];
 }
+
 export const Head = memo(({ title, description, keywords }: HeadProps) => {
   return (
     <Helmet>

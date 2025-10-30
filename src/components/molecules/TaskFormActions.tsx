@@ -5,20 +5,20 @@ import { CrudMode } from '@/types/shared.types';
 interface TaskFormActionsProps {
   mode: CrudMode;
   disabled: boolean;
-  onCancel: () => void;
-  onSubmit: () => Promise<void>;
+  handleCancel: () => void;
+  handleSubmit: () => Promise<void>;
 }
 
-export const TaskFormActions = ({ mode, disabled, onCancel, onSubmit }: TaskFormActionsProps) => (
+export const TaskFormActions = ({ mode, disabled, handleCancel, handleSubmit }: TaskFormActionsProps) => (
   <div
     className="flex items-center gap-2"
     role="group"
     aria-label="Task form actions">
-    <CancelTaskButton onCancel={onCancel} />
+    <CancelTaskButton onClick={handleCancel} />
     <SubmitTaskButton
       mode={mode}
       disabled={disabled}
-      onSubmit={onSubmit}
+      onClick={handleSubmit}
     />
   </div>
 );

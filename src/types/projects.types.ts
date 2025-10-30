@@ -31,5 +31,14 @@ export interface ProjectFormInput extends ProjectInput {
 export interface ProjectCreateInput extends ProjectInput {
   userId: string;
 }
+export interface SelectedProject {
+  id: string | null;
+  name: string;
+  colorHex: string;
+}
+export interface ColorValue {
+  name: string;
+  hex: string;
+}
 export type ProjectUpdateInput = ProjectInput;
 export type ProjectsListResponse = PaginatedResponse<ProjectListItem>;

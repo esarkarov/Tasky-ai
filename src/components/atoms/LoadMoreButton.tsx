@@ -3,19 +3,19 @@ import { Loader2 } from 'lucide-react';
 import { memo } from 'react';
 
 interface LoadMoreButtonProps {
-  handleLoadMore: () => void;
-  isLoading: boolean;
+  onClick: () => void;
+  loading: boolean;
 }
 
-export const LoadMoreButton = memo(({ handleLoadMore, isLoading }: LoadMoreButtonProps) => {
+export const LoadMoreButton = memo(({ onClick, loading }: LoadMoreButtonProps) => {
   return (
     <Button
-      onClick={handleLoadMore}
+      onClick={onClick}
       size="lg"
-      disabled={isLoading}
+      disabled={loading}
       className="flex items-center gap-2 px-6 py-3 text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
       aria-label="Load more tasks">
-      {isLoading ? (
+      {loading ? (
         <>
           <Loader2 className="w-4 h-4 animate-spin" />
           Loading...

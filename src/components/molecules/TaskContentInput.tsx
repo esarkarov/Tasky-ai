@@ -1,6 +1,6 @@
 import { InputValueCount } from '@/components/atoms/InputValueCount';
 import { Textarea } from '@/components/ui/textarea';
-import { CONTENT_WARNING_THRESHOLD, MAX_CONTENT_LENGTH } from '@/constants/validation';
+import { MAX_CONTENT_LENGTH } from '@/constants/validation';
 
 interface TaskContentInputProps {
   value: string;
@@ -8,7 +8,7 @@ interface TaskContentInputProps {
   onChange: (value: string) => void;
 }
 
-export const TaskContentInput = ({ value, onChange, disabled }: TaskContentInputProps) => {
+export const TaskContentInput = ({ value, disabled, onChange }: TaskContentInputProps) => {
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
@@ -30,16 +30,15 @@ export const TaskContentInput = ({ value, onChange, disabled }: TaskContentInput
         maxLength={MAX_CONTENT_LENGTH}
         value={value}
         disabled={disabled}
-        onInput={(e) => onChange(e.currentTarget.value)}
+        onChange={(e) => onChange(e.currentTarget.value)}
         onKeyDown={handleKeyDown}
         autoFocus
         aria-label="Task content input"
         aria-multiline="true"
       />
       <InputValueCount
-        value={value}
+        valueLength={value.length}
         maxLength={MAX_CONTENT_LENGTH}
-        threshold={CONTENT_WARNING_THRESHOLD}
       />
       <p className="sr-only">Press Enter to save, Shift+Enter for new line.</p>
     </div>

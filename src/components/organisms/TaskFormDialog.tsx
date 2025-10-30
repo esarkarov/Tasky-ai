@@ -8,9 +8,9 @@ import { useState } from 'react';
 import { useLocation } from 'react-router';
 
 export const TaskFormDialog: React.FC<PropsWithChildren> = ({ children }) => {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState(false);
   const { pathname } = useLocation();
-  const { createTask } = useTaskOperations({
+  const { handleCreateTask } = useTaskOperations({
     onSuccess: () => setIsOpen(false),
   });
   const isToday = pathname === ROUTES.TODAY;
@@ -24,14 +24,14 @@ export const TaskFormDialog: React.FC<PropsWithChildren> = ({ children }) => {
         className="p-0 border-0 !rounded-xl"
         aria-label="Create new task form">
         <TaskForm
-          defaultFormData={{
+          defaultValues={{
             content: '',
             due_date: isToday ? startOfToday() : null,
             projectId: null,
           }}
           mode="create"
-          onCancel={() => setIsOpen(false)}
-          onSubmit={createTask}
+          handleCancel={() => setIsOpen(false)}
+          onSubmit={handleCreateTask}
         />
       </DialogContent>
     </Dialog>

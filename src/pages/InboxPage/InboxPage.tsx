@@ -1,7 +1,7 @@
 import { AddTaskButton } from '@/components/atoms/AddTaskButton';
 import { Head } from '@/components/atoms/Head';
 import { LoadMoreButton } from '@/components/atoms/LoadMoreButton';
-import { Page, PageHeader, PageList, PageTitle } from '@/components/atoms/Page';
+import { PageContainer, PageHeader, PageList, PageTitle } from '@/components/atoms/Page';
 import { TotalCounter } from '@/components/atoms/TotalCounter';
 import { EmptyStateMessage } from '@/components/organisms/EmptyStateMessage';
 import { TaskCard } from '@/components/organisms/TaskCard';
@@ -21,14 +21,14 @@ export const InboxPage = () => {
     tasks: { total, documents: taskDocs },
   } = useLoaderData<TasksLoaderData>();
   const {
-    visibleItems: visibleTasks,
+    items: visibleTasks,
     isLoading,
     hasMore,
     handleLoadMore,
     getItemClassName,
     getItemStyle,
   } = useLoadMore(taskDocs || []);
-  const { createTask } = useTaskOperations();
+  const { handleCreateTask } = useTaskOperations();
 
   return (
     <>
@@ -36,16 +36,15 @@ export const InboxPage = () => {
 
       <TopAppBar
         title="Inbox"
-        taskCount={total}
+        totalCount={total}
       />
 
-      <Page aria-labelledby="inbox-page-title">
+      <PageContainer aria-labelledby="inbox-page-title">
         <PageHeader>
           <PageTitle>Inbox</PageTitle>
           {total > 0 && (
             <TotalCounter
-              total={total}
-              label="task"
+              totalCount={total}
               icon={ClipboardCheck}
             />
           )}
@@ -75,21 +74,21 @@ export const InboxPage = () => {
             <TaskForm
               className="mt-1"
               mode="create"
-              onCancel={() => setIsFormOpen(false)}
-              onSubmit={createTask}
+              handleCancel={() => setIsFormOpen(false)}
+              onSubmit={handleCreateTask}
             />
           )}
 
           {hasMore && (
             <div className="flex justify-center py-6">
               <LoadMoreButton
-                isLoading={isLoading}
-                handleLoadMore={handleLoadMore}
+                loading={isLoading}
+                onClick={handleLoadMore}
               />
             </div>
           )}
         </PageList>
-      </Page>
+      </PageContainer>
     </>
   );
 };

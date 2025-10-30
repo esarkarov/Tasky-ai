@@ -1,19 +1,22 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ProjectListItem } from '@/types/projects.types';
 import { ClipboardCheck, Hash, Inbox } from 'lucide-react';
-import { Dispatch, SetStateAction } from 'react';
 
 interface FilterSelectProps {
-  setSelectedProjectId: Dispatch<SetStateAction<string | null>>;
-  selectedProjectId: string | null;
-  projectDocs: ProjectListItem[];
+  value: string | null;
+  projects: ProjectListItem[];
+  handleValueChange: (value: string | null) => void;
 }
 
-export const FilterSelect = ({ selectedProjectId, setSelectedProjectId, projectDocs }: FilterSelectProps) => {
+export const FilterSelect = ({ value, projects, handleValueChange }: FilterSelectProps) => {
+  const onValueChange = (selectedValue: string) => {
+    handleValueChange(selectedValue === 'all' ? null : selectedValue);
+  };
+
   return (
     <Select
-      value={selectedProjectId || 'all'}
-      onValueChange={(value) => setSelectedProjectId(value === 'all' ? null : value)}>
+      value={value || 'all'}
+      onValueChange={onValueChange}>
       <SelectTrigger className="w-[180px]">
         <SelectValue placeholder="All Projects" />
       </SelectTrigger>
@@ -36,7 +39,7 @@ export const FilterSelect = ({ selectedProjectId, setSelectedProjectId, projectD
             <span>Inbox</span>
           </div>
         </SelectItem>
-        {projectDocs.map((project) => (
+        {projects.map((project) => (
           <SelectItem
             key={project.$id}
             value={project.$id}>

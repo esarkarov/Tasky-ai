@@ -1,30 +1,30 @@
 import { UseProjectFilterParams, UseProjectFilterResult } from '@/types/hooks.types';
 import { useMemo, useState } from 'react';
 
-export const useProjectFilter = ({ taskDocs }: UseProjectFilterParams): UseProjectFilterResult => {
-  const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
+export const useProjectFilter = ({ tasks }: UseProjectFilterParams): UseProjectFilterResult => {
+  const [value, setValue] = useState<string | null>(null);
 
   const filteredTasks = useMemo(() => {
-    if (!selectedProjectId || selectedProjectId === 'all') {
-      return taskDocs;
+    if (!value || value === 'all') {
+      return tasks;
     }
 
-    if (selectedProjectId === 'inbox') {
-      return taskDocs?.filter((task) => !task.projectId);
+    if (value === 'inbox') {
+      return tasks?.filter((task) => !task.projectId);
     }
 
-    return taskDocs?.filter((task) => {
+    return tasks?.filter((task) => {
       const taskProjectId = typeof task.projectId === 'object' ? task.projectId?.$id : task.projectId;
-      return taskProjectId === selectedProjectId;
+      return taskProjectId === value;
     });
-  }, [taskDocs, selectedProjectId]);
+  }, [value, tasks]);
 
   const filteredCount = filteredTasks?.length || 0;
 
   return {
     filteredTasks,
     filteredCount,
-    selectedProjectId,
-    setSelectedProjectId,
+    value,
+    setValue,
   };
 };

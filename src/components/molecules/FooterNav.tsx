@@ -5,11 +5,10 @@ export const FooterNav = () => {
   return (
     <nav aria-label="Social media links">
       <ul className="flex flex-wrap items-center">
-        {SOCIAL_LINKS.map(({ href, label }, index) => (
+        {SOCIAL_LINKS.map((link, index) => (
           <FooterNavLink
-            key={href}
-            href={href}
-            label={label}
+            key={link.href}
+            link={link}
             index={index}
           />
         ))}

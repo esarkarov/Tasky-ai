@@ -1,20 +1,25 @@
+import { INPUT_WARN_THRESHOLD } from '@/constants/validation';
 import { cn } from '@/utils/ui/ui.utils';
 
 interface InputValueCountProps {
-  value: string;
+  valueLength: number;
   maxLength: number;
-  threshold: number;
+  warnAtLength?: number;
 }
 
-export const InputValueCount = ({ value, maxLength, threshold }: InputValueCountProps) => {
-  const isNearLimit = value.length >= threshold;
+export const InputValueCount = ({
+  valueLength,
+  maxLength,
+  warnAtLength = maxLength - INPUT_WARN_THRESHOLD,
+}: InputValueCountProps) => {
+  const isNearLimit = valueLength >= warnAtLength;
 
   return (
     <div
       id="input-value-count"
       className={cn('ms-auto max-w-max text-xs text-muted-foreground', isNearLimit && 'text-destructive')}
       aria-live="polite">
-      {value.length}/{maxLength}
+      {valueLength}/{maxLength}
     </div>
   );
 };

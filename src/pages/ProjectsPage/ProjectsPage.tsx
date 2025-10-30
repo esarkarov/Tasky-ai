@@ -1,5 +1,5 @@
 import { Head } from '@/components/atoms/Head';
-import { Page, PageHeader, PageList, PageTitle } from '@/components/atoms/Page';
+import { PageContainer, PageHeader, PageList, PageTitle } from '@/components/atoms/Page';
 import { TotalCounter } from '@/components/atoms/TotalCounter';
 import { ProjectSearchField } from '@/components/molecules/ProjectSearchField';
 import { ProjectCard } from '@/components/organisms/ProjectCard';
@@ -16,12 +16,12 @@ import { useLoadMore } from '@/hooks/use-load-more';
 import { LoadMoreButton } from '@/components/atoms/LoadMoreButton';
 
 export const ProjectsPage = () => {
-  const { fetcher, searchStatus, searchProjects } = useProjectOperations();
+  const { fetcher, searchStatus, handleSearchProjects } = useProjectOperations();
   const {
     projects: { total, documents: projectDocs },
   } = useLoaderData<ProjectsLoaderData>();
   const {
-    visibleItems: visibleProjects,
+    items: visibleProjects,
     isLoading,
     hasMore,
     handleLoadMore,
@@ -35,10 +35,11 @@ export const ProjectsPage = () => {
 
       <TopAppBar
         title="My Projects"
-        taskCount={total}
+        totalCount={total}
+        label="project"
       />
 
-      <Page aria-labelledby="projects-page-title">
+      <PageContainer aria-labelledby="projects-page-title">
         <PageHeader>
           <div className="flex items-center gap-2">
             <PageTitle>My Projects</PageTitle>
@@ -59,7 +60,7 @@ export const ProjectsPage = () => {
             action={ROUTES.PROJECTS}
             role="search">
             <ProjectSearchField
-              onSearchProjects={searchProjects}
+              onChange={handleSearchProjects}
               searchStatus={searchStatus}
             />
           </fetcher.Form>
@@ -68,7 +69,7 @@ export const ProjectsPage = () => {
         <PageList aria-label="Project list">
           <div className="h-8 flex items-center border-b mb-1">
             <TotalCounter
-              total={total}
+              totalCount={total}
               label="project"
               icon={FolderKanban}
             />
@@ -98,14 +99,14 @@ export const ProjectsPage = () => {
             {hasMore && (
               <div className="flex justify-center py-6">
                 <LoadMoreButton
-                  isLoading={isLoading}
-                  handleLoadMore={handleLoadMore}
+                  loading={isLoading}
+                  onClick={handleLoadMore}
                 />
               </div>
             )}
           </div>
         </PageList>
-      </Page>
+      </PageContainer>
     </>
   );
 };

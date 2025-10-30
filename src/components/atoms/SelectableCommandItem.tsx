@@ -5,23 +5,23 @@ import { ReactNode } from 'react';
 interface SelectableCommandItemProps {
   id: string;
   value: string;
-  isSelected: boolean;
-  onSelect: (value: string) => void;
+  selected: boolean;
+  onSelect: () => void;
   icon: ReactNode;
   label: string;
 }
 
-export const SelectableCommandItem = ({ id, value, isSelected, onSelect, icon, label }: SelectableCommandItemProps) => {
+export const SelectableCommandItem = ({ id, value, selected, onSelect, icon, label }: SelectableCommandItemProps) => {
   return (
     <CommandItem
       key={id}
       role="option"
       value={value}
-      aria-selected={isSelected}
+      aria-selected={selected}
       onSelect={onSelect}>
       {icon}
       {label}
-      {isSelected && (
+      {selected && (
         <Check
           className="ms-auto"
           aria-hidden="true"

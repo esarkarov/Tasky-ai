@@ -3,53 +3,53 @@ import { TIMING } from '@/constants/timing';
 import { UseLoadMoreParams, UseLoadMoreResult } from '@/types/hooks.types';
 import { CSSProperties, useCallback, useState } from 'react';
 
-export const useLoadMore = <T>(items: T[], params: UseLoadMoreParams = {}): UseLoadMoreResult<T> => {
+export const useLoadMore = <T>(allItems: T[], params: UseLoadMoreParams = {}): UseLoadMoreResult<T> => {
   const { initialCount = INITIAL_COUNT, pageSize = PAGE_SIZE } = params;
 
-  const [visibleCount, setVisibleCount] = useState(initialCount);
+  const [count, setCount] = useState(initialCount);
   const [isLoading, setIsLoading] = useState(false);
 
-  const visibleItems = items.slice(0, visibleCount);
-  const hasMore = visibleCount < items.length;
+  const items = allItems.slice(0, count);
+  const hasMore = count < allItems.length;
 
   const handleLoadMore = useCallback(() => {
     setIsLoading(true);
     setTimeout(() => {
-      setVisibleCount((prev) => prev + PAGE_SIZE);
+      setCount((prev) => prev + pageSize);
       setIsLoading(false);
     }, TIMING.LOAD_DELAY);
-  }, []);
+  }, [pageSize]);
 
-  const reset = useCallback(() => {
-    setVisibleCount(initialCount);
+  const handleReset = useCallback(() => {
+    setCount(initialCount);
     setIsLoading(false);
   }, [initialCount]);
 
   const getItemClassName = useCallback(
     (index: number) => {
-      const isNewlyAdded = index >= visibleCount - pageSize;
-      return isNewlyAdded ? 'animate-in fade-in slide-in-from-bottom-4 duration-300' : '';
+      const isNewlyAdded = index >= count - pageSize;
+      return isNewlyAdded ? 'animate-in fade-in slide-in-from-bottom-4 duration-300' : 'animate-in fade-in';
     },
-    [visibleCount, pageSize]
+    [count, pageSize]
   );
 
   const getItemStyle = useCallback(
     (index: number): CSSProperties => {
-      const isNewlyAdded = index >= visibleCount - pageSize;
+      const isNewlyAdded = index >= count - pageSize;
       return {
-        animationDelay: isNewlyAdded ? `${(index - (visibleCount - pageSize)) * 50}ms` : '0ms',
+        animationDelay: isNewlyAdded ? `${(index - (count - pageSize)) * 50}ms` : '0ms',
       };
     },
-    [visibleCount, pageSize]
+    [count, pageSize]
   );
 
   return {
-    visibleItems,
-    visibleCount,
+    items,
+    count,
     isLoading,
     hasMore,
     handleLoadMore,
-    reset,
+    handleReset,
     getItemClassName,
     getItemStyle,
   };

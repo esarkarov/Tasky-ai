@@ -6,15 +6,14 @@ import { memo } from 'react';
 import { Link } from 'react-router';
 
 interface TaskSidebarNavLinkProps {
-  item: (typeof TASK_SIDEBAR_LINKS)[number];
+  link: (typeof TASK_SIDEBAR_LINKS)[number];
   isActive: boolean;
   taskCounts: TaskCounts;
-  onNavigationClick: () => void;
+  onClick: () => void;
 }
 
-export const TaskSidebarNavLink = memo(({ item, isActive, taskCounts, onNavigationClick }: TaskSidebarNavLinkProps) => {
-  const { href, label } = item;
-  const badgeCount = getBadgeCount(href, taskCounts);
+export const TaskSidebarNavLink = memo(({ link, isActive, taskCounts, onClick }: TaskSidebarNavLinkProps) => {
+  const badgeCount = getBadgeCount(link.href, taskCounts);
   const showBadge = Boolean(badgeCount && badgeCount > 0);
 
   return (
@@ -22,13 +21,13 @@ export const TaskSidebarNavLink = memo(({ item, isActive, taskCounts, onNavigati
       <SidebarMenuButton
         asChild
         isActive={isActive}
-        onClick={onNavigationClick}>
+        onClick={onClick}>
         <Link
-          to={href}
+          to={link.href}
           aria-current={isActive ? 'page' : undefined}
-          aria-label={label}>
-          <item.icon aria-hidden="true" />
-          <span>{label}</span>
+          aria-label={link.label}>
+          <link.icon aria-hidden="true" />
+          <span>{link.label}</span>
         </Link>
       </SidebarMenuButton>
 

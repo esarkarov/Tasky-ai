@@ -1,14 +1,14 @@
 import { InputValueCount } from '@/components/atoms/InputValueCount';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { MAX_PROMPT_LENGTH, PROMPT_WARNING_LENGTH } from '@/constants/validation';
+import { MAX_PROMPT_LENGTH } from '@/constants/validation';
 
 interface AIPromptInputProps {
-  prompt: string;
-  onChange: (prompt: string) => void;
+  value: string;
+  onChange: (value: string) => void;
 }
 
-export const AIPromptInput = ({ prompt, onChange }: AIPromptInputProps) => {
+export const AIPromptInput = ({ value, onChange }: AIPromptInputProps) => {
   return (
     <div className="px-3 pb-3">
       <Label
@@ -21,15 +21,14 @@ export const AIPromptInput = ({ prompt, onChange }: AIPromptInputProps) => {
         autoFocus
         placeholder="Tell me about your project. What do you want to accomplish?"
         className="border-none my-2 focus-visible:ring-2 focus-visible:ring-ring"
-        value={prompt}
+        value={value}
         onChange={(e) => onChange(e.currentTarget.value)}
         aria-describedby="ai-task-generator-description"
         aria-invalid={prompt.length > MAX_PROMPT_LENGTH}
       />
       <InputValueCount
-        value={prompt}
+        valueLength={prompt.length}
         maxLength={MAX_PROMPT_LENGTH}
-        threshold={PROMPT_WARNING_LENGTH}
       />
     </div>
   );

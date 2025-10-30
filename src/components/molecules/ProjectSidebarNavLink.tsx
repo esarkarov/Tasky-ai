@@ -6,11 +6,11 @@ import { Link, useLocation } from 'react-router';
 interface ProjectSidebarNavLinkProps {
   id: string;
   name: string;
-  color: string;
-  onNavigationClick: () => void;
+  colorHex: string;
+  onClick: () => void;
 }
 
-export const ProjectSidebarNavLink = ({ onNavigationClick, id, color, name }: ProjectSidebarNavLinkProps) => {
+export const ProjectSidebarNavLink = ({ id, colorHex, name, onClick }: ProjectSidebarNavLinkProps) => {
   const { pathname } = useLocation();
   const isActive = pathname === ROUTES.PROJECT(id);
 
@@ -18,13 +18,13 @@ export const ProjectSidebarNavLink = ({ onNavigationClick, id, color, name }: Pr
     <SidebarMenuButton
       asChild
       isActive={isActive}
-      onClick={onNavigationClick}>
+      onClick={onClick}>
       <Link
         to={ROUTES.PROJECT(id)}
         aria-label={`Open project ${name}`}
         aria-current={isActive ? 'page' : undefined}>
         <Hash
-          color={color}
+          color={colorHex}
           aria-hidden="true"
         />
         <span>{name}</span>
