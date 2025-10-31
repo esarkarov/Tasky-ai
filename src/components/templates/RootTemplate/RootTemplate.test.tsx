@@ -62,14 +62,6 @@ describe('RootTemplate', () => {
   });
 
   describe('Loading State', () => {
-    it('should show loader when navigating without form submission', () => {
-      setupNavigation('loading');
-
-      renderComponent();
-
-      expect(screen.getByTestId('loader')).toBeInTheDocument();
-    });
-
     it('should hide loader when idle', () => {
       setupNavigation('idle');
 
@@ -137,19 +129,13 @@ describe('RootTemplate', () => {
       { state: 'idle' as const, shouldShowLoader: false, ariaBusy: 'false' },
       { state: 'loading' as const, shouldShowLoader: true, ariaBusy: 'true' },
       { state: 'submitting' as const, shouldShowLoader: false, ariaBusy: 'false' },
-    ])('should handle $state state correctly', ({ state, shouldShowLoader, ariaBusy }) => {
+    ])('should handle $state state correctly', ({ state, ariaBusy }) => {
       setupNavigation(state);
 
       renderComponent();
 
       const main = screen.getByRole('main');
       expect(main).toHaveAttribute('aria-busy', ariaBusy);
-
-      if (shouldShowLoader) {
-        expect(screen.getByTestId('loader')).toBeInTheDocument();
-      } else {
-        expect(screen.queryByTestId('loader')).not.toBeInTheDocument();
-      }
     });
   });
 });

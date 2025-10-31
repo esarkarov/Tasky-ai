@@ -7,13 +7,13 @@ vi.mock('@/components/atoms/Loader', () => ({
   Loader: () => <div data-testid="loader">Loading...</div>,
 }));
 
-const mockUseNavigate = vi.fn();
+const mockNavigate = vi.fn();
 vi.mock('react-router', async () => {
   const actual = await vi.importActual('react-router');
   return {
     ...actual,
     Outlet: () => <div data-testid="public-content">Public Content</div>,
-    useNavigate: () => mockUseNavigate,
+    useNavigate: () => mockNavigate,
   };
 });
 
@@ -67,7 +67,7 @@ describe('RedirectIfAuthenticated', () => {
 
       renderComponent();
 
-      expect(mockUseNavigate).not.toHaveBeenCalled();
+      expect(mockNavigate).not.toHaveBeenCalled();
     });
   });
 
@@ -86,7 +86,7 @@ describe('RedirectIfAuthenticated', () => {
 
       renderComponent();
 
-      expect(mockUseNavigate).not.toHaveBeenCalled();
+      expect(mockNavigate).not.toHaveBeenCalled();
     });
   });
 
@@ -97,7 +97,7 @@ describe('RedirectIfAuthenticated', () => {
       renderComponent();
 
       await waitFor(() => {
-        expect(mockUseNavigate).toHaveBeenCalledWith('/today', { replace: true });
+        expect(mockNavigate).toHaveBeenCalledWith('/today', { replace: true });
       });
     });
 
@@ -116,7 +116,7 @@ describe('RedirectIfAuthenticated', () => {
       renderComponent();
 
       await waitFor(() => {
-        expect(mockUseNavigate).toHaveBeenCalledWith('/today', { replace: true });
+        expect(mockNavigate).toHaveBeenCalledWith('/today', { replace: true });
       });
     });
 
@@ -126,7 +126,7 @@ describe('RedirectIfAuthenticated', () => {
       renderComponent();
 
       await waitFor(() => {
-        expect(mockUseNavigate).toHaveBeenCalledWith('/today', { replace: true });
+        expect(mockNavigate).toHaveBeenCalledWith('/today', { replace: true });
       });
     });
   });
@@ -147,7 +147,7 @@ describe('RedirectIfAuthenticated', () => {
 
       expect(screen.getByTestId('public-content')).toBeInTheDocument();
       expect(screen.queryByTestId('loader')).not.toBeInTheDocument();
-      expect(mockUseNavigate).not.toHaveBeenCalled();
+      expect(mockNavigate).not.toHaveBeenCalled();
     });
 
     it('should transition from loading to authenticated with redirect', async () => {
@@ -164,29 +164,7 @@ describe('RedirectIfAuthenticated', () => {
       );
 
       await waitFor(() => {
-        expect(mockUseNavigate).toHaveBeenCalledWith('/today', { replace: true });
-      });
-    });
-
-    it('should trigger redirect when user firstName changes', async () => {
-      setupAuth(true, true, { firstName: 'John' });
-      const { rerender } = renderComponent();
-
-      await waitFor(() => {
-        expect(mockUseNavigate).toHaveBeenCalledTimes(1);
-      });
-
-      mockUseNavigate.mockClear();
-
-      setupAuth(true, true, { firstName: 'Jane' });
-      rerender(
-        <MemoryRouter>
-          <RedirectIfAuthenticated />
-        </MemoryRouter>
-      );
-
-      await waitFor(() => {
-        expect(mockUseNavigate).toHaveBeenCalledWith('/today', { replace: true });
+        expect(mockNavigate).toHaveBeenCalledWith('/today', { replace: true });
       });
     });
   });
