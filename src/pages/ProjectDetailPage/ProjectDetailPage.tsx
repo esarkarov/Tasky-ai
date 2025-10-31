@@ -1,5 +1,6 @@
 import { AddTaskButton } from '@/components/atoms/AddTaskButton';
 import { Head } from '@/components/atoms/Head';
+import { ItemList } from '@/components/atoms/List';
 import { LoadMoreButton } from '@/components/atoms/LoadMoreButton';
 import { PageContainer, PageHeader, PageList, PageTitle } from '@/components/atoms/Page';
 import { TotalCounter } from '@/components/atoms/TotalCounter';
@@ -12,7 +13,7 @@ import { Button } from '@/components/ui/button';
 import { useLoadMore } from '@/hooks/use-load-more';
 import { useTaskOperations } from '@/hooks/use-task-operations';
 import { ProjectDetailLoaderData } from '@/types/loaders.types';
-import type { Models } from 'appwrite';
+import { TaskEntity } from '@/types/tasks.types';
 import { ClipboardCheck, MoreHorizontal } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { useLoaderData } from 'react-router';
@@ -24,12 +25,13 @@ export const ProjectDetailPage = () => {
   const { handleCreateTask } = useTaskOperations();
 
   const filteredProjectTasks = useMemo(() => {
-    const incompleteTasks = tasks?.filter((task: Models.Document) => !task.completed) as Models.Document[];
+    const incompleteTasks = tasks?.filter((task) => !task.completed) as TaskEntity[];
 
     const sortedTasks = incompleteTasks?.sort((taskA, taskB) => {
-      const dateA = new Date(taskA.due_date);
-      const dateB = new Date(taskB.due_date);
-      return dateA.getTime() - dateB.getTime();
+      if (!taskA.due_date && !taskB.due_date) return 0;
+      if (!taskA.due_date) return 1;
+      if (!taskB.due_date) return -1;
+      return new Date(taskA.due_date).getTime() - new Date(taskB.due_date).getTime();
     });
 
     return sortedTasks;
@@ -84,10 +86,11 @@ export const ProjectDetailPage = () => {
 
         <PageList aria-label={`Tasks for project ${name}`}>
           {visibleProjectTasks?.map(({ $id, content, completed, due_date }, index) => (
-            <div
+            <ItemList
               key={$id}
-              className={getItemClassName(index)}
-              style={getItemStyle(index)}>
+              index={index}
+              getClassName={getItemClassName}
+              getStyle={getItemStyle}>
               <TaskCard
                 key={$id}
                 id={$id}
@@ -96,7 +99,7 @@ export const ProjectDetailPage = () => {
                 dueDate={due_date}
                 project={project}
               />
-            </div>
+            </ItemList>
           ))}
 
           {!isFormShow && (

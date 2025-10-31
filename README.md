@@ -1,13 +1,9 @@
 <div align="center">
-  <br />
-    <img src="public/banner/hero-banner-lg.png" alt="Tasky AI Hero Banner" width="100%" style="border-radius: 12px;" >
-  <br />
-
   <div>
     <img src="https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=white&style=for-the-badge" />
     <img src="https://img.shields.io/badge/Clerk-Auth-5A67D8?logo=clerk&logoColor=white&style=for-the-badge" />
     <img src="https://img.shields.io/badge/-Shadcn-black?style=for-the-badge&logoColor=white&logo=shadcnui&color=black"/>
-<img src="https://img.shields.io/badge/-Appwrite-black?style=for-the-badge&logoColor=white&logo=appwrite&color=black"/><br/>
+<img src="https://img.shields.io/badge/-Appwrite-black?style=for-the-badge&logoColor=white&logo=appwrite&color=FD366E"/><br/>
 
 <img src="https://img.shields.io/badge/-Vitest-black?style=for-the-badge&logoColor=white&logo=vitest&color=00A35C"/>
 <img src="https://img.shields.io/badge/Google-Gemini-4285F4?logo=google&logoColor=white&style=for-the-badge" />

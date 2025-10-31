@@ -37,7 +37,7 @@ export const useLoadMore = <T>(allItems: T[], params: UseLoadMoreParams = {}): U
     (index: number): CSSProperties => {
       const isNewlyAdded = index >= count - pageSize;
       return {
-        animationDelay: isNewlyAdded ? `${(index - (count - pageSize)) * 50}ms` : '0ms',
+        animationDelay: isNewlyAdded ? `${(index - (count - pageSize)) * 0.05}s` : '0s',
       };
     },
     [count, pageSize]

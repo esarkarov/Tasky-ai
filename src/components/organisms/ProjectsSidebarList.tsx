@@ -1,4 +1,5 @@
 import { AllProjectsButton } from '@/components/atoms/AllProjectsButton';
+import { NavList } from '@/components/atoms/List';
 import { ProjectSidebarNavItem } from '@/components/molecules/ProjectSidebarNavItem';
 import { CollapsibleContent } from '@/components/ui/collapsible';
 import { SidebarGroupContent, SidebarMenu, SidebarMenuItem } from '@/components/ui/sidebar';
@@ -18,12 +19,15 @@ export const ProjectsSidebarList = ({ handleMobileNavigation }: ProjectsSidebarL
     <CollapsibleContent id="projects-list">
       <SidebarGroupContent>
         <SidebarMenu>
-          {projectDocs.slice(0, 9).map((project) => (
-            <ProjectSidebarNavItem
+          {projectDocs.slice(0, 9).map((project, index) => (
+            <NavList
               key={project.$id}
-              project={project}
-              handleMobileNavigation={handleMobileNavigation}
-            />
+              index={index}>
+              <ProjectSidebarNavItem
+                project={project}
+                handleMobileNavigation={handleMobileNavigation}
+              />
+            </NavList>
           ))}
           {projectDocs !== null && total > 9 && (
             <SidebarMenuItem>

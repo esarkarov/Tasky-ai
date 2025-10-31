@@ -1,3 +1,4 @@
+import { NavList } from '@/components/atoms/List';
 import { TaskSidebarNavLink } from '@/components/molecules/TaskSidebarNavLink';
 import { TaskFormDialog } from '@/components/organisms/TaskFormDialog';
 import {
@@ -34,13 +35,17 @@ export const TaskSidebarNavGroup = ({ currentPath, taskCounts, handleMobileNavig
           </TaskFormDialog>
         </SidebarMenuItem>
         {TASK_SIDEBAR_LINKS.map((link, index) => (
-          <TaskSidebarNavLink
-            key={index}
-            link={link}
-            isActive={currentPath === link.href}
-            taskCounts={taskCounts}
-            onClick={handleMobileNavigation}
-          />
+          <NavList
+            key={link.label}
+            index={index}>
+            <TaskSidebarNavLink
+              key={index}
+              link={link}
+              isActive={currentPath === link.href}
+              taskCounts={taskCounts}
+              onClick={handleMobileNavigation}
+            />
+          </NavList>
         ))}
       </SidebarMenu>
     </SidebarGroupContent>

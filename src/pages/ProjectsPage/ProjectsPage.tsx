@@ -14,6 +14,7 @@ import { FolderKanban, Plus } from 'lucide-react';
 import { useLoaderData } from 'react-router';
 import { useLoadMore } from '@/hooks/use-load-more';
 import { LoadMoreButton } from '@/components/atoms/LoadMoreButton';
+import { ItemList } from '@/components/atoms/List';
 
 export const ProjectsPage = () => {
   const { fetcher, searchStatus, handleSearchProjects } = useProjectOperations();
@@ -77,15 +78,16 @@ export const ProjectsPage = () => {
 
           <div className={cn(searchStatus === 'searching' && 'opacity-25')}>
             {visibleProjects.map((project, index) => (
-              <div
+              <ItemList
                 key={project.$id}
-                className={getItemClassName(index)}
-                style={getItemStyle(index)}>
+                index={index}
+                getClassName={getItemClassName}
+                getStyle={getItemStyle}>
                 <ProjectCard
                   key={project.$id}
                   project={project}
                 />
-              </div>
+              </ItemList>
             ))}
 
             {!total && (

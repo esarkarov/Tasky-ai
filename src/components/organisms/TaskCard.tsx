@@ -9,7 +9,7 @@ interface TaskCardProps {
   id: string;
   content: string;
   completed: boolean;
-  dueDate: Date;
+  dueDate: Date | null;
   project: ProjectEntity;
 }
 

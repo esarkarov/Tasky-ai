@@ -14,7 +14,7 @@ const PageContainer: React.FC<PropsWithChildren> = memo(({ children }) => {
 const PageHeader: React.FC<PropsWithChildren> = memo(({ children }) => {
   return (
     <header
-      className="pt-2 pb-3 space-y-2 md:px-4 lg:px-10"
+      className="pt-2 pb-3 space-y-2 md:px-4 lg:px-10 animate-fade-in opacity-0 [animation-delay:0.1s] [animation-fill-mode:forwards]"
       role="banner"
       aria-label="Page header">
       {children}

@@ -20,10 +20,6 @@ export interface ProjectInput {
   color_name: string;
   color_hex: string;
 }
-export interface ProjectInfo {
-  name: string;
-  colorHex: string;
-}
 export interface ProjectFormInput extends ProjectInput {
   ai_task_gen: boolean;
   task_gen_prompt: string;

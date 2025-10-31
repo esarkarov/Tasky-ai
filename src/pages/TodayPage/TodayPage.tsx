@@ -1,5 +1,6 @@
 import { AddTaskButton } from '@/components/atoms/AddTaskButton';
 import { Head } from '@/components/atoms/Head';
+import { ItemList } from '@/components/atoms/List';
 import { LoadMoreButton } from '@/components/atoms/LoadMoreButton';
 import { PageContainer, PageHeader, PageList, PageTitle } from '@/components/atoms/Page';
 import { TotalCounter } from '@/components/atoms/TotalCounter';
@@ -68,10 +69,11 @@ export const TodayPage = () => {
 
         <PageList aria-label="Today's tasks">
           {visibleTasks.map(({ $id, content, completed, due_date, projectId }, index) => (
-            <div
+            <ItemList
               key={$id}
-              className={getItemClassName(index)}
-              style={getItemStyle(index)}>
+              index={index}
+              getClassName={getItemClassName}
+              getStyle={getItemStyle}>
               <TaskCard
                 id={$id}
                 content={content}
@@ -79,7 +81,7 @@ export const TodayPage = () => {
                 dueDate={due_date as Date}
                 project={projectId as ProjectEntity}
               />
-            </div>
+            </ItemList>
           ))}
 
           {!isFormOpen && (
