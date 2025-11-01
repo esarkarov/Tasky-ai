@@ -1,6 +1,4 @@
 import { Head } from '@/components/atoms/Head';
-import { Footer } from '@/components/organisms/Footer';
-import { Header } from '@/components/organisms/Header';
 import { Button } from '@/components/ui/button';
 import { ROUTES } from '@/constants/routes';
 import { isRouteErrorResponse, Link, useRouteError } from 'react-router';
@@ -12,9 +10,6 @@ export const ErrorPage = () => {
   return (
     <div className="min-h-[100dvh] flex flex-col">
       <Head title="Tasky AI | Something went wrong" />
-
-      <Header />
-
       <main
         role="main"
         className="grow container flex flex-col justify-center items-center pt-32 pb-12"
@@ -65,8 +60,6 @@ export const ErrorPage = () => {
           />
         </figure>
       </main>
-
-      <Footer />
     </div>
   );
 };

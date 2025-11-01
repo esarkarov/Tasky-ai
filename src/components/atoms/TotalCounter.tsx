@@ -18,7 +18,7 @@ export const TotalCounter = memo(({ totalCount, label = 'task', icon: Icon }: To
         size={16}
         aria-hidden="true"
       />
-      <span>
+      <span data-testid="total-count-label">
         {totalCount} {labelText}
       </span>
     </div>

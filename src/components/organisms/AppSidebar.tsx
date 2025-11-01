@@ -22,7 +22,7 @@ export const AppSidebar = () => {
     <Sidebar
       role="navigation"
       aria-label="Main sidebar">
-      <SidebarHeader>
+      <SidebarHeader className="py-2 border-b-2">
         <Link
           to={ROUTES.INBOX}
           className="p-2"

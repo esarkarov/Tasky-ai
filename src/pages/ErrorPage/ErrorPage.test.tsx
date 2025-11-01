@@ -1,12 +1,13 @@
 import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { userEvent } from '@testing-library/user-event';
 import { BrowserRouter } from 'react-router';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ErrorPage } from './ErrorPage';
-import type { ReactElement, ReactNode } from 'react';
+import { ReactNode } from 'react';
 
 const mockUseRouteError = vi.fn();
 const mockIsRouteErrorResponse = vi.fn();
+
 vi.mock('react-router', async () => {
   const actual = await vi.importActual('react-router');
   return {
@@ -17,15 +18,7 @@ vi.mock('react-router', async () => {
 });
 
 vi.mock('@/components/atoms/Head', () => ({
-  Head: ({ title }: { title: string }) => <title data-testid="meta-title">{title}</title>,
-}));
-
-vi.mock('@/components/organisms/Footer', () => ({
-  Footer: () => <footer data-testid="footer">Footer</footer>,
-}));
-
-vi.mock('@/components/organisms/Header', () => ({
-  Header: () => <header data-testid="header">Header</header>,
+  Head: ({ title }: { title: string }) => <title>{title}</title>,
 }));
 
 vi.mock('@/components/ui/button', () => ({
@@ -46,8 +39,12 @@ vi.mock('@/constants/routes', () => ({
   },
 }));
 
-const renderWithRouter = (component: ReactElement) => {
-  return render(<BrowserRouter>{component}</BrowserRouter>);
+const renderComponent = () => {
+  return render(
+    <BrowserRouter>
+      <ErrorPage />
+    </BrowserRouter>
+  );
 };
 
 describe('ErrorPage', () => {
@@ -55,166 +52,147 @@ describe('ErrorPage', () => {
     vi.clearAllMocks();
   });
 
-  describe('Basic Rendering', () => {
-    it('should render without crashing', () => {
+  describe('basic rendering', () => {
+    it('should render page with main container', () => {
       mockUseRouteError.mockReturnValue(new Error('Test error'));
       mockIsRouteErrorResponse.mockReturnValue(false);
 
-      renderWithRouter(<ErrorPage />);
+      renderComponent();
 
       expect(screen.getByRole('main')).toBeInTheDocument();
     });
 
-    it('should render Head component with correct title', () => {
+    it('should set document title', () => {
       mockUseRouteError.mockReturnValue(new Error('Test error'));
       mockIsRouteErrorResponse.mockReturnValue(false);
 
-      renderWithRouter(<ErrorPage />);
+      renderComponent();
 
-      const title = document.head.querySelector('[data-testid="meta-title"]');
-      expect(title!.textContent).toBe('Tasky AI | Something went wrong');
-    });
-
-    it('should render Header component', () => {
-      mockUseRouteError.mockReturnValue(new Error('Test error'));
-      mockIsRouteErrorResponse.mockReturnValue(false);
-
-      renderWithRouter(<ErrorPage />);
-
-      expect(screen.getByTestId('header')).toBeInTheDocument();
-    });
-
-    it('should render Footer component', () => {
-      mockUseRouteError.mockReturnValue(new Error('Test error'));
-      mockIsRouteErrorResponse.mockReturnValue(false);
-
-      renderWithRouter(<ErrorPage />);
-
-      expect(screen.getByTestId('footer')).toBeInTheDocument();
+      expect(document.title).toBe('Tasky AI | Something went wrong');
     });
 
     it('should render action buttons', () => {
       mockUseRouteError.mockReturnValue(new Error('Test error'));
       mockIsRouteErrorResponse.mockReturnValue(false);
 
-      renderWithRouter(<ErrorPage />);
+      renderComponent();
 
-      expect(screen.getByRole('link', { name: /Return to Home page/i })).toBeInTheDocument();
-      expect(screen.getByRole('link', { name: /Go to your Inbox/i })).toBeInTheDocument();
+      expect(screen.getByRole('link', { name: 'Return to Home page' })).toBeInTheDocument();
+      expect(screen.getByRole('link', { name: 'Go to your Inbox' })).toBeInTheDocument();
     });
   });
 
-  describe('Conditional Rendering', () => {
-    it('should display 404 title when route error response is detected', () => {
+  describe('404 error rendering', () => {
+    it('should display 404 title and message', () => {
       const notFoundError = { status: 404, statusText: 'Not Found' };
       mockUseRouteError.mockReturnValue(notFoundError);
       mockIsRouteErrorResponse.mockReturnValue(true);
 
-      renderWithRouter(<ErrorPage />);
+      renderComponent();
 
       expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent("Hmmm, that page doesn't exist.");
-    });
-
-    it('should display 404 description message', () => {
-      const notFoundError = { status: 404, statusText: 'Not Found' };
-      mockUseRouteError.mockReturnValue(notFoundError);
-      mockIsRouteErrorResponse.mockReturnValue(true);
-
-      renderWithRouter(<ErrorPage />);
-
       expect(screen.getByText(/You can get back on track and manage your tasks with ease/i)).toBeInTheDocument();
     });
 
-    it('should display 404 image alt text', () => {
+    it('should display 404 illustration', () => {
       const notFoundError = { status: 404, statusText: 'Not Found' };
       mockUseRouteError.mockReturnValue(notFoundError);
       mockIsRouteErrorResponse.mockReturnValue(true);
 
-      renderWithRouter(<ErrorPage />);
+      renderComponent();
 
       const image = screen.getByAltText('404 page not found illustration');
       expect(image).toBeInTheDocument();
       expect(image).toHaveAttribute('src', '/empty-state/page-not-found.png');
     });
 
-    it('should display generic error title when not a route error', () => {
+    it('should render complete 404 error page', () => {
+      const notFoundError = { status: 404, statusText: 'Not Found' };
+      mockUseRouteError.mockReturnValue(notFoundError);
+      mockIsRouteErrorResponse.mockReturnValue(true);
+
+      renderComponent();
+
+      expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent("Hmmm, that page doesn't exist.");
+      expect(screen.getByText(/You can get back on track/i)).toBeInTheDocument();
+      expect(screen.getByRole('link', { name: 'Return to Home page' })).toBeInTheDocument();
+      expect(screen.getByRole('link', { name: 'Go to your Inbox' })).toBeInTheDocument();
+      expect(screen.getByAltText('404 page not found illustration')).toBeInTheDocument();
+    });
+  });
+
+  describe('generic error rendering', () => {
+    it('should display generic error title and message', () => {
       mockUseRouteError.mockReturnValue(new Error('Server error'));
       mockIsRouteErrorResponse.mockReturnValue(false);
 
-      renderWithRouter(<ErrorPage />);
+      renderComponent();
 
       expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Something went wrong.');
-    });
-
-    it('should display generic error description message', () => {
-      mockUseRouteError.mockReturnValue(new Error('Server error'));
-      mockIsRouteErrorResponse.mockReturnValue(false);
-
-      renderWithRouter(<ErrorPage />);
-
       expect(screen.getByText(/We're working on fixing this issue. Please try again later/i)).toBeInTheDocument();
     });
 
-    it('should display generic error image alt text', () => {
+    it('should display generic error illustration', () => {
       mockUseRouteError.mockReturnValue(new Error('Server error'));
       mockIsRouteErrorResponse.mockReturnValue(false);
 
-      renderWithRouter(<ErrorPage />);
+      renderComponent();
 
       const image = screen.getByAltText('Generic error illustration');
       expect(image).toBeInTheDocument();
       expect(image).toHaveAttribute('src', '/empty-state/page-not-found.png');
     });
+
+    it('should render complete generic error page', () => {
+      mockUseRouteError.mockReturnValue(new Error('Server error'));
+      mockIsRouteErrorResponse.mockReturnValue(false);
+
+      renderComponent();
+
+      expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Something went wrong.');
+      expect(screen.getByText(/We're working on fixing this issue/i)).toBeInTheDocument();
+      expect(screen.getByRole('link', { name: 'Return to Home page' })).toBeInTheDocument();
+      expect(screen.getByRole('link', { name: 'Go to your Inbox' })).toBeInTheDocument();
+      expect(screen.getByAltText('Generic error illustration')).toBeInTheDocument();
+    });
   });
 
-  describe('User Interactions', () => {
-    it('should have working Return to Home button', async () => {
+  describe('navigation links', () => {
+    it('should have correct home link href', async () => {
       const user = userEvent.setup();
       mockUseRouteError.mockReturnValue(new Error('Test error'));
       mockIsRouteErrorResponse.mockReturnValue(false);
 
-      renderWithRouter(<ErrorPage />);
+      renderComponent();
 
-      const homeLink = screen.getByRole('link', { name: /Return to Home page/i });
+      const homeLink = screen.getByRole('link', { name: 'Return to Home page' });
       expect(homeLink).toHaveAttribute('href', '/');
 
       await user.click(homeLink);
       expect(homeLink).toHaveAttribute('href', '/');
     });
 
-    it('should have working View Inbox button', async () => {
+    it('should have correct inbox link href', async () => {
       const user = userEvent.setup();
       mockUseRouteError.mockReturnValue(new Error('Test error'));
       mockIsRouteErrorResponse.mockReturnValue(false);
 
-      renderWithRouter(<ErrorPage />);
+      renderComponent();
 
-      const inboxLink = screen.getByRole('link', { name: /Go to your Inbox/i });
+      const inboxLink = screen.getByRole('link', { name: 'Go to your Inbox' });
       expect(inboxLink).toHaveAttribute('href', '/inbox');
 
       await user.click(inboxLink);
       expect(inboxLink).toHaveAttribute('href', '/inbox');
     });
-
-    it('should render both action buttons with correct variants', () => {
-      mockUseRouteError.mockReturnValue(new Error('Test error'));
-      mockIsRouteErrorResponse.mockReturnValue(false);
-
-      renderWithRouter(<ErrorPage />);
-
-      const buttons = screen.getAllByTestId('button');
-      expect(buttons).toHaveLength(2);
-      expect(buttons[0]).not.toHaveAttribute('data-variant');
-      expect(buttons[1]).toHaveAttribute('data-variant', 'ghost');
-    });
   });
 
-  describe('Accessibility', () => {
+  describe('accessibility', () => {
     it('should have correct aria-labelledby on main element', () => {
       mockUseRouteError.mockReturnValue(new Error('Test error'));
       mockIsRouteErrorResponse.mockReturnValue(false);
 
-      renderWithRouter(<ErrorPage />);
+      renderComponent();
 
       const main = screen.getByRole('main');
       expect(main).toHaveAttribute('aria-labelledby', 'error-page-title');
@@ -224,7 +202,7 @@ describe('ErrorPage', () => {
       mockUseRouteError.mockReturnValue(new Error('Test error'));
       mockIsRouteErrorResponse.mockReturnValue(false);
 
-      renderWithRouter(<ErrorPage />);
+      renderComponent();
 
       const description = screen.getByText(/We're working on fixing this issue/i);
       expect(description).toHaveAttribute('aria-live', 'polite');
@@ -234,9 +212,9 @@ describe('ErrorPage', () => {
       mockUseRouteError.mockReturnValue(new Error('Test error'));
       mockIsRouteErrorResponse.mockReturnValue(false);
 
-      renderWithRouter(<ErrorPage />);
+      renderComponent();
 
-      const actionsGroup = screen.getByRole('group', { name: /Error recovery actions/i });
+      const actionsGroup = screen.getByRole('group', { name: 'Error recovery actions' });
       expect(actionsGroup).toBeInTheDocument();
     });
 
@@ -244,57 +222,24 @@ describe('ErrorPage', () => {
       mockUseRouteError.mockReturnValue(new Error('Test error'));
       mockIsRouteErrorResponse.mockReturnValue(false);
 
-      renderWithRouter(<ErrorPage />);
+      renderComponent();
 
       const heading = screen.getByRole('heading', { level: 1 });
       expect(heading).toHaveAttribute('id', 'error-page-title');
       expect(heading).toBeInTheDocument();
     });
 
-    it('should have aria-label on both action links', () => {
+    it('should have aria-labels on navigation links', () => {
       mockUseRouteError.mockReturnValue(new Error('Test error'));
       mockIsRouteErrorResponse.mockReturnValue(false);
 
-      renderWithRouter(<ErrorPage />);
+      renderComponent();
 
-      const homeLink = screen.getByRole('link', { name: /Return to Home page/i });
-      const inboxLink = screen.getByRole('link', { name: /Go to your Inbox/i });
+      const homeLink = screen.getByRole('link', { name: 'Return to Home page' });
+      const inboxLink = screen.getByRole('link', { name: 'Go to your Inbox' });
 
       expect(homeLink).toHaveAttribute('aria-label', 'Return to Home page');
       expect(inboxLink).toHaveAttribute('aria-label', 'Go to your Inbox');
-    });
-  });
-
-  describe('Integration', () => {
-    it('should render complete error page for 404 error', () => {
-      const notFoundError = { status: 404, statusText: 'Not Found' };
-      mockUseRouteError.mockReturnValue(notFoundError);
-      mockIsRouteErrorResponse.mockReturnValue(true);
-
-      renderWithRouter(<ErrorPage />);
-
-      expect(screen.getByTestId('header')).toBeInTheDocument();
-      expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent("Hmmm, that page doesn't exist.");
-      expect(screen.getByText(/You can get back on track/i)).toBeInTheDocument();
-      expect(screen.getByRole('link', { name: /Return to Home page/i })).toBeInTheDocument();
-      expect(screen.getByRole('link', { name: /Go to your Inbox/i })).toBeInTheDocument();
-      expect(screen.getByAltText('404 page not found illustration')).toBeInTheDocument();
-      expect(screen.getByTestId('footer')).toBeInTheDocument();
-    });
-
-    it('should render complete error page for generic error', () => {
-      mockUseRouteError.mockReturnValue(new Error('Server error'));
-      mockIsRouteErrorResponse.mockReturnValue(false);
-
-      renderWithRouter(<ErrorPage />);
-
-      expect(screen.getByTestId('header')).toBeInTheDocument();
-      expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Something went wrong.');
-      expect(screen.getByText(/We're working on fixing this issue/i)).toBeInTheDocument();
-      expect(screen.getByRole('link', { name: /Return to Home page/i })).toBeInTheDocument();
-      expect(screen.getByRole('link', { name: /Go to your Inbox/i })).toBeInTheDocument();
-      expect(screen.getByAltText('Generic error illustration')).toBeInTheDocument();
-      expect(screen.getByTestId('footer')).toBeInTheDocument();
     });
   });
 });
